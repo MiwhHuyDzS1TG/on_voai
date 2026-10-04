@@ -1,0 +1,30 @@
+{
+  "name": "vaio-active-learning",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && tsc -p tsconfig.api.json && vite build",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.39.0",
+    "@vitejs/plugin-react": "latest",
+    "katex": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "latest"
+  },
+  "devDependencies": {
+    "@types/katex": "latest",
+    "@types/node": "^26.6.4",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}

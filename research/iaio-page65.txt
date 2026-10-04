@@ -1,0 +1,28 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 65-65
+
+
+===== PAGE 65 =====
+
+Chương 3
+Chuẩn bị dữ liệu và kỹ thuật
+đặc trưng
+Nhiều dữ liệu hơn đánh bại thuật toán
+thông minh, nhưng dữ liệu tốt hơn
+đánh bại nhiều dữ liệu hơn.
+Peter Norvig
+3.1 Giới thiệu: Vì sao chuẩn bị dữ liệu quan trọng
+Bạn đã thu thập một bộ dữ liệu, chọn một thuật toán đầy triển vọng, và bạn
+sẵn sàng huấn luyện mô hình học máy đầu tiên. Bạn chạy mã, chờ kết quả,
+và... mô hình hoạt động tệ hại. Điều gì đã sai?
+Chín lần trong mười lần, vấn đề không nằm ở thuật toán. Vấn đề nằm ở dữ
+liệu.
+Thuật toán học máy là những bộ tìm mẫu mạnh mẽ một cách đáng kinh ngạc,
+nhưng chúng cũng rất cứng nhắc, hiểu mọi thứ theo đúng nghĩa đen. Chúng
+tìm mọi mẫu có trong dữ liệu bạn đưa cho chúng — kể cả những mẫu bạn
+không hề mong muốn. Nếu dữ liệu chứa lỗi, thuật toán sẽ học những lỗi đó.
+Nếu dữ liệu có giá trị thiếu, thuật toán hoặc là gặp lỗi sập, hoặc là bịa ra con
+số. Nếu một đặc trưng được đo bằng hàng triệu trong khi đặc trưng khác đo
+bằng số thập phân, thuật toán chỉ chú ý đến những con số lớn.
+65

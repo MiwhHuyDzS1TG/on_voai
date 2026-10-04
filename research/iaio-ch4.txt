@@ -1,0 +1,891 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 81-102
+
+
+===== PAGE 81 =====
+
+Chương 4
+Học có giám sát
+Mọi mô hình đều sai, nhưng có
+mô hình lại rất hữu ích.
+George Box
+4.1 Giới thiệu về học có giám sát
+Hãy tưởng tượng bạn dạy một đứa trẻ nhận biết động vật. Bạn đưa cho
+chúng từng tấm hình một: “Đây là mèo,” “Đây là chó,” “Đây là mèo,” “Đây là
+chó.” Sau khi xem đủ nhiều ví dụ, một điều kỳ diệu xảy ra. Khi được đưa một
+tấm hình hoàn toàn mới (một con vật chúng chưa từng thấy), đứa trẻ vẫn phân
+biệt được đúng đó là mèo hay chó. Nó đã học được cách khái quát từ những ví
+dụ cụ thể sang một khái niệm rộng hơn.
+Đây chính xác là cách học có giám sát hoạt động. Chúng ta cung cấp cho thuật
+toán một bộ ví dụ mà ta đã biết đáp án đúng, và thuật toán tự tìm ra khuôn mẫu
+ẩn bên dưới nối đầu vào với đầu ra. Khi đã học được khuôn mẫu đó, nó có thể
+dự đoán cho những ví dụ mới mà nó chưa từng gặp.
+Thuật ngữ “giám sát” xuất phát từ ý tưởng rằng chúng ta đang giám sát quá
+trình học bằng cách đưa ra đáp án đúng. Hãy hình dung như giáo viên chấm bài
+tập: với mỗi câu, học sinh (tức thuật toán) vừa thấy đề bài vừa thấy đáp án
+đúng, và học được từ những chỗ làm sai dọc đường.
+81
+
+===== PAGE 82 =====
+
+82 CHAPTER 4. SUPERVISED LEARNING
+4.1.1 Cấu trúc của học có giám sát
+Trong học có giám sát, dữ liệu của ta gồm các cặp đầu vào – đầu ra. Các đầu
+vào được gọi là đặc trưng, đó là những thông tin ta dùng để đưa ra dự đoán.
+Với một bức ảnh, đặc trưng có thể là các giá trị điểm ảnh. Với một ngôi nhà,
+đặc trưng có thể gồm diện tích, số phòng ngủ và vị trí. Với một bệnh nhân,
+đặc trưng có thể gồm tuổi, huyết áp và mức cholesterol.
+Các đầu ra được gọi là nhãn, đó là thứ ta muốn dự đoán. Với bức ảnh, nhãn
+có thể là “mèo” hay “chó.” Với ngôi nhà, nhãn có thể là giá của nó. Với bệnh
+nhân, nhãn có thể là người đó có mắc một bệnh cụ thể hay không.
+Tập các cặp đầu vào – đầu ra mà ta dùng để huấn luyện thuật toán được gọi là tập
+huấn luyện. Đó là dữ liệu mà thuật toán học từ đó. Song song với đó, ta giữ lại một
+tập kiểm thử, tức dữ liệu mà thuật toán không bao giờ được thấy trong lúc huấn
+luyện. Ta dùng tập này để đánh giá thuật toán đã học được mức độ khái quát tốt
+đến đâu.
+Thuật ngữ quan trọng
+Đặc trưng (ký hiệu x): Các biến đầu vào dùng để đưa ra dự đoán.
+Cũng gọi là biến dự đoán, thuộc tính, hay biến độc lập. Nhãn (ký hiệu
+y): Biến đầu ra mà ta muốn dự đoán. Cũng gọi là biến mục tiêu, biến
+đáp ứng, hay biến phụ thuộc.
+Tập huấn luyện: Tập hợp các cặp (đặc trưng, nhãn) dùng để huấn
+luyện mô hình. Thuật toán học từ những ví dụ này.
+Tập kiểm thử: Dữ liệu được tách ra khỏi quá trình huấn luyện, dùng
+để đánh giá mô hình khái quát tốt đến đâu trên những ví dụ mới, chưa
+từng thấy.
+4.1.2 Vì sao học có giám sát lại hiệu quả
+Giả định nền tảng của học có giám sát là dữ liệu chứa các khuôn mẫu: những
+quy luật nối đầu vào với đầu ra. Nếu giá nhà hoàn toàn ngẫu nhiên, không liên
+quan gì đến diện tích, vị trí hay bất kỳ đặc trưng nào đo lường được, thì chẳng
+thuật toán nào dự đoán được. Nhưng thực tế thì ngôi nhà lớn hơn thường đắt
+hơn, nhà ở khu vực mong muốn cũng thường đắt hơn, và cứ thế. Những khuôn
+mẫu ấy nằm sẵn trong dữ liệu, chờ được khám phá.
+Việc của một thuật toán học có giám sát là tìm một hàm h (gọi là giả thuyết)
+ánh xạ từ đầu vào sang đầu ra: với các đặc trưng x, hàm tạo ra một dự đoán
+h(x) vốn phải gần với nhãn thật y. Thuật toán tìm ra khuôn mẫu thật càng
+chính xác, dự đoán của nó trên dữ liệu mới càng chuẩn.
+
+===== PAGE 83 =====
+
+4.2. CLASSIFICATION VS. REGRESSION 83
+4.2 Phân loại so với Hồi quy
+Bài toán học có giám sát gồm hai dạng chính, tùy thuộc vào bản chất của thứ
+mà ta muốn dự đoán.
+4.2.1 Hồi quy: Dự đoán các giá trị liên tục
+Trong các bài toán hồi quy, nhãn là một số thực liên tục. Nó có thể nhận bất kỳ
+giá trị nào trong một khoảng nào đó. Khi dự đoán nhiệt độ ngày mai, bạn có thể
+nhận được 22.4°C hoặc 20.4°C hay con số nào khác. Khi dự đoán giá nhà, bạn
+có thể nhận được C247 500 hoặc C312 000 hay bất cứ số nào ở giữa.
+Các bài toán hồi quy thường gặp gồm dự đoán giá nhà dựa trên đặc điểm của
+nó, dự báo giá cổ phiếu hoặc doanh số, ước lượng tuổi một người qua ảnh
+chụp, và dự đoán một chiếc máy sẽ chạy được bao lâu thì hỏng. Trong mỗi
+trường hợp, đầu ra là một con số có thể thay đổi liên tục.
+Đặc điểm then chốt của hồi quy là những thay đổi nhỏ ở đầu vào có thể dẫn
+tới những thay đổi nhỏ ở đầu ra. Một ngôi nhà lớn hơn một chút có thể được
+dự đoán là đắt hơn một chút. Chính mối liên hệ mượt mà giữa đầu vào và đầu
+ra làm nên sự khác biệt giữa hồi quy và phân loại.
+4.2.2 Phân loại: Dự đoán các nhóm
+Trong các bài toán phân loại, nhãn là một nhóm rời rạc. Nó thuộc về một trong
+số hữu hạn các lớp có thể có. Khi phân loại một email, nó hoặc là spam hoặc
+không phải spam; không có kiểu “37% là spam.” Khi chẩn đoán một bệnh, bệnh
+nhân hoặc mắc hoặc không mắc. Khi nhận dạng một chữ số viết tay, đó là 0, 1,
+2, 3, 4, 5, 6, 7, 8, hay 9, không có kiểu “chữ số 3.7.”
+Khi có đúng hai lớp khả dĩ, ta gọi đó là phân loại nhị phân. Ví dụ gồm phát
+hiện spam (spam so với không spam), chẩn đoán y tế (có bệnh so với không
+bệnh), và phát hiện gian lận (gian lận so với hợp lệ). Khi có nhiều hơn hai lớp,
+ta gọi đó là phân loại đa lớp. Ví dụ gồm nhận dạng chữ số viết tay (10 lớp),
+nhận dạng loài động vật (nhiều lớp), và phân loại bài báo theo chủ đề.
+Sự khác biệt căn bản so với hồi quy là những thay đổi nhỏ ở đầu vào có thể
+dẫn tới những thay đổi đột ngột ở đầu ra. Một email rất giống spam vẫn có
+thể bị phân loại là không spam nếu nó rơi vào phía đúng của ranh giới quyết
+định. Bản chất rời rạc, trắng đen của phân loại đòi hỏi những thuật toán và
+phương pháp đánh giá khác hẳn so với hồi quy.
+
+===== PAGE 84 =====
+
+84 CHAPTER 4. SUPERVISED LEARNING
+Size
+Price
+Regression
+Predict a continuous value
+x1
+x2
+Classification
+Predict a discrete category
+Hình 4.1: Trong hồi quy, ta khớp một đường thẳng (hoặc đường cong) để dự
+đoán các giá trị liên tục. Trong phân loại, ta tìm một ranh giới tách các nhóm
+khác nhau.
+4.3 Hồi quy tuyến tính
+4.3.1 Hàm mất mát: Thứ mà thuật toán tối ưu
+Mọi thuật toán học có giám sát đều hoạt động bằng cách cực tiểu hóa một hàm
+mất mát: thước đo xem dự đoán của nó sai nhiều đến đâu. Việc chọn hàm mất
+mát quyết định mô hình quan tâm đến loại lỗi nào nhất, và mỗi nhiệm vụ khác
+nhau lại cần một hàm mất mát khác nhau.
+Mất mát bình phương (dùng trong hồi quy) phạt những lỗi lớn theo bình phương:
+L(y, ˆy) = (y − ˆy)2
+Một dự đoán lệch 10 bị phạt nặng gấp 100 lần một dự đoán lệch 1. Điều này
+khiến các mô hình hồi quy nhạy cảm với ngoại lệ: chỉ một dự đoán sai lầm
+khủng khiếp cũng đủ chi phối toàn bộ mất mát.
+Mất mát log / chéo entropy (dùng trong hồi quy logistic) đo mức khớp giữa
+xác suất dự đoán và các lớp thực tế:
+L(y, ˆp) = −[y log( ˆp) + (1 − y) log(1 − ˆp)]
+Một dự đoán sai mà vẫn tự tin (dự đoán 0.99 trong khi nhãn thật là 0) gây ra
+mức mất mát khổng lồ. Một dự đoán đúng mà tự tin gần như không gây mất
+mát nào. Điều này buộc các bộ phân loại phải tạo ra các xác suất tách bạch rõ
+ràng.
+Mất mát hinge (dùng trong SVM) chỉ quan tâm xem dự đoán có nằm ở phía
+đúng của biên hay không:
+L(y, f (x)) = max(0, 1 − y · f (x))
+Nếu dự đoán đúng và tự tin (cách xa biên), mất mát hinge bằng không. Nó chỉ
+phạt những dự đoán sai hoặc nằm quá gần
+
+===== PAGE 85 =====
+
+4.3. LINEAR REGRESSION 85
+ranh giới. Đó là lý do SVM tạo ra các bộ phân loại biên tối đa: mất mát hinge
+chủ động thưởng cho biên lớn.
+Vì sao hàm mất mát lại quan trọng
+Hàm mất mát định hình cách mô hình hoạt động:
+• Mất mát bình phương: Nhạy cảm với ngoại lệ; dự đoán là liên tục
+• Mất mát log: Đẩy dự đoán về 0 hoặc 1; đầu ra là xác suất
+• Mất mát hinge: Bỏ qua các ví dụ “dễ”; tập trung vào ranh giới
+quyết định
+Chọn sai hàm mất mát cho nhiệm vụ của bạn có thể tạo ra một mô hình
+đi tối ưu nhầm thứ.
+4.3.2 Giả thuyết và hàm chi phí
+Hồi quy tuyến tính là thuật toán đơn giản nhất và nền tảng nhất trong học có
+giám sát. Ý tưởng cốt lõi: nếu đầu vào và đầu ra có mối quan hệ đường thẳng,
+thì hãy tìm đường thẳng đó.
+Để dự đoán giá nhà từ diện tích, ta mô hình hóa mối quan hệ như sau:
+hθ(x) = θ0 + θ1x (4.1)
+Đây đơn thuần là một đường thẳng: θ0 là giao điểm với trục y, θ1 là độ dốc.
+Những giá trị tham số khác nhau cho những đường thẳng khác nhau; thuật toán
+tìm các giá trị khớp dữ liệu huấn luyện tốt nhất.
+Để đo một đường thẳng khớp tốt đến đâu, ta dùng Sai số bình phương trung bình (MSE):
+J (θ0, θ1) = 1
+2m
+mX
+i=1
+
+hθ(x(i)) − y(i)
+2
+(4.2)
+Hàm chi phí này đo mức dự đoán lệch khỏi giá trị thực tế nhiều đến đâu. Mục
+tiêu của ta là cực tiểu hóa nó.
+4.3.3 Giảm gradient
+Giảm gradient tìm điểm cực tiểu bằng cách liên tục bước theo hướng làm
+giảm chi phí:1
+θj := θj − α ∂
+∂θj
+J (θ0, θ1) (4.3)
+1See Appendix D for partial derivatives and the chain rule.
+
+===== PAGE 86 =====
+
+86 CHAPTER 4. SUPERVISED LEARNING
+Tốc độ học  α điều khiển độ dài bước. Quá nhỏ: hội tụ chậm. Quá lớn: bước
+vượt qua cực tiểu hoặc phân kỳ.
+Một tính chất then chốt: hàm chi phí của hồi quy tuyến tính là hàm lồi, có hình
+cái bát với đúng một điểm cực tiểu. Giảm gradient chắc chắn sẽ tìm được nó.
+4.3.4 Nhiều đặc trưng
+Đến đây, ta mới chỉ xét việc dự đoán giá nhà từ riêng diện tích. Nhưng thực tế
+có nhiều đặc trưng ảnh hưởng tới giá: số phòng ngủ, tuổi của ngôi nhà, chất
+lượng khu vực, và vân vân. Hồi quy tuyến tính dễ dàng mở rộng sang nhiều
+đặc trưng:
+hθ(x) = θ0 + θ1x1 + θ2x2 + · · · + θnxn (4.4)
+Ở đây, x1, x2, . . . , xn là các đặc trưng n khác nhau, và mỗi cái có tham số
+riêng θj quyết định mức đóng góp của đặc trưng đó vào dự đoán. Tham số θ0
+vẫn là hệ số chặn.
+Dùng ký hiệu vector, ta có thể viết gọn hơn là hθ(x) = θT x, trong đó θ và x
+đều là vector. Ký hiệu này trở nên thiết yếu khi làm việc với nhiều đặc trưng.
+4.3.5 Hồi quy đa thức
+Còn nếu mối quan hệ giữa đầu vào và đầu ra không phải đường thẳng thì sao?
+Có lẽ giá nhà tăng nhanh hơn với những ngôi nhà lớn hơn, hàm ý một mối quan
+hệ cong. Ta có thể nắm bắt điều này bằng cách thêm các đặc trưng đa thức:
+hθ(x) = θ0 + θ1x + θ2x2 + θ3x3 + · · · (4.5)
+Điều thú vị là đây vẫn gọi là hồi quy “tuyến tính” vì giả thuyết tuyến tính theo
+các tham số θ. Ta chỉ đơn giản tạo ra các đặc trưng mới (x2, x3, v.v.) từ đặc
+trưng gốc x. Cùng thuật toán giảm gradient vẫn dùng để tìm các tham số tối
+ưu.
+Sức mạnh của hồi quy đa thức đi kèm một lời cảnh báo: đa thức bậc cao có
+thể khớp rất sát dữ liệu huấn luyện nhưng lại có thể hoạt động tệ trên dữ liệu
+mới. Vấn đề này, gọi là quá khớp, sẽ được bàn tới sau trong chương này.
+4.4 Hồi quy logistic
+Dù cái tên có chữ “regression”, hồi quy logistic thực ra là một thuật toán phân
+loại. Nó được dùng khi đầu ra là phân loại chứ không phải
+
+===== PAGE 87 =====
+
+4.4. LOGISTIC REGRESSION 87
+liên tục, phổ biến nhất là phân loại nhị phân khi ta muốn dự đoán một trong hai
+lớp.
+4.4.1 Vì sao hồi quy tuyến tính thất bại khi phân loại
+Bạn có thể tự hỏi: sao không dùng luôn hồi quy tuyến tính để phân loại? Giả sử
+ta gán email spam là 1 và email hợp lệ là 0. Ta có thể huấn luyện một mô hình
+hồi quy tuyến tính rồi xếp email vào spam nếu dự đoán lớn hơn 0.5.
+Vấn đề là hồi quy tuyến tính có thể cho ra dự đoán nhỏ hơn 0 hoặc lớn hơn 1.
+Nó có thể dự đoán −0.3 cho một email và 1.7 cho email khác, những giá trị
+chẳng có nghĩa gì khi hiểu là xác suất. Chưa kể, một ngoại lệ duy nhất cũng có
+thể đẩy đường hồi quy lệch mạnh, làm thay đổi phân loại của nhiều ví dụ
+khác.
+Điều ta cần là một hàm luôn cho giá trị nằm trong khoảng từ 0 đến 1, mà ta có
+thể diễn giải như xác suất. Đó chính xác là điều hồi quy logistic mang lại.
+4.4.2 Hàm sigmoid
+Thành phần then chốt của hồi quy logistic là hàm sigmoid (còn gọi là hàm
+logistic):
+σ(z) = 1
+1 + e−z (4.6)
+Hàm này có một đường cong chữ S rất đẹp. Dù bạn đưa vào giá trị  z nào, đầu
+ra luôn nằm giữa 0 và 1. Khi z là số dương lớn, σ(z) xấp xỉ 1. Khi z là số âm
+lớn, σ(z) xấp xỉ 0. Khi z = 0, σ(z) = 0.5 đúng bằng 0.5.
+z
+σ(z)
+0.5
+1
+0
+Hình 4.2: Hàm sigmoid ánh xạ trơn tru mọi số thực về một giá trị trong khoảng
+0 đến 1, khiến nó hoàn hảo để biểu diễn xác suất.
+
+===== PAGE 88 =====
+
+88 CHAPTER 4. SUPERVISED LEARNING
+4.4.3 Giả thuyết của hồi quy logistic
+Trong hồi quy logistic, ta lấy tổ hợp tuyến tính của các đặc trưng (giống hệt
+trong hồi quy tuyến tính) rồi cho đi qua hàm sigmoid:
+hθ(x) = σ(θT x) = 1
+1 + e−θT x (4.7)
+Đầu ra hθ(x) giờ luôn nằm giữa 0 và 1, và ta diễn giải nó là xác suất mà đầu
+vào thuộc lớp 1. Cụ thể, hθ(x) = P (y = 1|x; θ), là xác suất mà y bằng 1,
+với các đặc trưng x và tham số θ.
+Để ra quyết định phân loại cuối cùng, ta dùng một ngưỡng, thường là 0.5:
+Predict y =
+(
+1 if hθ(x) ≥ 0.5
+0 if hθ(x) < 0.5 (4.8)
+Điều này có nghĩa ta dự đoán lớp 1 khi mô hình tin rằng xác suất thuộc lớp 1 ít
+nhất là 50%. Ngưỡng có thể điều chỉnh tùy ứng dụng, chẳng hạn trong chẩn
+đoán y tế ta có thể dùng ngưỡng thấp hơn để tránh bỏ sót bệnh.
+4.4.4 Ranh giới quyết định
+Ranh giới quyết định là mặt trong không gian đặc trưng nơi dự đoán đổi từ
+lớp này sang lớp khác. Với hồi quy logistic có hai đặc trưng, ranh giới này là
+nơi hθ(x) = 0.5, điều xảy ra đúng khi θT x = 0.
+Với hai đặc trưng x1 và x2, phương trình θ0 + θ1x1 + θ2x2 = 0 xác định
+một đường thẳng. Các điểm ở một phía được xếp vào lớp 0; các điểm ở phía
+kia được xếp vào lớp 1. Việc của thuật toán là tìm đường thẳng (do θ0, θ1, θ2
+quyết định) tách hai lớp tốt nhất.
+4.4.5 Hàm chi phí của hồi quy logistic
+Ta không thể dùng sai số bình phương trung bình cho hồi quy logistic vì hàm chi
+phí thu được sẽ không lồi, với nhiều cực tiểu cục bộ nơi giảm gradient có thể
+mắc kẹt.
+Thay vào đó, ta dùng mất mát chéo entropy nhị phân, vốn có một trực giác rất
+đẹp. Nếu nhãn thật là y = 1, ta muốn hθ(x) xấp xỉ 1. Số hạng
+− log(hθ(x)) nhỏ khi hθ(x) gần 1, nhưng lại lớn dần khi hθ(x) tiến về 0.
+Tương tự, nếu y = 0, số hạng − log(1 − hθ(x)) phạt những dự đoán gần
+1.
+
+===== PAGE 89 =====
+
+4.5. REGULARIZATION: PREVENTING OVERFITTING 89
+Gộp các trường hợp này lại:
+J (θ) = − 1
+m
+mX
+i=1
+h
+y(i) log(hθ(x(i))) + (1 − y(i)) log(1 − hθ(x(i)))
+i
+(4.9)
+Hàm chi phí này lồi, nên giảm gradient tìm được cực tiểu toàn cục. Các quy tắc
+cập nhật trông gần giống hồi quy tuyến tính, và nhiều thư viện phần mềm giúp
+việc huấn luyện hồi quy logistic trở nên thật dễ.
+4.5 Hiệu chỉnh: Ngăn ngừa quá khớp
+Một trong những khái niệm quan trọng nhất của học máy là sự phân biệt giữa
+việc khớp dữ liệu huấn luyện và việc khái quát sang dữ liệu mới. Một mô hình
+làm rất tốt trên dữ liệu huấn luyện nhưng lại tệ trên dữ liệu mới đã bị quá
+khớp, nó chỉ ghi nhớ các ví dụ huấn luyện thay vì học khuôn mẫu ẩn phía sau.
+4.5.1 Hiểu về quá khớp
+Hãy tưởng tượng bạn khớp một đa thức vào một tập dữ liệu nhỏ. Một đường
+thẳng (bậc 1) có thể không nắm bắt được khuôn mẫu, đó là thiếu khớp. Một
+đa thức bậc 2 có thể khớp ổn thỏa. Nhưng đa thức bậc 20 lại có thể đi qua
+đúng từng điểm huấn luyện, đạt sai số huấn luyện bằng không. Nghe thì tuyệt,
+nhưng đa thức sẽ ngoằn ngoèo dữ dội giữa các điểm, cho những dự đoán tồi
+tệ trên dữ liệu mới.
+Đa thức bậc 20 có quá nhiều tham số so với lượng dữ liệu huấn luyện. Nó đủ
+linh hoạt để khớp không chỉ khuôn mẫu thật mà cả nhiễu ngẫu nhiên trong dữ
+liệu. Đó chính là quá khớp.
+4.5.2 Hiệu chỉnh: Thêm hình phạt cho độ phức tạp
+Hiệu chỉnh ngăn quá khớp bằng cách thêm một số hạng phạt vào hàm chi phí,
+làm nản những giá trị tham số lớn. Trực giác là các giá trị tham số cực đoan
+thường cho thấy mô hình đang cố quá sức để khớp dữ liệu huấn luyện.
+Hiệu chỉnh L2 (còn gọi là hồi quy Ridge) cộng vào tổng bình phương các tham
+số:
+JL2(θ) = J (θ) + λ
+nX
+j=1
+θ2
+j (4.10)
+Siêu tham số λ điều khiển độ mạnh của hiệu chỉnh. Giá trị λ lớn hơn áp dụng
+hình phạt mạnh hơn, đẩy các tham số về những giá trị nhỏ hơn. Khi
+
+===== PAGE 90 =====
+
+90 CHAPTER 4. SUPERVISED LEARNING
+λ = 0, không có hiệu chỉnh nào được áp dụng. Lưu ý rằng ta thường không
+hiệu chỉnh θ0 (hệ số chặn).
+Hiệu chỉnh L2 thu nhỏ mọi tham số về phía không, nhưng chúng hiếm khi trở thành
+không hoàn toàn. Mô hình giữ lại toàn bộ đặc trưng nhưng giảm ảnh hưởng của
+chúng.
+Hiệu chỉnh L1 (còn gọi là Lasso) cộng vào tổng các giá trị tuyệt đối:
+JL1(θ) = J (θ) + λ
+nX
+j=1
+|θj| (4.11)
+Hiệu chỉnh L1 có một tính chất đáng chú ý: nó có xu hướng làm một số tham số
+thành không hoàn toàn. Nhờ đó mà việc chọn đặc trưng tự động được thực
+hiện, những đặc trưng không quan trọng bị loại bỏ hẳn. Điều này rất có giá trị
+khi bạn có nhiều đặc trưng và muốn xác định cái nào thực sự quan trọng.
+Việc chọn giá trị λ đúng là rất quan trọng. Quá nhỏ thì hiệu chỉnh hầu như
+không có tác dụng; quá lớn thì mô hình trở nên quá đơn giản, thiếu khớp dữ
+liệu. Kiểm chéo (sẽ bàn sau) thường được dùng để chọn λ.
+Tạm dừng khái niệm: So sánh các mô hình tuyến tính
+Trước khi sang những thuật toán phức tạp hơn, hãy cùng ôn lại những gì ta đã
+học về mô hình tuyến tính.
+Method Use When Strengths Weaknesses
+Linear Regres-
+sion
+Predicting continu-
+ous values; rela-
+tionship is approxi-
+mately linear
+Simple, inter-
+pretable, fast;
+closed-form solu-
+tion
+Cannot capture non-
+linear patterns
+Logistic Re-
+gression
+Binary/multi-class
+classification; want
+probabilities
+Outputs calibrated
+probabilities; works
+with many features
+Assumes linear deci-
+sion boundary
+Ridge (L2) Many features;
+want to prevent
+overfitting
+Shrinks all coeffi-
+cients; stable
+No feature selection
+Lasso (L1) Many features;
+want sparsity
+Automatic feature
+selection
+May select arbitrar-
+ily among corre-
+lated features
+4.6 Máy vectorsupport
+Máy vectorsupport (SVM) tiếp cận bài toán phân loại từ một góc khác: thay vì
+mô hình hóa xác suất như hồi quy logistic, chúng tập trung tìm ranh giới tách
+các lớp với biên rộng nhất.
+
+===== PAGE 91 =====
+
+4.6. SUPPORT VECTOR MACHINES 91
+4.6.1 Ý tưởng biên rộng nhất
+Xét một bài toán phân loại nhị phân mà hai lớp phân tách tuyến tính được.
+Nghĩa là ta có thể vẽ một đường thẳng (hoặc siêu mặt phẳng ở số chiều cao
+hơn) tách hoàn hảo chúng. Có vô số đường như vậy. Nên chọn đường nào?
+SVM chọn đường thẳng nằm xa nhất so với các điểm huấn luyện gần nhất
+của mỗi lớp. Khoảng cách này gọi là biên. Trực giác là một đường có biên lớn
+sẽ vững hơn. Những nhiễu động nhỏ hay nhiễu trong dữ liệu ít gây ra phân
+loại nhầm hơn.
+x1
+x2
+Margin
+Support vectors
+Hình 4.3: SVM tìm ranh giới quyết định (đường liền) cực đại hóa biên (khoảng
+cách tới các đường nét đứt). Các điểm khoanh tròn là support vector. Chúng là
+những ví dụ huấn luyện gần ranh giới nhất.
+4.6.2 Support vector
+Những điểm nằm ngay trên các đường biên được gọi là support vector. Đây là
+những ví dụ huấn luyện “chống đỡ” cho ranh giới quyết định. Nếu bạn bỏ đi
+bất kỳ điểm huấn luyện nào khác, ranh giới tối ưu cũng không đổi. Chỉ các
+support vector mới quyết định bộ phân loại.
+Đây là một tính chất đẹp: lời giải của SVM chỉ phụ thuộc vào một tập con của
+dữ liệu huấn luyện. Ngược lại, các phương pháp như hồi quy logistic lại dùng
+mọi điểm huấn luyện để xác định tham số.
+4.6.3 Biên mềm và tham số C
+Trong thực tế, dữ liệu hiếm khi tách được hoàn hảo. Có thể có vài điểm của
+lớp này xen vào lớp kia, hoặc hai lớp chồng lên nhau khá nhiều. Một SVM “biên
+cứng” đòi hỏi tách hoàn hảo sẽ thất bại trên dữ liệu như vậy.
+SVM biên mềm cho phép một số điểm vi phạm biên hoặc thậm chí nằm sai
+phía ranh giới. Bài toán tối ưu trở thành một sự đánh đổi: ta
+
+===== PAGE 92 =====
+
+92 CHAPTER 4. SUPERVISED LEARNING
+muốn biên lớn, nhưng đồng thời cũng muốn giảm thiểu phân loại nhầm. Tham
+số C điều khiển sự đánh đổi này:
+min
+w,b
+1
+2 ∥w∥2 + C
+mX
+i=1
+ξi (4.12)
+Ở đây, ξi cho biết điểm i vi phạm biên nhiều đến đâu (bằng không nếu không
+vi phạm). Giá trị C lớn phạt nặng những vi phạm, dẫn tới biên nhỏ hơn nhưng
+ít phân loại nhầm hơn. Điều này có thể gây quá khớp dữ liệu nhiễu. Giá trị C
+nhỏ chịu được nhiều vi phạm hơn để đổi lấy biên lớn hơn. Điều này có thể
+gây thiếu khớp nếu dữ liệu tách được sạch.
+4.6.4 Phương pháp kernel: Bước ra không tuyến tính
+Còn nếu không có đường thẳng nào tách được các lớp thì sao? SVM xử lý điều
+này qua thủ thuật kernel, một trong những ý tưởng tinh tế nhất của học máy.
+Thủ thuật kernel ngầm ánh xạ dữ liệu sang một không gian số chiều cao hơn,
+nơi có thể tách tuyến tính được. Ví dụ, dữ liệu tạo thành hai đường tròn đồng
+tâm trong 2D không thể tách bằng một đường thẳng. Nhưng nếu ta thêm chiều
+thứ ba z = x2
+1 + x2
+2 (bình phương khoảng cách tới gốc tọa độ), hai đường
+tròn trở thành hai mặt phẳng song song có thể tách bằng một siêu mặt phẳng.
+Điểm đáng kinh ngạc là ta chưa bao giờ thực sự tính ánh xạ cao chiều này.
+Thay vào đó, ta dùng một hàm kernel K(x, z) tính trực tiếp tích vô hướng
+trong không gian cao chiều ngay từ các đặc trưng gốc. Những kernel phổ biến
+gồm:
+Kernel tuyến tính K(x, z) = xT z tương ứng với không có biến đổi nào, nó
+cho một SVM tuyến tính tiêu chuẩn.
+Kernel đa thức K(x, z) = (xT z + c)d tương ứng với các đặc trưng đa thức
+bậc d.
+Kernel RBF (Gaussian) K(x, z) = exp(−γ∥x − z∥2) là loại phổ biến nhất,
+tương ứng với một không gian vô hạn chiều. Nó có thể tạo ra những ranh giới
+quyết định phức tạp tùy ý.
+4.7 Cây quyết định
+Cây quyết định đi một hướng hoàn toàn khác để phân loại: chúng học một loạt
+quy tắc if-then chia không gian đặc trưng thành các vùng, mỗi vùng gán cho một
+lớp. Kết quả rất dễ diễn giải, bạn lần được đúng lý do từng dự đoán được
+đưa ra.
+
+===== PAGE 93 =====
+
+4.7. DECISION TREES 93
+4.7.1 Cấu trúc của cây
+Một cây quyết định được dựng từ ba loại nút. Nút gốc nằm ở trên cùng và
+chứa quyết định đầu tiên.Các nút bên trong đại diện cho những quyết định
+tiếp theo khi bạn đi xuống cây.Các nút lá nằm ở dưới cùng và chứa những dự
+đoán lớp cuối cùng.
+Tại mỗi nút bên trong, cây đặt một câu hỏi về một đặc trưng, thường dạng
+“Đặc trưng xj có lớn hơn một ngưỡng nào đó không?” Dựa vào câu trả lời, ta
+đi theo nhánh này hoặc nhánh kia. Cuối cùng ta tới một nút lá cho biết lớp được
+dự đoán.
+Size > 1500?
+Age > 20?
+Low
+Yes
+Medium
+No
+No
+High
+Yes
+Hình 4.4: Một cây quyết định đơn giản để dự đoán nhóm giá nhà. Bắt đầu từ
+nút gốc, ta đi theo các nhánh dựa trên câu trả lời cho tới khi tới một nút lá chứa
+dự đoán.
+4.7.2 Chọn các cách chia tốt nhất
+Câu hỏi then chốt khi dựng một cây quyết định là: tại mỗi nút, nên chia theo
+đặc trưng nào, và ở ngưỡng nào? Ta muốn những cách chia tách các lớp tốt
+nhất.
+Đo mức một tập ví dụ “hỗn tạp” hay “bất thuần” đến đâu, ta dùng entropy:
+H(S) = −
+X
+c
+pc log2(pc) (4.13)
+Ở đây, pc là tỷ lệ các ví dụ thuộc lớp c. Nếu mọi ví dụ đều thuộc một lớp
+(pc = 1 cho lớp đó), entropy bằng 0. Không có sự không chắc chắn nào về lớp.
+Nếu các ví dụ chia đều cho hai lớp (pc = 0.5 cho mỗi lớp), entropy bằng 1.
+Không chắc chắn tối đa.
+Một cách chia tốt sẽ giảm entropy, sau khi chia, các tập con thu được nên thuần
+khiết hơn tập ban đầu.Lợi thông tin đo mức giảm này:
+Gain(S, A) = H(S) −
+X
+v∈Values(A)
+|Sv|
+|S| H(Sv) (4.14)
+
+===== PAGE 94 =====
+
+94 CHAPTER 4. SUPERVISED LEARNING
+Điều này tính entropy trước khi chia trừ trung bình có trọng số của entropy sau
+khi chia. Thuộc tính có lợi thông tin cao nhất sẽ được chọn để chia.
+Example: Computing Information Gain
+Consider a dataset with 10 examples: 5 positive and 5 negative.
+The entropy is H(S) = −0.5 log2(0.5) − 0.5 log2(0.5) = 1.0
+(maximum uncertainty).
+Suppose splitting on attribute A produces two branches: one with 4
+positive and 1 negative, another with 1 positive and 4 negative.
+For the first branch: H = − 4
+5 log2
+4
+5 − 1
+5 log2
+1
+5 ≈ 0.72
+For the second branch: same calculation gives H ≈ 0.72
+Weighted average entropy after split: 5
+10 (0.72) + 5
+10 (0.72) = 0.72
+Information Gain = 1.0 − 0.72 = 0.28
+This split reduces uncertainty by 0.28 bits.
+4.7.3 Dựng cây: Thuật toán ID3
+Thuật toán kinh điển để dựng cây quyết định, gọi là ID3, chạy đệ quy:
+Thứ nhất, nếu mọi ví dụ trong tập hiện tại cùng một lớp, tạo một nút lá mang
+nhãn lớp đó. Thứ hai, nếu không còn thuộc tính nào để chia, tạo một nút lá
+mang lớp đa số. Nếu không, chọn thuộc tính có lợi thông tin cao nhất, tạo nút
+cho thuộc tính đó, và với mỗi giá trị khả dĩ của thuộc tính, dựng đệ quy một cây
+con cho các ví dụ mang giá trị ấy.
+Cách tham lam này dựng cây theo chiều từ trên xuống, luôn chọn phương án tối
+ưu cục bộ ở mỗi bước. Dù nó không bảo đảm cây tối ưu toàn cục, nó hoạt
+động tốt trong thực tế.
+4.7.4 Cắt tỉa: Tránh quá khớp
+Cây quyết định có xu hướng quá khớp, nhất là khi mọc sâu. Một cây có nhiều
+tầng có thể tạo ra những quy tắc quá cụ thể, khớp hoàn hảo dữ liệu huấn luyện
+nhưng không khái quát được.
+Cắt tỉa xử lý điều này bằng cách loại bỏ những nhánh không cải thiện hiệu
+năng trên dữ liệu kiểm định. Cắt tỉa trước dừng việc mọc cây sớm, còn cắt tỉa
+sau mọc cây đầy đủ rồi gỡ bỏ những nhánh vô ích. Các tham số như độ sâu tối
+đa, số mẫu tối thiểu mỗi lá, và lợi thông tin tối thiểu để chia giúp kiểm soát độ
+phức tạp của cây.
+
+===== PAGE 95 =====
+
+4.8. NAÏVE BAYES CLASSIFICATION 95
+4.7.5 Phương pháp tập hợp: Kết hợp nhiều cây
+Một cây quyết định đơn lẻ dễ quá khớp và có phương sai cao: thay đổi nhỏ
+trong dữ liệu huấn luyện có thể cho ra một cây rất khác.Các phương pháp tập
+hợp khắc phục điểm yếu này bằng cách kết hợp nhiều cây thành một bộ dự
+đoán vững hơn.
+Bagging (Bootstrap Aggregating) huấn luyện nhiều cây trên các mẫu con ngẫu
+nhiên của dữ liệu huấn luyện (rút có hoàn lại) rồi lấy trung bình dự đoán của
+chúng. Vì mỗi cây thấy một tập dữ liệu hơi khác, chúng mắc những lỗi khác
+nhau, và việc lấy trung bình làm giảm phương sai.
+Một Rừng ngẫu nhiên mở rộng bagging bằng cách còn ngẫu nhiên hóa cả
+những đặc trưng xét tới ở mỗi lần chia. Tại mỗi nút, chỉ một tập con đặc trưng
+ngẫu nhiên được đánh giá, buộc các cây phải khác nhau. Rừng ngẫu nhiên
+thuộc nhóm những bộ phân loại sẵn dùng đáng tin cậy nhất trong thực tế:
+chúng xử lý được mẫu không tuyến tính, cần rất ít tinh chỉnh, chống quá khớp,
+và làm tốt cả trên tập dữ liệu nhỏ lẫn lớn.
+Boosting đi hướng khác: nó huấn luyện các cây tuần tự, trong đó cây mới tập
+trung vào những ví dụ mà các cây trước dự đoán sai.AdaBoost tăng trọng số
+của các ví dụ bị phân loại sai trước khi huấn luyện cây tiếp theo.Gradient
+Boosting khớp cây mới vào phần sai số còn lại của tập hợp cho tới thời điểm
+đó. Boosting thường cho độ chính xác cao hơn bagging nhưng nhạy hơn với dữ
+liệu nhiễu và cần tinh chỉnh cẩn thận hơn.
+Ý chính: Vì sao tập hợp lại hiệu quả
+Một cây đơn lẻ giống như hỏi một người chỉ đường: bạn có thể nhận
+câu trả lời tuyệt vời hoặc câu trả lời rất tệ. Một tập hợp giống như hỏi
+nhiều người rồi lấy phiếu. Những lỗi cá nhân triệt tiêu nhau, và đồng
+thuận thường đáng tin cậy hơn bất kỳ ý kiến riêng lẻ nào.
+4.8 Phân loại Naïve Bayes
+2
+Naïve Bayes là bộ phân loại xác suất dựa trên định lý Bayes kèm một giả định
+đơn giản hóa làm phép tính khả thi. Bất chấp sự đơn giản của nó, nó thường
+hoạt động tốt đến bất ngờ, nhất là cho phân loại văn bản.
+2See Appendix C for a review of Bayes’ theorem and conditional probability.
+
+===== PAGE 96 =====
+
+96 CHAPTER 4. SUPERVISED LEARNING
+4.8.1 Định lý Bayes
+Định lý Bayes liên hệ xác suất của một giả thuyết khi có bằng chứng với xác
+suất của bằng chứng khi có giả thuyết:
+P (y|x) = P (x|y) · P (y)
+P (x) (4.15)
+Ở khía cạnh phân loại: P (y|x) là xác suất của lớp y khi biết các đặc trưng x
+(cái ta muốn). P (x|y) là xác suất khi thấy các đặc trưng x với điều kiện lớp y
+(hàm khả năng). P (y) là xác suất tiên nghiệm của lớp y trước khi thấy bất kỳ
+đặc trưng nào. P (x) là xác suất của các đặc trưng, đóng vai trò hằng số chuẩn
+hóa.
+Để phân loại, ta tính P (y|x) cho mỗi lớp khả dĩ y và dự đoán lớp có xác suất
+cao nhất.
+4.8.2 Giả định độc lập kiểu Naïve
+Khó khăn nằm ở việc tính P (x|y), xác suất của một tổ hợp đặc trưng cụ thể
+khi biết một lớp. Với nhiều đặc trưng, số tổ hợp khả dĩ là khổng lồ.
+Giả định “naïve” giải quyết điều này bằng cách giả sử các đặc trưng độc lập có
+điều kiện với nhau khi đã biết lớp. Nói cách khác, một khi đã biết lớp, biết giá
+trị của một đặc trưng không cho ta biết gì về giá trị của các đặc trưng khác.
+Nhờ thế ta có thể phân tích xác suất:
+P (x|y) = P (x1|y) · P (x2|y) · . . . · P (xn|y) =
+nY
+i=1
+P (xi|y) (4.16)
+Mỗi P (xi|y) có thể ước lượng trực tiếp từ dữ liệu huấn luyện bằng cách
+đếm tần suất xuất hiện của mỗi giá trị đặc trưng trong từng lớp.
+4.8.3 Quy tắc phân loại
+Bước phân loại cuối cùng chọn lớp cực đại hóa xác suất hậu nghiệm:
+ˆy = arg max
+y
+P (y)
+nY
+i=1
+P (xi|y) (4.17)
+Vì P (x) giống nhau với mọi lớp, ta có thể bỏ qua nó và chỉ so sánh tử số.
+Giả định độc lập gần như luôn sai, các đặc trưng thường tương quan với nhau.
+Vậy mà Naïve Bayes vẫn thường hoạt động tốt đáng kinh ngạc. Một lý do là
+
+===== PAGE 97 =====
+
+4.9. ALGORITHM COMPARISON 97
+việc phân loại chỉ cần xếp hạng đúng các lớp, chứ không cần tính xác suất
+chính xác. Ngay cả khi xác suất sai, thứ hạng vẫn có thể đúng.
+Naïve Bayes đặc biệt phổ biến cho phân loại văn bản (lọc spam, phân tích cảm
+xúc) nơi các đặc trưng là số lần xuất hiện của từ. Nó huấn luyện nhanh, xử lý
+tốt dữ liệu số chiều cao, và cho một đường cơ sở mạnh.
+4.9 So sánh các thuật toán
+Chọn đúng thuật toán đòi hỏi phải hiểu giả định, thế mạnh và kiểu thất bại của
+chúng.
+Algorithm Assumptions Failure Modes Strengths Interpretable?
+Linear Re-
+gression
+Linear re-
+lationship;
+homoscedastic
+errors
+Non-linear patterns;
+outliers distort fit
+Fast; closed-
+form solution;
+coefficients
+meaningful
+Yes
+Logistic Re-
+gression
+Linear deci-
+sion bound-
+ary; features
+independent-ish
+Non-linear bound-
+aries; multi-
+collinearity
+Probabilistic out-
+put; regulariza-
+tion easy
+Yes
+Decision Tree None (non-
+parametric)
+Overfits with depth;
+axis-aligned only
+Handles mixed
+types; no scaling
+needed
+Yes
+SVM (linear) Linearly separa-
+ble (soft margin
+helps)
+Very non-linear
+data; large datasets
+slow
+Max-margin =
+good generaliza-
+tion
+Somewhat
+SVM (RBF) Data has local
+structure
+Too many features;
+sensitive to γ, C
+Captures com-
+plex boundaries
+No
+Naïve Bayes Features condi-
+tionally indepen-
+dent
+Correlated features;
+continuous features
+tricky
+Fast; works with
+little data; han-
+dles many fea-
+tures
+Yes
+Bảng 4.1: Các thuật toán học có giám sát: giả định, kiểu thất bại và khả năng
+diễn giải.
+
+===== PAGE 98 =====
+
+98 CHAPTER 4. SUPERVISED LEARNING
+Khi nào dùng gì
+Bắt đầu đơn giản: Hồi quy tuyến tính/logistic làm đường cơ sở.
+Cần khả năng diễn giải: Cây quyết định hoặc mô hình tuyến tính có
+hiệu chỉnh.
+Mẫu không tuyến tính: SVM với kernel RBF, hoặc tập hợp cây như
+Rừng ngẫu nhiên.
+Dữ liệu thưa, số chiều cao (ví dụ: văn bản): Naïve Bayes hoặc SVM
+tuyến tính.
+Loại đặc trưng pha trộn: Cây quyết định xử lý đặc trưng phân loại
+một cách tự nhiên.
+Trạm kiểm tra đạo đức: Tính công bằng của bộ phân loại
+Bạn đã huấn luyện một cây quyết định để dự báo vỡ nợ. Cón đạt độ
+chính xác 92% tổng thể.
+Câu hỏi kỹ thuật – đạo đức:
+1. Bạn phát hiện cây dùng “zip code” làm một cách chia hàng đầu. Vì
+sao điều này có thể thành vấn đề dù zip code có tính dự đoán? 2. Cón
+có độ nhạy (recall) 85% với Nhóm A nhưng chỉ 60% với Nhóm B. Cả
+hai nhóm có cùng tỷ lệ nền về vỡ nợ. Điều này có công bằng không?
+Định nghĩa nào về công bằng bị vi phạm?
+3. Bạn gỡ zip code khỏi danh sách đặc trưng. Độ chính xác giảm còn
+89%. Một quản lý nói “chúng ta đang hy sinh hiệu năng vì chính trị
+đúng đắn.” Bạn đáp lại thế nào?
+Đây chính là dạng bài lai kỹ thuật – đạo đức xuất hiện ở IAIO. Xem
+Chương 2 để biết các định nghĩa về công bằng.
+Tạm dừng khái niệm: So sánh các bộ phân loại
+Đến đây chúng ta đã thấy vài thuật toán phân loại. Sau đây là cách so sánh
+chúng:
+
+===== PAGE 99 =====
+
+4.9. ALGORITHM COMPARISON 99
+Method Decision
+Boundary
+Best For Many Fea-
+tures?
+Interpretable?
+Logistic Re-
+gression
+Linear (hyper-
+plane)
+Linearly separa-
+ble data; proba-
+bility outputs
+Yes, with regu-
+larization
+Yes (coeffi-
+cients)
+SVM (linear) Linear (max
+margin)
+High-
+dimensional
+data; clear mar-
+gin
+Yes Somewhat
+SVM (ker-
+nel)
+Non-linear Complex bound-
+aries; moderate
+data
+Depends No
+Decision Tree Axis-aligned
+rectangles
+Mixed feature
+types; inter-
+pretability
+Can struggle Yes (rules)
+Naïve Bayes Quadratic Text classifica-
+tion; indepen-
+dent features
+Yes Yes (probabili-
+ties)
+Những lỗi thường gặp
+• Dùng SVM mà không chuẩn hóa: SVM nhạy với thang của đặc
+trưng. Luôn chuẩn hóa trước.
+• Cây quyết định sâu mà không cắt tỉa: Chúng sẽ ghi nhớ dữ liệu
+huấn luyện.
+• Naïve Bayes với đặc trưng tương quan: Giả định độc lập bị vi
+phạm; xác suất sẽ sai (nhưng việc phân loại vẫn có thể chạy
+được).
+• Hồi quy logistic cho ranh giới không tuyến tính: Nó sẽ thiếu
+khớp. Hãy cân nhắc SVM kernel hoặc cây.
+Đánh giá mô hình
+Huấn luyện mô hình mới chỉ là một nửa vấn đề. Việc đánh giá nghiêm
+ngặt trên dữ liệu giữ lại là điều bắt buộc.
+Nguyên tắc then chốt: Không bao giờ đánh giá trên dữ liệu huấn luyện,
+nó cho ra kết quả lạc quan một cách gây hiểu lầm.
+Để biết đầy đủ về các phương pháp đánh giá, các số đo và kiểm chéo,
+hãy xem Chương 5.
+
+===== PAGE 100 =====
+
+100 CHAPTER 4. SUPERVISED LEARNING
+4.10 Tóm tắt
+Hồi quy tuyến tính mô hình hóa biến mục tiêu liên tục dưới dạng tổng có trọng số của các
+đặc trưng. Giảm gradient tìm trọng số tối ưu bằng cách liên tục giảm sai số bình phương.3
+Hồi quy logistic xử lý phân loại bằng cách áp hàm sigmoid lên một tổ hợp
+tuyến tính, tạo ra xác suất. Mất mát chéo entropy cho phép học dựa trên
+gradient.
+Hiệu chỉnh (L1/L2) ngăn quá khớp bằng cách phạt các trọng số lớn. L1 tạo mô
+hình thưa; L2 thu nhỏ mọi trọng số.
+SVM tìm các ranh giới quyết định biên rộng nhất. Kernel cho phép phân loại
+không tuyến tính mà không cần tính toán đặc trưng tường minh.
+Cây quyết định học các cách chia thẳng hàng trục, phân vùng đệ quy không
+gian đặc trưng. Entropy/lợi thông tin dẫn hướng việc chọn cách chia.
+Naïve Bayes áp dụng định lý Bayes4 kèm giả định độc lập có điều kiện. Dù
+“sai”, nó thường hoạt động tốt.
+Lựa chọn thuật toán phụ thuộc vào đặc điểm dữ liệu, nhu cầu diễn giải và
+ràng buộc tính toán. Không thuật toán nào là tốt nhất cho mọi bài toán.
+4.11 Bài tập luyện tập
+1. Một mô hình hồi quy tuyến tính dự đoán giá nhà: h(x) = 50,000 +
+100x, trong đó x là diện tính theo feet vuông. Mô hình dự báo giá bao nhiêu
+cho một nhà 2000 feet vuông? Các hệ số được hiểu thế nào?
+2. Một mô hình hồi quy logistic cho ra hθ(x) = 0.73. Với ngưỡng 0.5, lớp
+nào được dự đoán? Con số 0.73 nghĩa là gì?
+3. Khi dựng một cây quyết định, việc chia theo thuộc tính A tạo ra các nhánh
+có (4+, 0−) và (1+, 5−). Nếu entropy ban đầu là 1.0, hãy tính lợi thông
+tin.
+4. Giải thích vì sao SVM được gọi là “bộ phân loại biên rộng.”  C ảnh
+hưởng tới biên như thế nào?
+5. So sánh hiệu chỉnh L1 và L2. Khi nào bạn chọn cái nào?
+6. (Dạng IAIO: Một thuật toán bạn chưa từng thấy)
+Một đồng nghiệp đề xuất “Bộ phân loại hàng xóm có trọng số” (WNC):
+3See Appendix D for calculus of gradients.
+4See Appendix C for probability review.
+
+===== PAGE 101 =====
+
+4.11. PRACTICE PROBLEMS 101
+(a) Với một điểm kiểm thử x, tính khoảng cách di tới mỗi điểm huấn
+luyện xi (b) Gán trọng số wi = exp(−d2
+i /σ2) cho mỗi điểm huấn
+luyện (c) Dự đoán: ˆy = sign (P
+i wi · yi) trong đó yi ∈ {−1, +1}
+Hãy trả lời các câu sau:
+(a) Điều gì xảy ra khi σ → 0? Khi σ → ∞? (b) Điều
+này liên quan thế nào tới k-NN? Tới các phương pháp
+kernel? (c) Ranh giới quyết định có hình dạng gì? Nó có
+tuyến tính không? (d) Những kiểu thất bại của thuật toán
+này là gì? (e) Đề xuất một cách sửa để xử lý lệch lớp.
+7. (Nhiều phần) Xét bài toán XOR với các điểm (0, 0), (0, 1), (1, 0), (1, 1) và các
+nhãn 0, 1, 1, 0.
+(a) Chứng minh không bộ phân loại tuyến tính nào giải được bài này.
+(b) Cho thấy việc thêm đặc trưng x3 = x1 · x2 làm nó phân tách tuyến tính được.
+(c) Vẽ một cây quyết định giải XOR.
+(d) Điều này liên quan thế nào tới thủ thuật kernel?
+8. (Kỹ thuật – Đạo đức) Hồi quy logistic của một ngân hàng dùng “số năm
+ở địa chỉ hiện tại” (hệ số = âm thì rủi ro vỡ nợ thấp hơn). Biến này tương
+quan với tuổi.
+(a) Vì sao điều này có thể cấu thành phân biệt đối xử theo tuổi dù tuổi
+không phải là một đặc trưng?
+(b) Việc bỏ biến này làm AUC giảm từ 0.82 xuống 0.79. Hãy định
+lượng sự đánh đổi này.
+(c) Bạn sẽ tính những số đo công bằng nào?
+9. (Dạng IAIO: Một thuật toán khác bạn chưa từng thấy)
+Xét “Bộ phân loại nguyên mẫu”:
+(a) Với mỗi lớp c, tính điểm centroid (giá trị trung bình) của tất cả điểm
+huấn luyện trong lớp đó: µc = 1
+|Cc|
+P
+x∈Cc x
+(b) Để phân loại một điểm mới x, gán nó vào lớp có centroid gần nhất:
+ˆy = arg minc ∥x − µc∥
+Hãy trả lời các câu sau:
+
+===== PAGE 102 =====
+
+102 CHAPTER 4. SUPERVISED LEARNING
+(a) Hình dạng của ranh giới quyết định giữa hai lớp là gì? (Gợi ý: 
+∥x − µ1∥ = ∥x − µ2∥ nằm ở đâu?)
+(b) Điều này so với k-NN với k = mọi điểm trong mỗi lớp thì thế nào?
+(c) Giả định nào về dữ liệu sẽ làm bộ phân loại này hoạt động tốt?
+(d) Hãy dựng một tập dữ liệu 2D đơn giản mà bộ phân loại này hỏng
+nặng. Tập dữ liệu của bạn có tính chất gì?
+(e) Bộ phân loại này lưu bao nhiêu tham số? So với k-NN và hồi quy
+logistic.

@@ -1,0 +1,564 @@
+003	Preface
+019	Introduction
+025	I Foundations
+  027	Introduction to Artificial Intelligence
+    027	What is Artificial Intelligence?
+    028	A Brief History of AI
+      029	The Birth of AI
+      029	The Perceptron and Its Limits
+      030	Expert Systems and the Second Winter
+      030	The Backpropagation Revival
+      031	The Statistical Turn
+      031	Big Data and GPUs
+      031	The Deep Learning Revolution
+      032	Transformers and Large Language Models
+    032	Three Types of AI
+      033	Narrow AI (Artificial Narrow Intelligence)
+      033	Artificial General Intelligence (AGI)
+      034	Artificial Superintelligence (ASI)
+    034	Key Technologies in AI
+      034	Machine Learning
+      035	Deep Learning
+      036	Computer Vision
+      037	Natural Language Processing
+    037	The AI Development Pipeline
+      038	Step 1: Collect Data
+      038	Step 2: Train the Model
+      039	Step 3: Validate
+      039	Step 4: Test
+      039	Step 5: Deploy
+    040	Prerequisites for Learning AI
+      040	Mathematics
+      040	Programming
+      041	Understanding Computers
+    042	Summary
+    042	Practice Problems
+  045	The Societal Impact of AI
+    045	Introduction: Why Ethics Matters
+    046	Case Study 1: Bias in Image Search
+    047	Case Study 2: Bias in Hiring
+    048	Defining Fairness: A Fundamentally Hard Problem
+      048	Competing Definitions
+      049	The Impossibility Result
+      049	Which Definition When?
+    050	The Bias-Detection-Mitigation Pipeline
+    050	Systematic Approach to AI Ethics Problems
+    051	Privacy and Data Protection
+      051	Collection and Consent
+      052	De-anonymization
+      052	Training on Personal Data
+      052	Differential Privacy
+    053	Accountability and Responsibility
+      053	Medical AI
+      053	Hiring and Employment
+      053	Criminal Justice and Credit
+    054	Transparency and Explainability
+      054	Black Boxes vs. Interpretable Models
+      054	The Right to Explanation
+      054	When Is Interpretability Required?
+    055	Feedback Loops and Distributed Harm
+      055	Reinforcing Inequality Over Time
+      055	Predictive Policing: A Case Study in Feedback Loops
+      055	Distributed Harm
+    056	Environmental and Resource Costs
+      056	Energy Consumption
+      056	Centralization of Power
+      056	Should You Use This Data? Should You Build This System?
+    057	Generative AI: Earlier Issues Amplified
+    059	Summary
+    059	Practice Problems
+063	II Core Machine Learning
+  065	Data Preparation and Feature Engineering
+    065	Introduction: Why Data Preparation Matters
+    066	Understanding Data Structure
+    066	Data Quality Problems
+    067	Feature Scaling
+    067	Encoding Categorical Variables
+    068	Train-Validation-Test Split
+    068	Feature Engineering
+      068	Creating New Features
+      069	Domain Knowledge
+      069	Data Leakage: A Critical Pitfall
+    071	Sampling Bias: Problems Before Modeling Begins
+      072	Selection Bias
+      072	Survivorship Bias
+      072	Convenience Sampling
+      072	Non-Response Bias
+    073	Distribution Shift: When the World Changes
+      073	Covariate Shift
+      073	Label Shift
+      074	Concept Drift
+    074	When Is a Test Set Valid?
+      074	The Representativeness Requirement
+      075	When Test Sets Lie
+      075	Temporal Splits
+      075	Connecting the Pieces
+    076	Summary
+    076	Practice Problems
+  081	Supervised Learning
+    081	Introduction to Supervised Learning
+      082	The Structure of Supervised Learning
+      082	Why Supervised Learning Works
+    083	Classification vs. Regression
+      083	Regression: Predicting Continuous Values
+      083	Classification: Predicting Categories
+    084	Linear Regression
+      084	Loss Functions: What the Algorithm Optimizes
+      085	The Hypothesis and Cost Function
+      085	Gradient Descent
+      086	Multiple Features
+      086	Polynomial Regression
+    086	Logistic Regression
+      087	Why Linear Regression Fails for Classification
+      087	The Sigmoid Function
+      088	The Logistic Regression Hypothesis
+      088	The Decision Boundary
+      088	The Cost Function for Logistic Regression
+    089	Regularization: Preventing Overfitting
+      089	Understanding Overfitting
+      089	Regularization: Adding a Penalty for Complexity
+    090	Support Vector Machines
+      091	The Maximum Margin Idea
+      091	Support Vectors
+      091	Soft Margins and the Parameter C
+      092	Kernel Methods: Going Non-Linear
+    092	Decision Trees
+      093	The Tree Structure
+      093	Choosing the Best Splits
+      094	Building the Tree: The ID3 Algorithm
+      094	Pruning: Avoiding Overfitting
+      095	Ensemble Methods: Combining Multiple Trees
+    095	Naïve Bayes Classification
+      096	Bayes' Theorem
+      096	The Naïve Independence Assumption
+      096	Classification Rule
+    097	Algorithm Comparison
+    100	Summary
+    100	Practice Problems
+  103	Model Evaluation
+    103	Introduction: The Problem of Generalization
+    104	Parameters vs. Hyperparameters
+    104	The Importance of Data Splitting
+    105	Bias and Variance: Understanding Errors
+    106	Classification Metrics
+      107	ROC Curves and AUC
+      109	Calibration: Are the Probabilities Meaningful?
+    110	Regression Metrics
+    111	Cross-Validation
+    112	How People Accidentally Cheat
+      112	Leaderboard Overfitting
+      112	Why ``Just One More Look'' Breaks Guarantees
+      113	Data Leakage in Preprocessing
+      113	Temporal Leakage
+      113	Good Test = Good Real-World
+    114	Hyperparameter Tuning
+    115	Summary
+    115	Practice Problems
+  119	Unsupervised Learning and Clustering
+    119	Introduction: Learning Without Labels
+    120	Clustering: Finding Groups in Data
+    121	Measuring Similarity: Distance Functions
+      122	The Minkowski Family
+    123	K-Means Clustering
+      123	The Algorithm
+      126	Choosing the Number of Clusters
+      126	Limitations of K-Means
+    127	Hierarchical Clustering
+      127	Agglomerative Clustering
+      128	Dendrograms
+    129	Gaussian Mixture Models
+      129	The Generative Model
+      129	Soft Assignments: Responsibilities
+    130	The Expectation-Maximization Algorithm
+      131	K-Means as a Special Case
+    131	Dimensionality Reduction
+      131	Principal Component Analysis (PCA)
+      133	t-SNE: Visualizing High-Dimensional Data
+    133	Comparing Unsupervised Methods
+      134	Choosing the Right Method
+      134	Interpreting Clusters with Care
+    135	Summary
+    136	Practice Problems
+139	III Advanced Methods
+  141	Kernel Methods
+    141	Why Linear Models Fail: A Motivating Example
+    143	Linear Functions and Their Limitations
+    143	Ridge Regression: A Worked Example
+      144	The Primal Solution
+      145	The Dual Solution
+    145	The Kernel Trick
+    146	The Quadratic Kernel
+    146	Polynomial and Gaussian Kernels
+    148	Properties of Valid Kernels
+    148	Beyond Regression: Other Kernel Algorithms
+    149	Geometric Operations in Feature Space
+    150	Kernel Methods and Deep Learning
+      150	Why Kernel Methods Lost: The Scaling Wall
+    151	The Bias-Variance Trade-off
+    152	A Worked IAIO-Style Problem
+    152	Practice Problems
+  155	AI Search and Constraint Satisfaction
+    155	The Nature of Search Problems
+    156	State Space Representation
+      156	Thinking in States and Actions
+      157	The Components of a Search Problem
+      158	A Concrete Example: The Romania Map
+      159	Tree Search vs. Graph Search
+    159	Measuring Algorithm Performance
+    161	Uninformed Search Strategies
+      161	Breadth-First Search
+      162	Uniform Cost Search
+      163	Depth-First Search
+      164	Comparing Uninformed Search Strategies
+    164	Informed Search Strategies
+      165	Heuristic Functions
+      166	Greedy Best-First Search
+      167	A* Search
+    168	Adversarial Search: Games
+      168	The Game Framework
+      169	The Minimax Algorithm
+      169	Alpha-Beta Pruning
+      170	Dealing with Complexity: Evaluation Functions
+    171	Constraint Satisfaction Problems
+      171	What is a CSP?
+      171	Backtracking Search
+      172	Improving Backtracking
+      173	Variable and Value Ordering
+      173	CSPs and SAT
+    173	Complexity Comparison
+    174	Connecting CSP, SAT, and Logic
+    176	Summary
+    177	Practice Problems
+  179	Reinforcement Learning
+    179	Introduction
+    180	The Reinforcement Learning Framework
+      181	A Concrete Example: Navigating a Maze
+    182	Returns and the Discount Factor
+    183	Policies and Value Functions
+    184	The Markov Property and MDPs
+    185	The Bellman Equations
+    187	Exploration vs. Exploitation
+    187	Dynamic Programming Methods
+    188	Model-Free Methods: Learning from Experience
+      189	Q-Learning: A Worked Example
+      190	Exploration Strategies
+    191	Summary
+    191	Practice Problems
+  193	Generative Models and Deep Learning
+    193	Introduction to Generative AI
+    194	Generative Versus Discriminative Models
+      194	Discriminative Models
+      195	Generative Models
+    196	Latent Space: The Heart of Generative Models
+      196	The Problem of High Dimensionality
+      196	Compression to Meaningful Representations
+      196	Why Latent Space Works
+    197	Autoencoders: Learning to Compress and Reconstruct
+      197	Architecture
+      198	Training Objective
+      198	Applications of Autoencoders
+    199	Variational Autoencoders (VAEs)
+      199	From Points to Distributions
+      199	The VAE Training Objective
+      200	Generation with VAEs
+    200	Evaluating Generative Models
+      200	Failure Modes
+      201	Compute and Data Dependence
+    202	Summary
+    202	Practice Problems
+205	IV Theory
+  207	Statistical Learning Theory
+    208	Introduction: The Theory Behind Learning
+    209	A Tale of Two Learners: Rats and Pigeons
+      209	The Clever Rats
+      209	The Superstitious Pigeons
+    210	The Formal Learning Framework
+      210	The Papaya Example
+    211	Measuring Success: True Error vs. Training Error
+    211	PAC Learning: Probably Approximately Correct
+      211	The Realizability Assumption
+      212	Sample Complexity for Finite Classes
+    212	Agnostic PAC Learning
+      213	The Bias-Estimation Trade-off
+    213	Uniform Convergence
+    214	Summary
+    214	Practice Problems
+  215	Advanced Statistical Learning Theory
+    216	Introduction: Beyond Finite Classes
+    216	Shattering: What a Class Can Express
+    217	The VC Dimension
+      218	Examples of VC Dimensions
+    218	The Fundamental Theorem of PAC Learning
+    219	The No Free Lunch Theorem
+    220	Connecting Theory to Practice
+      220	Overfitting Through the Lens of VC Dimension
+      220	Practical Guidelines
+    221	Summary
+    221	Practice Problems
+223	V Applications (Optional)
+  225	Matrix Factorization: A Unifying Idea
+    226	The Core Idea
+    227	Mathematical Formulation
+      227	The Optimization Problem
+      228	Gradient Derivation
+      228	Alternating Least Squares
+    229	Connection to SVD
+    230	The Bias-Variance Perspective
+    232	Summary
+    232	Practice Problems
+  235	Modern Deep Learning
+    235	Introduction
+    236	How Computers Process Images
+      236	Images as Numbers
+      236	From Pixels to Understanding
+    236	Generative Adversarial Networks (GANs)
+      237	The Two Players
+      237	The Adversarial Game
+      238	Strengths and Challenges
+    238	Diffusion Models
+      238	The Forward Process: Adding Noise
+      239	The Reverse Process: Learning to Denoise
+      239	Generation
+      240	Why Diffusion Models Work So Well
+      240	Why Diffusion Replaced GANs
+    240	Transformers and Large Language Models
+      240	The Attention Mechanism
+      241	Transformer Architecture
+      241	Large Language Models
+      241	Tokenization
+      242	Computing Parameters
+      242	Why Scale Works (and When It Stops)
+    243	Text-to-Image Generation
+    243	The AI Landscape Today
+    243	Ethical Considerations
+    244	Limitations and Open Problems
+    245	Summary
+    245	Practice Problems
+  247	Practical Competition Strategies
+    247	Introduction
+    247	Understanding Competition Structure
+      247	The Data Split
+      248	Evaluation Metrics
+    249	The Competition Workflow
+      249	Phase 1: Understand the Problem
+      249	Phase 2: Establish a Baseline
+      250	Phase 3: Exploratory Data Analysis
+      250	Phase 4: Feature Engineering
+      250	Phase 5: Model Development
+      251	Phase 6: Validation and Selection
+    251	Avoiding Data Leakage
+    252	Cross-Validation Strategies
+    252	Ensemble Methods
+    252	Time Management in Timed Competitions
+    253	Common Mistakes to Avoid
+    254	Summary
+  255	Mathematical Notation
+    255	Introduction
+    255	Numbers and Basic Operations
+      255	Number Sets
+      256	Arithmetic Operations
+    256	Sets and Set Operations
+      257	Set Notation
+      257	Set Operations and Their Logical Cousins
+    258	Summation and Product Notation
+      258	Summation ()
+      258	Product ()
+    259	Functions
+      259	Common Function Notation
+      259	Important Functions
+      260	The Indicator Function
+    260	Greek Letters
+    261	Comparisons and Logical Symbols
+    261	Quantifiers
+    261	Machine Learning Specific Notation
+      261	Data and Features
+      262	Models and Learning
+      262	Probability Notation
+      262	Calculus Notation
+    262	Reading Mathematical Expressions
+    263	Summary: Quick Reference
+  265	Probability
+    265	Introduction: Why Probability?
+    266	What Is Probability?
+      266	The Basic Idea
+      266	Sample Spaces and Events
+    267	Basic Probability Rules
+      267	The Fundamental Axioms
+      267	The Complement Rule
+      268	The Addition Rule
+    269	Conditional Probability
+      269	The Idea
+      269	How Conditional Probability Works
+      270	A Concrete Example with Numbers
+      271	Medical Testing: A Famous Example
+    273	Bayes' Theorem
+      273	The Formula
+      273	Understanding the Parts
+      274	Example: Spam Detection
+      274	Bayes' Theorem in Machine Learning
+    274	Independence
+      274	What Independence Means
+      275	Examples
+      275	Why Independence Matters
+      275	Independence in Machine Learning
+    276	Random Variables
+      276	What Is a Random Variable?
+      276	Discrete vs. Continuous
+      277	Probability Distributions
+    277	Expected Value
+      277	The Idea
+      277	Computing Expected Value
+      278	Properties of Expected Value
+    278	Variance and Standard Deviation
+      278	Why We Need Variance
+      278	Definition
+      278	Standard Deviation
+    279	Common Probability Distributions
+      279	Bernoulli Distribution
+      280	Binomial Distribution
+      280	Gaussian (Normal) Distribution
+    282	Summary
+  283	Calculus
+    283	Introduction: Why Calculus for Machine Learning?
+    284	Slope: The Key Idea
+      284	What is Slope?
+      284	Slope of a Straight Line
+      285	The Problem with Curves
+    285	The Derivative: Slope at a Point
+      285	The Tangent Line Idea
+      286	Definition of the Derivative
+      286	Alternative Notations
+      286	Computing a Derivative from the Definition
+      287	What the Derivative Tells Us
+    288	Derivative Rules: Shortcuts
+      288	The Power Rule
+      289	Constant Multiple Rule
+      290	Sum and Difference Rules
+      290	Important Special Derivatives
+      290	The Chain Rule
+      292	The Product Rule
+      293	The Quotient Rule
+    294	Partial Derivatives: Functions of Multiple Variables
+      294	The Need for Partial Derivatives
+      294	Definition of Partial Derivatives
+      295	Evaluating Partial Derivatives at Specific Points
+      296	More Examples
+      296	Geometric Interpretation
+    297	The Gradient
+      297	Definition
+      298	Understanding Contour Lines
+      299	The Gradient Points Uphill
+    300	Gradient Descent: Finding the Minimum
+      300	The Algorithm
+      300	A One-Variable Example
+      301	A Two-Variable Example
+      302	The Learning Rate Matters
+    302	Critical Points and Optimization
+      302	What are Critical Points?
+      303	Types of Critical Points
+      303	Finding Critical Points
+      304	The Second Derivative Test
+      305	Global vs Local Optima
+    305	Important Functions and Their Derivatives
+      305	The Sigmoid Function
+      306	The ReLU Function
+      307	Loss Function Derivatives
+    308	Summary
+  309	Logic
+    309	Introduction: Why Logic?
+    310	Propositions and Truth Values
+      310	What is a Proposition?
+      310	Truth Values
+    310	Logical Connectives
+      310	NOT (Negation)
+      310	AND (Conjunction)
+      311	OR (Disjunction)
+      311	XOR (Exclusive Or)
+      311	Connection to Sets
+    312	Implication and Equivalence
+      312	Implication (If-Then)
+      312	Biconditional (If and Only If)
+      313	Logical Equivalence
+    313	Important Logical Equivalences
+      313	Laws You Already Know from Arithmetic
+      314	Identity and Domination
+      314	Negation and Double Negation
+      314	De Morgan's Laws
+      315	Contrapositive
+    315	Quantifiers
+      315	Universal Quantifier ()
+      316	Existential Quantifier ()
+      316	Negating Quantifiers
+    316	First-Order Logic
+      317	Predicates and Terms
+      317	Sentences in First-Order Logic
+      318	Scope of Quantifiers
+      318	Inference in First-Order Logic
+    318	Unification
+      318	The Unification Problem
+      319	Most General Unifier (MGU)
+      319	The Unification Algorithm
+      320	Unification in AI
+    320	Logical Paradoxes
+      320	The Liar Paradox
+      320	Russell's Paradox
+      320	The Barber Paradox
+    321	Logic and Artificial Intelligence
+      321	The Historical Role of Logic in AI
+      321	Decision Trees as Logical Formulas
+      322	Logic in Modern AI
+      322	The Limits of Pure Logic
+    322	Building Truth Tables
+    323	Conjunctive Normal Form (CNF)
+      323	What is CNF?
+      323	Converting to CNF
+    324	Resolution
+      324	The Resolution Rule
+      325	Proof by Refutation
+    326	SAT: Boolean Satisfiability
+      326	SAT as Search
+      326	Why SAT Matters
+    328	Summary
+  329	Linear Algebra
+    329	Introduction: Why Linear Algebra?
+    330	Scalars: Single Numbers
+    330	Vectors: Ordered Lists of Numbers
+      330	What is a Vector?
+      330	Vectors in the Real World
+      331	Geometric View: Vectors as Arrows
+      331	Vector Addition and Scalar Multiplication
+    331	The Dot Product: Multiplying Two Vectors
+      331	Definition
+      332	Why the Dot Product Matters
+      332	Geometric Meaning
+    332	Vector Length (Norm)
+    333	Matrices: Tables of Numbers
+      333	What is a Matrix?
+      333	Special Matrices
+    334	Matrix Operations: Building Up Step by Step
+      334	Scalar Times Matrix
+      334	Matrix Times Vector
+      334	Matrix Times Matrix
+      334	The Dimension Rule
+      335	Commutativity: Order Matters!
+    335	What Operations Return What?
+    335	Matrix Inverse
+    336	Eigenvalues and Eigenvectors
+      336	What Does a Matrix Do to Vectors?
+      336	The Definition
+      337	Visualizing Eigenvectors
+      337	Why Should You Care?
+      338	Finding Eigenvalues (Optional)
+    339	Summary
+  341	Computational Complexity for Machine Learning
+    341	Big-O Notation Review
+    342	Complexity of Machine Learning Algorithms
+      342	Supervised Learning
+      343	Unsupervised Learning
+    343	Time vs. Space Tradeoffs
+      343	Other Common Tradeoffs
+    344	IAIO-Style Complexity Questions
+    344	Summary
+    344	Practice Problems
+  347	Solutions to Practice Problems
+  375	A Song: I Am Still Mine

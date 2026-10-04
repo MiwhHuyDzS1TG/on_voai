@@ -1,0 +1,256 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 1-8
+
+
+===== PAGE 1 =====
+
+Tập huấn IAIO
+Eljakim Schrijvers
+Tháng 1, 2026
+
+===== PAGE 2 =====
+
+Tác phẩm này được cấp phép theo Giấy phép Quốc tế
+Creative Commons Ghi công – Phi thương mại 4.0 (CC
+BY-NC 4.0).
+Bạn được tự do:
+• Chia sẻ: sao chép và phân phối lại tài liệu dưới bất kỳ
+phương tiện hay định dạng nào
+• Sửa đổi: pha trộn, chuyển đổi và xây dựng dựa trên tài
+liệu Theo các điều khoản sau:
+• Ghi công: Bạn phải ghi nhận đầy đủ tác giả gốc
+• Phi thương mại: Bạn không được sử dụng tài liệu này cho
+mục đích thương mại
+Toàn văn giấy phép:
+https://creativecommons.org/licenses/by-nc/4.0/
+Ngoại lệ: Bản nhạc I Am Still Mine (Phụ lục I) thuộc bản quyền ©
+2026 Eljakim Schrijvers, mọi quyền được bảo lưu, và không thuộc
+phạm vi của giấy phép Creative Commons nêu trên. Khuyến khích
+trình diễn phi thương mại kèm ghi công cho tác giả.
+Feedback: eljakim+ai@gmail.com
+© 2026 Eljakim Schrijvers
+
+===== PAGE 3 =====
+
+Lời nói đầu
+Tôi vẫn là của tôi, và chính vì
+thế, tôi thuộc về bạn để giữ
+lấy.
+Eljakim Schrijvers, I Am Still Mine
+Tôi nên mở đầu bằng một lời thú tội: tôi không phải là một nhà nghiên cứu AI.
+Điều tôi là là một người yêu thuật toán, lập trình, và giúp đỡ thanh niên khám
+phá niềm vui của tư duy tính toán. Tôi là một trong những huấn luyện viên của
+đoàn Hà Lan tại Kỳ Olympic Quốc tế Tin học (IOI), và năm 2024 tôi có vinh dự
+đưa Kỳ Olympic Tin học Châu Âu nữ (EGOI) về Hà Lan. Lập trình cạnh tranh
+là niềm đam mê của tôi đã nhiều năm. Có điều gì đó thỏa mãn sâu sắc khi nhìn
+khuôn mặt một học sinh bừng sáng lên khi một lời giải thanh tú bất ngờ khớp
+vào nhau.
+Tôi đã học về mạng nơ-ron vào thập niên 1990, thời mà một mạng “sâu” chỉ có
+ba lớp. Quay trở lại lĩnh vực này sau hàng chục năm, tôi thấy nền tảng về cơ
+bản không hề thay đổi. Điều thay đổi một cách chấn động lại là mọi thứ khác:
+năng lực tính toán, dữ liệu, và quy mô khổng lồ mà những ý tưởng cũ này nay
+vận hành. Khác biệt giữa một mạng nơ-ron năm 1995 và một mạng năm 2025
+không nằm ở sơ đồ kiến trúc trên bảng trắng; nó nằm ở hàng nghìn GPU và
+hàng tỷ tham số đã thổi sức sống cho sơ đồ đó.
+Cuốn sách này là nỗ lực của tôi để cô đọng những gì tôi đã học thành một cẩm nang tập
+huấn dành cho học sinh. Đây không phải là một bài báo khoa học: không có danh mục tài
+liệu tham khảo ở cuối sách. Mục tiêu là giúp bạn hiểu và áp dụng các khái niệm AI, chứ
+không phải để truy vết nguồn gốc tri thức của chúng. Tôi đã cố gắng hết sức trình bày các
+ý tưởng một cách chính xác và công bằng, nhưng tôi đã ưu tiên sự rõ ràng hơn là quy ước
+học thuật.
+Trong suốt quá trình viết cuốn sách này, tôi đã dùng các công cụ AI như một
+trợ lý văn bản. Các ý tưởng, cấu trúc và lựa chọn sư phạm là của tôi; AI đã
+giúp tôi diễn đạt chúng một cách rõ ràng và nhất quán hơn so với những gì tôi
+có thể tự làm trong giới hạn thời gian của mình.
+3
+
+===== PAGE 4 =====
+
+4
+Trong khi viết, tôi thấy mình suy ngẫm về AI — không chỉ như tư liệu ôn thi mà
+còn ở chiều sâu cá nhân. Ý nghĩa gì khi một thuật toán dự đoán những gì bạn sẽ
+nói trước khi bạn kịp nói ra? Khi nó học được thói quen của bạn rồi tiếp lời
+bạn? Tôi đã viết một bài hát về điều đó. Lời nhạc và giai điệu là của tôi; tôi chỉ
+dùng AI làm một cuốn từ điển vần rất kém. Bạn sẽ tìm thấy bản nhạc trong
+Phụ lục I. Nó không nên thuộc bất kỳ kỳ thi nào. Nhưng tôi tin mỗi câu chuyện
+hay đều xứng đáng có một bài hát. Nó giúp phần quan trọng nhất dễ nhớ hơn.
+Vì thế hãy biểu diễn nó, chơi nó, ngâm nga nó. Biến nó thành của chúng ta.
+Nếu bạn có phản hồi, sửa lỗi hay gợi ý, tôi rất muốn được nghe từ bạn. Hãy
+gửi email tới eljakim+ai@gmail.com. Tôi không thể đảm bảo sẽ trả lời, nhưng
+tôi sẽ đọc mọi tin nhắn.
+Chúc bạn may mắn.
+Eljakim Schrijvers
+January 2026
+
+===== PAGE 5 =====
+
+Contents
+Preface 3
+Introduction 19
+I Foundations 25
+1 Introduction to Artificial Intelligence 27
+1.1 What is Artificial Intelligence? . . . . . . . . . . . . . . 27
+1.2 A Brief History of AI . . . . . . . . . . . . . . . . . . . 28
+1.2.1 The Birth of AI . . . . . . . . . . . . . . . . . . 29
+1.2.2 The Perceptron and Its Limits . . . . . . . . . . . 29
+1.2.3 Expert Systems and the Second Winter . . . . . . 30
+1.2.4 The Backpropagation Revival . . . . . . . . . . . 30
+1.2.5 The Statistical Turn . . . . . . . . . . . . . . . . 31
+1.2.6 Big Data and GPUs . . . . . . . . . . . . . . . . 31
+1.2.7 The Deep Learning Revolution . . . . . . . . . . 31
+1.2.8 Transformers and Large Language Models . . . . 32
+1.3 Three Types of AI . . . . . . . . . . . . . . . . . . . . . 32
+1.3.1 Narrow AI (Artificial Narrow Intelligence) . . . . 33
+1.3.2 Artificial General Intelligence (AGI) . . . . . . . . 33
+1.3.3 Artificial Superintelligence (ASI) . . . . . . . . . 34
+1.4 Key Technologies in AI . . . . . . . . . . . . . . . . . . 34
+1.4.1 Machine Learning . . . . . . . . . . . . . . . . . 34
+1.4.2 Deep Learning . . . . . . . . . . . . . . . . . . 35
+1.4.3 Computer Vision . . . . . . . . . . . . . . . . . 36
+1.4.4 Natural Language Processing . . . . . . . . . . . 37
+1.5 The AI Development Pipeline . . . . . . . . . . . . . . . 37
+1.5.1 Step 1: Collect Data . . . . . . . . . . . . . . . . 38
+1.5.2 Step 2: Train the Model . . . . . . . . . . . . . . 38
+1.5.3 Step 3: Validate . . . . . . . . . . . . . . . . . . 39
+1.5.4 Step 4: Test . . . . . . . . . . . . . . . . . . . . 39
+1.5.5 Step 5: Deploy . . . . . . . . . . . . . . . . . . 39
+1.6 Prerequisites for Learning AI . . . . . . . . . . . . . . . 40
+5
+
+===== PAGE 6 =====
+
+6CONTENTS
+1.6.1 Mathematics . . . . . . . . . . . . . . . . . . . 40
+1.6.2 Programming . . . . . . . . . . . . . . . . . . . 40
+1.6.3 Understanding Computers . . . . . . . . . . . . 41
+1.7 Summary . . . . . . . . . . . . . . . . . . . . . . . . . 42
+1.8 Practice Problems . . . . . . . . . . . . . . . . . . . . . 42
+2 The Societal Impact of AI 45
+2.1 Introduction: Why Ethics Matters . . . . . . . . . . . . . 45
+2.2 Case Study 1: Bias in Image Search . . . . . . . . . . . . 46
+2.3 Case Study 2: Bias in Hiring . . . . . . . . . . . . . . . 47
+2.4 Defining Fairness: A Fundamentally Hard Problem . . . . 48
+2.4.1 Competing Definitions . . . . . . . . . . . . . . 48
+2.4.2 The Impossibility Result . . . . . . . . . . . . . . 49
+2.4.3 Which Definition When? . . . . . . . . . . . . . 49
+2.5 The Bias-Detection-Mitigation Pipeline . . . . . . . . . . 50
+2.6 Systematic Approach to AI Ethics Problems . . . . . . . . 50
+2.7 Privacy and Data Protection . . . . . . . . . . . . . . . 51
+2.7.1 Collection and Consent . . . . . . . . . . . . . . 51
+2.7.2 De-anonymization . . . . . . . . . . . . . . . . 52
+2.7.3 Training on Personal Data . . . . . . . . . . . . . 52
+2.7.4 Differential Privacy . . . . . . . . . . . . . . . . 52
+2.8 Accountability and Responsibility . . . . . . . . . . . . . 53
+2.8.1 Medical AI . . . . . . . . . . . . . . . . . . . . 53
+2.8.2 Hiring and Employment . . . . . . . . . . . . . . 53
+2.8.3 Criminal Justice and Credit . . . . . . . . . . . . 53
+2.9 Transparency and Explainability . . . . . . . . . . . . . 54
+2.9.1 Black Boxes vs. Interpretable Models . . . . . . . 54
+2.9.2 The Right to Explanation . . . . . . . . . . . . . 54
+2.9.3 When Is Interpretability Required? . . . . . . . . 54
+2.10 Feedback Loops and Distributed Harm . . . . . . . . . . 55
+2.10.1 Reinforcing Inequality Over Time . . . . . . . . . 55
+2.10.2 Predictive Policing: A Case Study in Feedback Loops 55
+2.10.3 Distributed Harm . . . . . . . . . . . . . . . . . 55
+2.11 Environmental and Resource Costs . . . . . . . . . . . . 56
+2.11.1 Energy Consumption . . . . . . . . . . . . . . . 56
+2.11.2 Centralization of Power . . . . . . . . . . . . . . 56
+2.11.3 Should You Use This Data? Should You Build This
+System? . . . . . . . . . . . . . . . . . . . . . . 56
+2.12 Generative AI: Earlier Issues Amplified . . . . . . . . . . 57
+2.13 Summary . . . . . . . . . . . . . . . . . . . . . . . . . 59
+2.14 Practice Problems . . . . . . . . . . . . . . . . . . . . . 59
+
+===== PAGE 7 =====
+
+CONTENTS7
+II Core Machine Learning 63
+3 Data Preparation and Feature Engineering 65
+3.1 Introduction: Why Data Preparation Matters . . . . . . . 65
+3.2 Understanding Data Structure . . . . . . . . . . . . . . 66
+3.3 Data Quality Problems . . . . . . . . . . . . . . . . . . 66
+3.4 Feature Scaling . . . . . . . . . . . . . . . . . . . . . . 67
+3.5 Encoding Categorical Variables . . . . . . . . . . . . . . 67
+3.6 Train-Validation-Test Split . . . . . . . . . . . . . . . . . 68
+3.7 Feature Engineering . . . . . . . . . . . . . . . . . . . 68
+3.7.1 Creating New Features . . . . . . . . . . . . . . 68
+3.7.2 Domain Knowledge . . . . . . . . . . . . . . . . 69
+3.7.3 Data Leakage: A Critical Pitfall . . . . . . . . . . 69
+3.8 Sampling Bias: Problems Before Modeling Begins . . . . 71
+3.8.1 Selection Bias . . . . . . . . . . . . . . . . . . . 72
+3.8.2 Survivorship Bias . . . . . . . . . . . . . . . . . 72
+3.8.3 Convenience Sampling . . . . . . . . . . . . . . 72
+3.8.4 Non-Response Bias . . . . . . . . . . . . . . . . 72
+3.9 Distribution Shift: When the World Changes . . . . . . . 73
+3.9.1 Covariate Shift . . . . . . . . . . . . . . . . . . 73
+3.9.2 Label Shift . . . . . . . . . . . . . . . . . . . . 73
+3.9.3 Concept Drift . . . . . . . . . . . . . . . . . . . 74
+3.10 When Is a Test Set Valid? . . . . . . . . . . . . . . . . . 74
+3.10.1 The Representativeness Requirement . . . . . . . 74
+3.10.2 When Test Sets Lie . . . . . . . . . . . . . . . . 75
+3.10.3 Temporal Splits . . . . . . . . . . . . . . . . . . 75
+3.10.4 Connecting the Pieces . . . . . . . . . . . . . . . 75
+3.11 Summary . . . . . . . . . . . . . . . . . . . . . . . . . 76
+3.12 Practice Problems . . . . . . . . . . . . . . . . . . . . . 76
+4 Supervised Learning 81
+4.1 Introduction to Supervised Learning . . . . . . . . . . . 81
+4.1.1 The Structure of Supervised Learning . . . . . . . 82
+4.1.2 Why Supervised Learning Works . . . . . . . . . 82
+4.2 Classification vs. Regression . . . . . . . . . . . . . . . 83
+4.2.1 Regression: Predicting Continuous Values . . . . . 83
+4.2.2 Classification: Predicting Categories . . . . . . . 83
+4.3 Linear Regression . . . . . . . . . . . . . . . . . . . . . 84
+4.3.1 Loss Functions: What the Algorithm Optimizes . . 84
+4.3.2 The Hypothesis and Cost Function . . . . . . . . 85
+4.3.3 Gradient Descent . . . . . . . . . . . . . . . . . 85
+4.3.4 Multiple Features . . . . . . . . . . . . . . . . . 86
+4.3.5 Polynomial Regression . . . . . . . . . . . . . . 86
+4.4 Logistic Regression . . . . . . . . . . . . . . . . . . . . 86
+
+===== PAGE 8 =====
+
+8CONTENTS
+4.4.1 Why Linear Regression Fails for Classification . . . 87
+4.4.2 The Sigmoid Function . . . . . . . . . . . . . . . 87
+4.4.3 The Logistic Regression Hypothesis . . . . . . . . 88
+4.4.4 The Decision Boundary . . . . . . . . . . . . . . 88
+4.4.5 The Cost Function for Logistic Regression . . . . . 88
+4.5 Regularization: Preventing Overfitting . . . . . . . . . . 89
+4.5.1 Understanding Overfitting . . . . . . . . . . . . 89
+4.5.2 Regularization: Adding a Penalty for Complexity . 89
+4.6 Support Vector Machines . . . . . . . . . . . . . . . . . 90
+4.6.1 The Maximum Margin Idea . . . . . . . . . . . . 91
+4.6.2 Support Vectors . . . . . . . . . . . . . . . . . . 91
+4.6.3 Soft Margins and the Parameter C . . . . . . . . . 91
+4.6.4 Kernel Methods: Going Non-Linear . . . . . . . . 92
+4.7 Decision Trees . . . . . . . . . . . . . . . . . . . . . . 92
+4.7.1 The Tree Structure . . . . . . . . . . . . . . . . 93
+4.7.2 Choosing the Best Splits . . . . . . . . . . . . . . 93
+4.7.3 Building the Tree: The ID3 Algorithm . . . . . . . 94
+4.7.4 Pruning: Avoiding Overfitting . . . . . . . . . . . 94
+4.7.5 Ensemble Methods: Combining Multiple Trees . . 95
+4.8 Naïve Bayes Classification . . . . . . . . . . . . . . . . 95
+4.8.1 Bayes’ Theorem . . . . . . . . . . . . . . . . . . 96
+4.8.2 The Naïve Independence Assumption . . . . . . . 96
+4.8.3 Classification Rule . . . . . . . . . . . . . . . . . 96
+4.9 Algorithm Comparison . . . . . . . . . . . . . . . . . . 97
+4.10 Summary . . . . . . . . . . . . . . . . . . . . . . . . . 100
+4.11 Practice Problems . . . . . . . . . . . . . . . . . . . . . 100
+5 Model Evaluation 103
+5.1 Introduction: The Problem of Generalization . . . . . . . 103
+5.2 Parameters vs. Hyperparameters . . . . . . . . . . . . . 104
+5.3 The Importance of Data Splitting . . . . . . . . . . . . . 104
+5.4 Bias and Variance: Understanding Errors . . . . . . . . . 105
+5.5 Classification Metrics . . . . . . . . . . . . . . . . . . . 106
+5.5.1 ROC Curves and AUC . . . . . . . . . . . . . . . 107
+5.5.2 Calibration: Are the Probabilities Meaningful? . . 109
+5.6 Regression Metrics . . . . . . . . . . . . . . . . . . . . 110
+5.7 Cross-Validation . . . . . . . . . . . . . . . . . . . . . 111
+5.8 How People Accidentally Cheat . . . . . . . . . . . . . . 112
+5.8.1 Leaderboard Overfitting . . . . . . . . . . . . . . 112
+5.8.2 Why “ Just One More Look” Breaks Guarantees . . 112
+5.8.3 Data Leakage in Preprocessing . . . . . . . . . . 113
+5.8.4 Temporal Leakage . . . . . . . . . . . . . . . . . 113
+5.8.5 Good Test̸=Good Real-World . . . . . . . . . . 113
+5.9 Hyperparameter Tuning . . . . . . . . . . . . . . . . . 114

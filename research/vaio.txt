@@ -1,0 +1,151 @@
+SOURCE: noi_dung_on_tap_VAIO.pdf
+PAGES: 5
+
+
+===== PAGE 1 =====
+
+Nội dung ôn tập Vòng sơ khảo VAIO 2026
+1 Học có giám sát và không giám sát
+1.1 Khái niệm nền tảng
+• Dataset, mẫu dữ liệu (sample/instance), đặc trưng (feature) và nhãn/giá
+trị mục tiêu (label/target).
+• Dữ liệu đầu vào X, giá trị mục tiêu y và dự đoán ˆy.
+• Model, huấn luyện (training), suy luận (inference), tham số và siêu tham
+số.
+• Phân biệt học có giám sát và học không giám sát.
+1.2 Học có giám sát
+• Regression và classification; phân biệt hai loại bài toán.
+• Binary , multiclass và multilabel classification.
+• Linear Regression và Polynomial Regression.
+• Logistic Regression, xác suất dự đoán và ngưỡng phân loại.
+• Decision Tree: root, node, leaf, split, depth, entropy , information gain và
+pruning.
+• Naive Bayes: xác suất có điều kiện, định lý Bayes, prior , likelihood,
+posterior và giả định độc lập có điều kiện.
+1.3 Học không giám sát
+• Clustering và dimensionality reduction.
+• Khoảng cách Euclidean và vai trò của khoảng cách trong phân cụm.
+• K-means: số cụm K, centroid, bước gán cụm, bước cập nhật và ảnh hưởng
+của khởi tạo.
+• Hierarchical Clustering: phân cụm tích tụ, linkage và dendrogram.
+• PCA: principal component, explained variance, giảm chiều và trực quan
+hóa dữ liệu.
+• Phân biệt feature selection và feature extraction.
+1
+
+===== PAGE 2 =====
+
+2 Mạng nơ-ron và kiến thức cơ bản về học sâu
+2.1 Nơ-ron nhân tạo và kiến trúc mạng
+• Input, weight, bias, weighted sum và activation.
+• Mô hình nơ-ron: z = wT x + b và a = f (z).
+• Input layer , hidden layer , output layer và fully connected layer .
+• Ma trận trọng số, số lượng tham số và khái niệm mạng nơ-ron sâu.
+2.2 Hàm kích hoạt
+• ReLU và vai trò trong hidden layer .
+• Tanh: miền giá trị từ −1 đến 1, đầu ra có tâm tại 0; khi giá trị đầu vào có
+độ lớn cao, đầu ra tiến gần −1 hoặc 1 và gradient trở nên rất nhỏ, làm
+quá trình học chậm lại.
+• Sigmoid trong bài toán phân loại nhị phân.
+• Softmax trong bài toán phân loại nhiều lớp.
+• Vai trò của tính phi tuyến trong mạng nơ-ron.
+2.3 Quá trình huấn luyện
+• Forward propagation, prediction và loss function.
+• MSE, binary cross-entropy và categorical cross-entropy .
+• Gradient, gradient descent, learning rate và cập nhật trọng số.
+• Backpropagation và chain rule.
+2.4 CNN cơ bản
+• Biểu diễn ảnh dưới dạng tensor .
+• Convolution, kernel/filter và feature map; weight sharing là việc dùng
+cùng một bộ trọng số của kernel tại mọi vị trí trên ảnh, giúp giảm số
+tham số và nhận diện cùng một đặc trưng ở nhiều vị trí.
+• Stride, padding và pooling; ảnh hưởng của chúng đến kích thước feature
+map.
+• Receptive field: vùng trên ảnh đầu vào có thể ảnh hưởng đến một giá trị
+trên feature map; receptive field thường tăng qua các lớp convolution.
+• CNN tự học các đặc trưng theo tầng, từ cạnh và góc đến họa tiết, hình
+dạng và các bộ phận của đối tượng.
+2
+
+===== PAGE 3 =====
+
+3 Tiền xử lý dữ liệu và kỹ thuật đặc trưng
+3.1 Kiểu dữ liệu và thống kê mô tả
+• Dữ liệu numerical, categorical, continuous, discrete, nominal, ordinal và
+binary .
+• Mean, median, mode, range, variance và standard deviation.
+• Outlier và ảnh hưởng của outlier đến dữ liệu và mô hình.
+3.2 Làm sạch và biến đổi dữ liệu
+• Missing value và nguyên nhân dữ liệu bị thiếu.
+• Xóa mẫu/đặc trưng; mean, median và mode imputation.
+• Min-Max normalization và standardization.
+• Ảnh hưởng của feature scale đến các thuật toán dựa trên khoảng cách
+và gradient.
+• Label Encoding, One-hot Encoding và Ordinal Encoding.
+• Nguy cơ tạo thứ tự giả khi mã hóa dữ liệu categorical.
+3.3 Kỹ thuật đặc trưng
+• Tạo đặc trưng mới và interaction feature.
+• Feature selection và feature extraction.
+• Đặc trưng không liên quan và đặc trưng dư thừa.
+• Vai trò của PCA trong trích xuất đặc trưng và giảm chiều.
+3.4 Chia dữ liệu và ngăn ngừa rò rỉ dữ liệu
+• Training set, validation set và test set.
+• Vai trò của từng tập dữ liệu trong huấn luyện, lựa chọn mô hình và đánh
+giá cuối cùng.
+• Data leakage trong imputation, scaling, PCA và feature selection.
+• Nguyên tắc học các tham số tiền xử lý chỉ từ training data.
+4 Đánh giá mô hình và các chỉ số đo lường
+4.1 Đánh giá mô hình Regression
+• Residual và prediction error .
+• MAE, MSE và RMSE.
+• Sự khác nhau giữa MAE và MSE; ảnh hưởng của outlier .
+3
+
+===== PAGE 4 =====
+
+4.2 Đánh giá mô hình Classification
+• Confusion matrix: TP , TN, FP và FN.
+• Accuracy , Precision, Recall và F1-score.
+• False Positive Rate, ROC curve và AUC.
+• Classification threshold và sự đánh đổi giữa Precision và Recall.
+• Class imbalance và hạn chế của Accuracy trên dữ liệu mất cân bằng.
+• Lựa chọn metric dựa trên chi phí của False Positive và False Negative.
+4.3 Khả năng tổng quát hóa và lựa chọn mô hình
+• Training error , validation error và test error .
+• Underfitting, overfitting và generalization.
+• Bias, variance và bias-variance trade-off.
+• Regularization L1, L2 và vai trò của hệ số regularization.
+• K-fold cross-validation, hyperparameter tuning và model selection.
+• Không sử dụng test set để lựa chọn mô hình hoặc điều chỉnh siêu tham
+số.
+5 Giải quyết bài toán AI thực tế
+Khi phân tích một tình huống thực tế, cần xác định được:
+1. Dữ liệu đầu vào X và giá trị mục tiêu y.
+2. Bài toán thuộc regression, classification, clustering hay một dạng học
+máy khác.
+3. Bài toán sử dụng học có giám sát hay học không giám sát.
+4. Chất lượng dữ liệu: missing value, outlier , nhiễu và dữ liệu không đại
+diện.
+5. Các bước tiền xử lý: làm sạch, encoding, scaling và kỹ thuật đặc trưng.
+6. Nguy cơ data leakage trong quá trình chuẩn bị và chia dữ liệu.
+7. Mô hình phù hợp với loại dữ liệu, quy mô dữ liệu và mục tiêu của bài
+toán.
+8. Metric phù hợp; mức độ nghiêm trọng của False Positive và False
+Negative.
+9. Ảnh hưởng của class imbalance, underfitting và overfitting.
+10. Khả năng tổng quát hóa: mô hình vẫn dự đoán tốt trên dữ liệu mới chưa
+từng gặp; hiệu năng có thể giảm khi dữ liệu thực tế có phân phối khác
+dữ liệu huấn luyện.
+4
+
+===== PAGE 5 =====
+
+11. Fairness: hạn chế việc mô hình tạo ra kết quả thiên lệch hoặc bất công
+đối với một nhóm người.
+12. Privacy: bảo vệ dữ liệu cá nhân và dữ liệu nhạy cảm trong quá trình thu
+thập, huấn luyện và sử dụng mô hình.
+13. Explainability: có thể giải thích cơ sở hoặc các yếu tố chính dẫn đến dự
+đoán của mô hình.
+14. Human oversight: con người giám sát, có thể can thiệp và chịu trách
+nhiệm đối với quyết định của hệ thống AI.
+5

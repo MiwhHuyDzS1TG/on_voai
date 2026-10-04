@@ -1,0 +1,536 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 103-118
+
+
+===== PAGE 103 =====
+
+Chương 5
+Đánh giá mô hình
+The purpose of computing is
+insight, not numbers.
+Richard Hamming
+5.1 Giới thiệu: Vấn đề khái quát hóa
+Giả sử bạn đang chuẩn bị cho một học sinh kỳ thi quan trọng. Bạn đưa cho cậu
+100 bài tập luyện, và cậu học rất chăm chỉ. Khi bạn kiểm tra cậu bằng chính
+100 bài đó, cậu trả lời đúng từng câu một. Thật ấn tượng! Nhưng khi kỳ thi
+thật sự đến với những câu hỏi khác, cậu trượt chét. Chuyện gì đã xảy ra?
+Học sinh chỉ ghi nhớ đáp án cụ thể của các bài tập luyện thay vì học các nguyên
+lý đằng sau đó. Cậu có thể tái hiện những đáp án đã từng thấy nhưng lại không
+thể áp dụng kiến thức của mình cho những tình huống mới. Đây là phiên bản
+trong giáo dục của một vấn đề cơ bản trong học máy: sự khác biệt giữa ghi
+nhớ và khái quát hóa.
+Các mô hình học máy đối mặt với đúng thách thức này. Một mô hình hoạt
+động hoàn hảo trên dữ liệu huấn luyện nhưng thất bại trên dữ liệu mới chưa
+từng thấy thì chưa thực sự học được điều gì. Nó chỉ đơn thuần là ghi nhớ. Mô
+hình như vậy vô dụng trên thực tế, bởi toàn bộ ý nghĩa của học máy là đưa ra
+dự đoán về dữ liệu mà ta chưa từng thấy.
+103
+
+===== PAGE 104 =====
+
+104 CHAPTER 5. MODEL EVALUATION
+Thách thức cốt lõi
+Một mô hình hoạt động hoàn hảo trên dữ liệu huấn luyện nhưng thất bại trên dữ liệu
+mới thì vô dụng. Toàn bộ giá trị của học máy nằm ở khái quát hóa. Ở khả năng áp
+dụng các khuôn mẫu đã học vào những tình huống mới. Các phương pháp đánh giá
+của chúng ta phải đo lường sự khái quát hóa, chứ không chỉ hiệu năng trên tập huấn
+luyện.
+5.2 Tham số và siêu tham số
+Trước khi đi sâu vào các phương pháp đánh giá, chúng ta cần làm rõ một sự
+phân biệt làm nhiều người mới bắt đầu bối rối.
+Tham số là những giá trị mà mô hình tự động học được từ dữ liệu trong quá
+trình huấn luyện. Trong một mạng nơ-ron, đó là các trọng số nối giữa các
+nơ-ron. Thuật toán học điều chỉnh những trọng số này để khớp với dữ liệu
+huấn luyện.
+Siêu tham số là những thiết lập do con người chọn trước khi bắt đầu huấn
+luyện. Chúng điều khiển cách thức học diễn ra nhưng không được học từ dữ
+liệu. Ví dụ gồm tốc độ học, số kỳ (epoch), kiến trúc mạng và cường độ chuẩn
+hóa (regularization).
+Parameters
+Learned automatically
+from data during training
+e.g., neural network weights
+Hyperparameters
+Set by humans
+before training begins
+e.g., learning rate, # layers
+Hình 5.1: Tham số được học; siêu tham số do con người chọn.
+5.3 Tầm quan trọng của việc chia dữ liệu
+Nguyên tắc nền tảng nhất trong đánh giá mô hình là: không bao giờ đánh giá
+một mô hình trên chính dữ liệu đã dùng để huấn luyện nó.
+Nếu ta huấn luyện trên một phần dữ liệu rồi kiểm thử trên chính phần dữ liệu
+đó, mô hình có thể đạt độ chính xác cao chỉ đơn thuần bằng cách ghi nhớ các
+ví dụ huấn luyện. Điều đó không cho chúng ta biết gì về khả năng khái quát
+hóa.
+
+===== PAGE 105 =====
+
+5.4. BIAS AND VARIANCE: UNDERSTANDING ERRORS 105
+Quy tắc vàng
+Không bao giờ kiểm thử trên dữ liệu huấn luyện!
+Đánh giá trên dữ liệu huấn luyện giống như đưa trước đề thi cho học
+sinh. Kết quả cao không nói lên được điều gì về mức độ hiểu bài thực
+sự.
+Ta chia dữ liệu thành các tập riêng biệt với những mục đích khác nhau:
+Full Dataset (100%)
+Training (70%) Val Test
+Model learns here Tune
+settings
+Final eval
+Hình 5.2: Cách chia chuẩn tập huấn luyện – kiểm định – kiểm tra.
+ Tập huấn luyện (60-80%) là nơi diễn ra việc học.  Tập kiểm định (10-20%)
+dùng để kiểm tra tiến độ trong quá trình phát triển và tinh chỉnh siêu tham số. 
+Tập kiểm tra (10-20%) được giữ hoàn toàn nguyên vẹn cho đến khi đánh giá
+cuối cùng, nó cung cấp ước lượng không thiên lệch về hiệu năng ngoài đời
+thực.
+Ẩn dụ: Chuẩn bị cho kỳ thi
+Tập huấn luyện = Giáo trình (học từ đó)
+Tập kiểm định = Kỳ thi luyện tập (kiểm tra tiến độ, điều chỉnh chiến
+lược học)
+Tập kiểm tra = Kỳ thi cuối cùng (đo lường thực sự việc học)
+Khi chia dữ liệu, hãy chọn các ví dụ một cách ngẫu nhiên. Nếu dữ liệu được
+sắp xếp (theo ngày, nhóm, v.v.), việc lấy 70% đầu tiên sẽ tạo ra thành kiến
+(bias).
+5.4 Thiên vị và Phương sai: Hiểu các lỗi
+Mọi mô hình đều mắc lỗi. Hiểu được tại sao sẽ giúp chúng ta sửa chúng.
+Thiếu khớp (thiên vị cao) xảy ra khi mô hình quá đơn giản. Nó không thể nắm bắt
+được các khuôn mẫu ngay cả trong dữ liệu huấn luyện. Cách khắc phục: tăng độ phức
+tạp.
+Quá khớp (phương sai cao) xảy ra khi mô hình quá phức tạp. Nó ghi nhớ dữ liệu
+huấn luyện nhưng thất bại trên dữ liệu mới. Cách khắc phục: giảm độ phức tạp,
+thêm
+
+===== PAGE 106 =====
+
+106 CHAPTER 5. MODEL EVALUATION
+chuẩn hóa (regularization), hoặc thu thập thêm dữ liệu.
+Underfitting Good Fit Overfitting
+Hình 5.3: Thiếu khớp (quá đơn giản), vừa khớp (vừa phải), và quá khớp (quá
+phức tạp).
+Chẩn đoán: Nếu độ chính xác trên tập huấn luyện thấp, mô hình đang thiếu
+khớp. Nếu độ chính xác trên tập huấn luyện cao nhưng độ chính xác trên tập
+kiểm định thấp hơn nhiều, mô hình đang quá khớp.
+5.5 Các số đo cho bài toán phân loại
+Với các bài toán phân loại, chúng ta cần những số đo phù hợp. Ma trận nhầm
+lẫn thể hiện các dự đoán so với nhãn thực tế:
+Dự đoán
+Dương tính Âm tính
+Thực tế Dương tính Dương tính thật (TP) Âm tính giả (FN)
+Âm tính Dương tính giả (FP) Âm tính thật (TN)
+Độ chính xác là tỉ lệ dự đoán đúng: (T P + T N )/(T P + T N + F P + F N )
+Nhưng độ chính xác có thể gây hiểu lầm khi các lớp mất cân bằng! Một máy phát hiện vận
+chuyển trái phép luôn nói “không vận chuyển trái phép” sẽ đạt độ chính xác 99,5% nếu chỉ có
+0,5% số container chứa hàng cấm. Vậy mà nó bắt được không một kẻ vận chuyển trái phép
+nào.
+Độ chính xác (precision) trả lời câu hỏi “trong các dự đoán dương tính của tôi, có bao nhiêu là đúng?”
+Precision = T P
+T P + F P
+Dùng khi dương tính giả tốn kém (ví dụ: bộ lọc thư rác – bạn không muốn bỏ
+sót email thật).
+Độ nhạy (recall) trả lời câu hỏi “Trong tất cả các ca dương tính thực sự, tôi đã bắt được bao nhiêu?”
+Recall = T P
+T P + F N
+
+===== PAGE 107 =====
+
+5.5. CLASSIFICATION METRICS 107
+Dùng khi âm tính giả tốn kém (ví dụ: sàng lọc ung thư, đừng bỏ sót ca bệnh).
+Điểm F1 cân bằng giữa precision và recall:
+F1 = 2 · Precision · Recall
+Precision + Recall
+Ví dụ minh họa
+Một máy phát hiện bệnh: TP=80, FP=20, FN=10, TN=890 Độ chính
+xác = (80 + 890)/(80 + 890 + 20 + 10) = 970/1000 = 97%
+Precision = 80/(80 + 20) = 80/100 = 80%
+Recall = 80/(80 + 10) = 80/90 ≈ 88.9%
+F1 = 2 · (0.80 × 0.889)/(0.80 + 0.889) ≈ 84.2%
+Thông thường có sự đánh đổi giữa precision và recall, được điều khiển bởi
+ngưỡng quyết định. Hầu hết các bộ phân loại đưa ra một xác suất hoặc điểm
+số; bạn chọn một ngưỡng mà trên đó dự đoán là dương tính.
+Tăng ngưỡng (ví dụ, từ 0.5 lên 0.8) nghĩa là bạn chỉ dự đoán dương tính khi
+mô hình rất tự tin. Dương tính giả giảm xuống, nên precision tăng lên. Nhưng
+bạn bỏ sót nhiều dương tính thật hơn, nên recall giảm xuống.
+Hạ ngưỡng (ví dụ, từ 0.5 xuống 0.2) nghĩa là bạn gắn cờ nhiều ca là dương
+tính hơn. Bạn bắt được nhiều dương tính thật hơn, nên recall tăng lên. Nhưng
+nhiều ca âm tính bị gắn cờ sai hơn, nên precision giảm xuống.
+Việc chọn ngưỡng là một quyết định kinh doanh
+Một xét nghiệm sàng lọc ung thư có thể dùng ngưỡng thấp (ví dụ 0.3):
+bỏ sót một ca ung thư còn tệ hơn nhiều so với việc chỉ định thêm một
+xét nghiệm theo dõi không cần thiết. Recall cao quan trọng hơn precision
+cao.
+Một bộ lọc thư rác có thể dùng ngưỡng cao (ví dụ 0.8): xóa nhầm một
+email hợp lệ còn tệ hơn việc để lọt vài thư rác. Precision cao quan trọng
+hơn recall cao.
+Không có ngưỡng “đúng”. Lựa chọn phù hợp phụ thuộc vào chi phí
+tương đối của dương tính giả và âm tính giả trong ứng dụng cụ thể của
+bạn.
+5.5.1 Đường cong ROC và AUC
+Đường cong đặc trưng người nhận (ROC) cung cấp cái nhìn toàn diện về
+hiệu năng của bộ phân loại trên tất cả các ngưỡng có thể có.
+Hầu hết các bộ phân loại đưa ra một xác suất hoặc điểm số chứ không phải một dự
+đoán lớp cứng. Ta chuyển nó thành dự đoán bằng cách chọn một ngưỡng: nếu điểm
+số
+
+===== PAGE 108 =====
+
+108 CHAPTER 5. MODEL EVALUATION
+vượt quá ngưỡng thì dự đoán là dương tính. Các ngưỡng khác nhau tạo ra
+những sự đánh đổi khác nhau giữa việc bắt được dương tính (Tỉ lệ Dương
+tính Thật) và việc gắn cờ sai các ca âm tính (Tỉ lệ Dương tính Giả).
+• Tỉ lệ Dương tính Thật (TPR) = T P
+T P +F N = Recall (tỉ lệ các ca dương
+tính thực sự được nhận diện đúng)
+• Tỉ lệ Dương tính Giả (FPR) = F P
+F P +T N (tỉ lệ các ca âm tính thực sự bị
+gắn cờ sai)
+Đường cong ROC thể hiện TPR (trục tung) theo FPR (trục hoành) cho mọi
+ngưỡng có thể có:
+FPR
+TPR
+Random
+Good classifier
+Perfect
+0 1
+1
+Hình 5.4: Các đường cong ROC của những bộ phân loại khác nhau. Vùng tô
+màu biểu diễn AUC. Một bộ phân loại hoàn hảo ôm sát góc trên-trái; một bộ
+phân loại ngẫu nhiên đi theo đường chéo.
+Hiểu đường cong ROC:
+• Góc trên-trái (0, 1) đại diện cho phân loại hoàn hảo: TPR=1 (bắt được
+toàn bộ dương tính), FPR=0 (không có cảnh báo sai)
+• Đường chéo đại diện cho một bộ phân loại ngẫu nhiên không phân biệt
+được các lớp
+• Một đường cong càng gần góc trên-trái thì càng tốt
+Diện tích dưới đường cong (AUC) tóm tắt đường cong ROC thành một con
+số duy nhất:
+• AUC = 1.0: Bộ phân loại hoàn hảo
+• AUC = 0.5: Đoán bừa (không có sức phân biệt)
+• AUC < 0.5: Tệ hơn cả ngẫu nhiên (dự đoán bị đảo ngược)
+
+===== PAGE 109 =====
+
+5.5. CLASSIFICATION METRICS 109
+Ý nghĩa của AUC
+AUC có một cách diễn giải xác suất tuyệt đẹp: nó bằng xác suất mà một
+ví dụ dương tính được chọn ngẫu nhiên sẽ được xếp hạng cao hơn một
+ví dụ âm tính được chọn ngẫu nhiên.
+AUC = 0.85 nghĩa là: nếu bạn chọn ngẫu nhiên một ví dụ dương tính và
+một ví dụ âm tính, có 85% khả năng bộ phân loại gán điểm cao hơn cho
+ví dụ dương tính.
+Quy tắc kinh nghiệm: AUC > 0.9 là xuất sắc; 0.8–0.9 là tốt; 0.7–0.8 là
+khá; < 0.7 có thể kém.
+Khi nào dùng AUC thay cho các số đo khác:
+• Hãy dùng AUC khi bạn muốn đánh giá khả năng xếp hạng mà không cần
+chốt một ngưỡng cụ thể
+• Hãy dùng precision/recall/F1 khi bạn đã có một ngưỡng cụ thể trong đầu
+hoặc khi sự mất cân bằng lớp quá nghiêm trọng
+• AUC có thể gây hiểu lầm với các tập dữ liệu mất cân bằng nặng nề; khi
+đó nên cân nhắc dùng đường cong precision-recall
+5.5.2 Hiệu chuẩn: Các xác suất có ý nghĩa không?
+Một bộ phân loại có thể xếp hạng chính xác các ca dương tính cao hơn các ca
+âm tính (AUC tốt) trong khi vẫn đưa ra những ước lượng xác suất sai lệch dữ
+dội. Hiệu chuẩn đo lường xem các xác suất dự đoán có khớp với tần suất thực
+tế hay không.
+Một mô hình được hiệu chuẩn tốt nếu, trong số tất cả các ca mà nó dự đoán
+“có 70% khả năng vỡ nợ”, xấp xỉ 70% thực sự vỡ nợ. Một mô hình dự đoán
+70% nhưng chỉ có 30% vỡ nợ thì chính xác về thứ hạng (nó xác định đúng các
+ca rủi ro hơn) nhưng lại hiệu chuẩn kém (những con số xác suất của nó vô
+nghĩa).
+Điều ngược lại cũng có thể xảy ra. Một mô hình có thể hiệu chuẩn tốt nhưng
+không chính xác: nó ước lượng đúng rằng tỉ lệ vỡ nợ chung là 10%, nhưng lại
+gán 10% cho từng người vay. Các xác suất “đúng” về mặt trung bình, nhưng mô
+hình không có sức phân biệt nào.
+Khi nào hiệu chuẩn mới quan trọng
+Hiệu chuẩn quan trọng mỗi khi chính bản thân xác suất dự đoán dẫn dắt
+một quyết định, chứ không chỉ thứ hạng. Nếu một bác sĩ cần nói với
+bệnh nhân “nguy cơ mắc bệnh này của bạn là 30%”, con số đó phải có ý
+nghĩa. Nếu bạn chỉ cần xếp bệnh nhân theo nguy cơ từ cao xuống thấp
+thì thứ hạng (AUC) là đủ.
+
+===== PAGE 110 =====
+
+110 CHAPTER 5. MODEL EVALUATION
+Điểm kiểm tra đạo đức: Khi số đo tốt trở thành xấu
+Một bệnh viện triển khai một mô hình để dự đoán nguy cơ bệnh nhân
+phải nhập viện lại. Mô hình có AUC = 0.85.
+Câu hỏi kỹ thuật – đạo đức:
+1. Bệnh viện dùng mô hình để từ chối chăm sóc theo dõi cho các bệnh
+nhân “rủi ro thấp” (để tiết kiệm chi phí). Mô hình có độ chính xác
+(precision) 90% ở nhóm rủi ro cao nhưng chỉ 70% ở nhóm rủi ro thấp.
+Vấn đề đạo đức nằm ở đâu? 2. Ban lãnh đạo đề xuất hạ ngưỡng để
+gắn cờ nhiều bệnh nhân hơn là rủi ro cao. Điều này làm recall tăng lên
+nhưng precision giảm xuống. Ai được lợi? Ai bị thiệt hại?
+3. Một bác sĩ lập luận: “Tôi nên ghi đè lên mô hình mỗi khi tôi không
+đồng ý với nó.” Người khác lập luận: “Việc áp dụng mô hình nhất quán
+là công bằng hơn phán đoán của con người.” Hãy phân tích cả hai quan
+điểm. Đây chính là dạng bài hỗn hợp kỹ thuật – đạo đức xuất hiện trong
+IAIO.
+Dừng lại để suy nghĩ: Chọn đúng số đo
+Khi có rất nhiều số đo, làm sao chọn?
+Số đo Dùng khi Lưu ý
+Độ chính xác Các lớp cân bằng; mọi lỗi có
+chi phí như nhau
+Gây hiểu lầm với dữ liệu mất cân bằng
+Độ chính xác (precision) Dương tính giả tốn kém (ví
+dụ: thư rác gây phiền nhiễu
+người dùng)
+Bỏ qua âm tính giả
+Độ nhạy (recall) Âm tính giả tốn kém (ví dụ:
+bỏ sót ung thư)
+Bỏ qua dương tính giả
+Điểm F1 Cần sự cân bằng; cần một
+con số duy nhất
+Giả định rằng precision và recall
+cũng quan trọng như nhau
+AUC-ROC Đánh giá qua nhiều ngưỡng;
+so sánh các mô hình
+Không cho biết hiệu năng tại một
+ngưỡng cụ thể
+Trọng số chi phí Các loại lỗi khác nhau có chi
+phí khác nhau
+Đòi hỏi phải biết các chi phí đó
+5.6 Các số đo cho hồi quy
+Với hồi quy (dự đoán các số liên tục), chúng ta đo lường sai số dự đoán.
+Sai số Trung bình Tuyệt đối (MAE) là trung bình của các hiệu tuyệt đối:
+MAE = 1
+n
+nX
+i=1
+|yi − ˆyi|
+
+===== PAGE 111 =====
+
+5.7. CROSS-VALIDATION 111
+MAE dễ diễn giải vì dùng cùng đơn vị với giá trị mục tiêu.
+Sai số Bình phương Trung bình (MSE) bình phương các sai số, khiến sai số lớn bị phạt nặng hơn:
+MSE = 1
+n
+nX
+i=1
+(yi − ˆyi)2
+RMSE =
+√
+MSE trở về đơn vị gốc.
+R bình phương (R2) cho biết phần phân phối mà mô hình giải thích được:
+R2 = 1 −
+P(yi − ˆyi)2
+P(yi − ¯y)2
+R2 = 1 có nghĩa là dự đoán hoàn hảo; R2 = 0 có nghĩa là không tốt hơn việc
+dự đoán giá trị trung bình.
+5.7 Kiểm chéo
+Nếu bạn không có nhiều dữ liệu thì sao? Một cách chia huấn luyện – kiểm định
+đơn lẻ có thể không đáng tin; bạn có thể may mắn hoặc xui xẻo với việc
+những ví dụ nào rơi vào phần nào.
+Kiểm chéo K-fold giải quyết điều này bằng cách dùng toàn bộ dữ liệu cho cả
+huấn luyện lẫn kiểm định:
+Fold
+1 Val → Error1
+2 Val → Error2
+3 Val → Error3
+4 Val → Error4
+5 Val → Error5
+Final Score = Average of all errors
+Hình 5.5: Kiểm chéo 5-fold: mỗi phần đóng vai trò kiểm định đúng một lần.
+Quy trình: chia dữ liệu thành k phần bằng nhau; với mỗi phần i, huấn luyện trên các
+phần còn lại k − 1 và kiểm định trên chính phần i đó; lấy trung bình các k điểm kiểm
+định.
+Lợi ích: ước lượng đáng tin cậy hơn, dùng toàn bộ dữ liệu cho cả huấn luyện
+lẫn kiểm định, mỗi ví dụ đều được kiểm định đúng một lần. Chi phí: phải
+huấn luyện k mô hình thay vì 1. Các lựa chọn phổ biến: k = 5 hoặc k = 10.
+
+===== PAGE 112 =====
+
+112 CHAPTER 5. MODEL EVALUATION
+5.8 Cách mọi người vô tình gian lận
+Ngay cả những người thực hành có thiện chí cũng có thể vô tình làm mất hiệu
+lực của việc đánh giá. Hiểu các cạm bẫy này là điều thiết yếu để tạo ra những
+kết quả đáng tin cậy.
+5.8.1 Quá khớp vào bảng xếp hạng
+Trong các cuộc thi, bảng xếp hạng công khai hiển thị hiệu năng trên một phần
+của dữ liệu kiểm tra. Một kiểu hành vi nguy hiểm xuất hiện:
+1. Gửi dự đoán → xem điểm
+2. Điều chỉnh mô hình → gửi lại → xem điểm
+3. Lặp lại hàng trăm lần
+Mỗi lần gửi đều làm rò rỉ thông tin về tập kiểm tra. Sau đủ nhiều lần gửi, bạn
+đang âm thầm sửa mô hình cho khớp với dữ liệu kiểm tra. Điểm trên bảng xếp
+hạng công khai trở nên vô nghĩa, còn điểm trên bảng xếp hạng riêng (trên dữ
+liệu bị giữ lại) sụp đáng kể.
+Tại sao thứ hạng trên bảng xếp hạng ̸= không phản ánh chất lượng mô hình
+Một thứ hạng cao trên bảng xếp hạng không có nghĩa là bạn có một mô
+hình tốt. Nó có thể có nghĩa là:
+• Bạn may mắn trên tập kiểm tra công khai
+• Bạn đã quá khớp vào dữ liệu kiểm tra công khai qua nhiều lần gửi
+liên tục
+• Cách chia công khai/riêng không khớp với phân phối ngoài đời thực
+Tín hiệu đáng tin cậy duy nhất là điểm kiểm chéo của bạn trên dữ
+liệu của chính bạn.
+Những mô hình xếp hạng tốt trên kiểm chéo nhưng kém trên bảng xếp
+hạng công khai thường tốt hơn so với ngược lại; chúng thường sẽ hoạt
+động tốt hơn trên bảng xếp hạng riêng và khi triển khai thực tế.
+Cách khắc phục: Hãy tin điểm kiểm chéo của mình chứ đừng tin điểm bảng
+xếp hạng. Hạn chế số lần gửi.
+5.8.2 Vì sao “Chỉ xem thêm một lần nữa thôi” phá vỡ các bảo đảm
+Giá trị của tập kiểm tra đến từ một tính chất duy nhất: mô hình chưa từng bị nó
+chi phối. Mỗi lần bạn kiểm tra hiệu năng trên tập kiểm tra rồi điều chỉnh mô
+hình, bạn đang rò rỉ thông tin từ tập kiểm tra vào các quyết định thiết kế mô
+hình. Điều này đúng ngay cả khi bạn không trực tiếp huấn luyện trên đó.
+
+===== PAGE 113 =====
+
+5.8. HOW PEOPLE ACCIDENTALLY CHEAT 113
+Hãy cân nhắc: bạn huấn luyện Mô hình A, kiểm tra điểm trên tập kiểm tra (82%), kết
+luận rằng nó chưa đủ tốt, xây Mô hình B với các đặc trưng khác, kiểm tra lại (85%), tinh
+chỉnh thêm, kiểm tra lại nữa (87%). Sau 20 vòng lặp, bạn báo cáo độ chính xác kiểm tra
+là 87%. Nhưng đây không còn là một ước lượng trung thực nữa. Rõ ràng bạn đã dùng
+tập kiểm tra để lựa chọn trong số 20 mô hình, và chỉ do may rủi thôi, một số mô hình sẽ
+đạt điểm cao hơn trên tập kiểm tra cụ thể này so với khi chúng được đánh giá trên dữ
+liệu mới.
+Đây là cùng một vấn đề thống kê như kiểm định giả thuyết nhiều lần. Nếu bạn đánh giá
+20 mô hình trên cùng một tập kiểm tra, bạn đang thực hiện 20 phép so sánh. Ngay cả khi
+không mô hình nào thực sự tốt hơn, một số mô hình vẫn sẽ trông có vẻ tốt hơn chỉ vì biến
+động ngẫu nhiên. Bạn xem càng nhiều lần, điểm “tốt nhất” của bạn càng bị thổi phồng
+lên.
+Cách khắc phục: Chỉ chạm vào tập kiểm tra đúng một lần. Dùng kiểm chéo cho
+mọi quyết định trong quá trình phát triển. Nếu buộc phải đánh giá nhiều ứng viên
+cuối cùng, hãy áp dụng các hiệu chỉnh thống kê hoặc dùng một tập kiểm tra mới
+hoàn toàn.
+5.8.3 Rò rỉ dữ liệu trong bước tiền xử lý
+Một lỗi tinh vi nhưng phổ biến: thực hiện các bước tiền xử lý trên toàn bộ tập
+dữ liệu trước khi chia.
+Sai và Đúng
+Sai:
+1. Tính trung bình/độ lệch chuẩn của
+toàn bộ dữ liệu 2. Chuẩn hóa toàn bộ dữ
+liệu
+3. Chia thành tập huấn luyện/kiểm tra
+Đúng:
+1. Chia thành tập huấn luyện/kiểm tra
+2. Chỉ tính trung bình/độ lệch chuẩn của tập huấn luyện 3. Chuẩn
+hóa tập huấn luyện bằng số liệu thống kê của tập huấn luyện 4.
+Chuẩn hóa tập kiểm tra bằng số liệu thống kê của tập huấn luyện
+Cáchsai này làm rò rỉ thông tin của tập kiểm tra vào quá trình huấn luyện.
+5.8.4 Rò rỉ theo thời gian
+Với dữ liệu chuỗi thời gian, việc chia tập huấn luyện/kiểm tra một cách ngẫu nhiên là không hợp lệ. Nếu
+bạn huấn luyện trên dữ liệu năm 2023 để dự đoán năm 2022, bạn đang dùng tương lai để dự đoán quá
+khứ.
+Cách khắc phục: Luôn chia theo thời gian. Huấn luyện trên quá khứ, kiểm định trên tương lai.
+5.8.5 Tập kiểm tra tốt ̸= không đồng nghĩa với thực tế tốt
+Ngay cả với một tập kiểm tra được xây dựng hoàn hảo, một quá trình đánh giá trung thực và
+không có rò rỉ, một điểm kiểm tra cao vẫn không bảo đảm mô hình sẽ hoạt động tốt khi triển
+
+===== PAGE 114 =====
+
+114 CHAPTER 5. MODEL EVALUATION
+khai. Tập kiểm tra đo lường hiệu năng trên dữ liệu được lấy từ cùng phân
+phối với dữ liệu huấn luyện. Thế giới thực có thể khác.
+Dân số bệnh nhân thay đổi. Sở thích người tiêu dùng thay đổi. Điều kiện kinh
+tế biến đổi. Một mô hình đạt 95% trên một tập kiểm tra lấy từ dữ liệu bệnh
+viện năm 2024 có thể chỉ đạt 80% trên dữ liệu năm 2026 của một mạng lưới
+bệnh viện khác. Điểm kiểm tra không sai; nó chính xác đo lường hiệu năng
+dưới điều kiện của năm 2024. Nhưng nó không phải là một lời hứa về tương
+lai.
+Đây là lý do Chương 3 nhấn mạnh về dịch chuyển phân phối và tính hợp lệ của
+tập kiểm tra. Điểm kiểm tra là một ước lượng dưới những giả định cụ thể.
+Khi những giả định ấy không còn đúng, ước lượng cũng không còn đúng.
+5.9 Tinh chỉnh siêu tham số
+Việc tìm được các siêu tham số tốt có thể làm nên khác biệt giữa thành công và
+thất bại.
+Tìm kiếm lưới thử mọi tổ hợp của các giá trị đã chỉ định. Đơn giản nhưng tốn
+kém. 5 siêu tham số với 10 giá trị mỗi cái nghĩa là 105 = 100, 000 tổ hợp.
+Tìm kiếm ngẫu nhiên lấy mẫu các tổ hợp một cách ngẫu nhiên. thường tìm ra
+lời giải tốt nhanh hơn vì không phải siêu tham số nào cũng quan trọng như
+nhau.
+Mẹo thực hành: bắt đầu với tốc độ học (thường là yếu tố quan trọng nhất).
+Dùng thang logarit (hãy thử 0.001, 0.01, 0.1, chứ đừng thử 0.1, 0.2, 0.3). Không
+tinh chỉnh quá mức. Quá nhiều thí nghiệm có thể khiến bạn quá khớp vào chính
+tập kiểm định.
+
+===== PAGE 115 =====
+
+5.10. SUMMARY 115
+5.10 Tóm tắt
+Điểm cần nhớ
+Chia dữ liệu: Huấn luyện (70%) để học, Kiểm định (15%) để tinh
+chỉnh, Kiểm tra (15%) để đánh giá cuối cùng. Không bao giờ kiểm thử
+trên dữ liệu huấn luyện. Thiên vị – Phương sai: Thiếu khớp = quá đơn
+giản (thiên vị cao). Quá khớp = quá phức tạp (phương sai cao). Điểm
+ngọt nằm ở giữa phụ thuộc vào độ lớn dữ liệu và mức nhiễu.
+Các số đo phân loại: Độ chính xác gây hiểu lầm với dữ liệu mất cân
+bằng. Hãy dùng precision (dương tính giả tốn kém), recall (âm tính giả
+tốn kém), hoặc F1 (cân bằng). Lựa chọn ngưỡng là một quyết định kinh
+doanh.
+Hiệu chuẩn: Thứ hạng tốt (AUC) không kéo theo xác suất có ý nghĩa.
+Hiệu chuẩn quan trọng khi chính giá trị xác suất dẫn dắt quyết định.
+ROC và AUC: ROC thể hiện TPR so với FPR qua các ngưỡng. AUC
+tóm tắt khả năng phân biệt.
+Kiểm chéo: Kiểm chéo K-fold dùng toàn bộ dữ liệu cho cả huấn luyện
+lẫn kiểm định, cho ra các ước lượng đáng tin cậy hơn.
+Tính toàn vẹn của tập kiểm tra: Mỗi lần nhìn vào tập kiểm tra đều làm
+rò rỉ thông tin. “Chỉ xem thêm một lần nữa thôi” chính là cùng một sai
+lầm thống kê như kiểm định giả thuyết nhiều lần.
+Kiểm thử ̸= Triển khai: Hiệu năng kiểm thử tốt đo độ chính xác dưới
+điều kiện kiểm thử. Dịch chuyển phân phối có thể khiến ước lượng đó
+trở nên vô nghĩa trong thế giới thực.
+1
+5.11 Bài tập luyện
+1. Với 10.000 điểm dữ liệu, hãy mô tả cách bạn sẽ chia dữ liệu để tinh chỉnh
+siêu tham số. Tỉ lệ cho mỗi tập là bao nhiêu?
+2. Một mô hình đạt độ chính xác huấn luyện 99% nhưng chỉ đạt độ chính
+xác kiểm định 65%. Hãy chẩn đoán bằng góc nhìn thiên vị – phương sai.
+3. Hãy tính precision, recall và F1 từ ma trận nhầm lẫn sau đây:
+Pred + Pred –
+Actual + 450 50
+Actual – 100 400
+1The theory of why cross-validation works is covered in Chapter 11 (PAC learning and
+generalization bounds).
+
+===== PAGE 116 =====
+
+116 CHAPTER 5. MODEL EVALUATION
+4. Khi nào bạn nên tối ưu theo precision thay vì recall? Hãy cho một ví dụ
+ngoài đời thực.
+5. (Dạng bài chứng minh: Vì sao kiểm chéo hoạt động)
+Trong kiểm chéo  k-fold, ta huấn luyện k mô hình, mỗi mô hình trên
+(k − 1)/k dữ liệu, rồi lấy trung bình sai số kiểm định của chúng.
+(a) Hãy giải thích trực giác về sao việc lấy trung bình trên k phần cho
+ước lượng đáng tin cậy hơn so với một cách chia huấn luyện/kiểm tra
+đơn lẻ.
+(b) Khi  k tăng lên và tiến gần  n (kiểm chéo loại-trừ-một), điều gì xảy ra với:
+• Thiên vị của ước lượng sai số?
+• Phương sai của ước lượng sai số?
+• Chi phí tính toán?
+(c) Tại sao  k = 5 hay  k = 10 thường là một sự thỏa hiệp tốt? (d) Nếu dữ liệu
+của bạn có các nhóm tự nhiên (ví dụ: nhiều mẫu cho cùng một bệnh nhân), tại sao
+kiểm chéo  k-fold tiêu chuẩn lại có thể cho ra các ước lượng lạc quan? Bạn nên làm gì
+thay thế?
+6. (Dạng bài chứng minh: Phân rã thiên vị – phương sai)
+Với hồi quy có hàm thật f (x) và mô hình ˆf (x):
+E[(f (x) − ˆf (x))2] = Bias2 + Variance + Noise
+(a) Hãy định nghĩa thiên vị theo E[ ˆf (x)] và f (x).
+(b) Một mô hình hằng số ˆf (x) = c có thiên vị cao. Vì sao? (c) Một mô
+hình nội suy qua mọi điểm huấn luyện có phương sai cao. Vì sao?
+(d) Chuẩn hóa làm tăng thiên vị. Vì sao điều này thường lại cải thiện sai
+số kiểm thử?
+7. (Nhiều phần: Khi độ chính xác đánh lừa) Một xét nghiệm bệnh (tỉ lệ
+mắc 1%) cho:
+Test + Test –
+Has Disease 90 10
+No Disease 495 9405
+(a) Hãy tính độ chính xác, precision, recall, F1.
+(b) Tại sao độ chính xác 94,95% là gây hiểu lầm?
+
+===== PAGE 117 =====
+
+5.11. PRACTICE PROBLEMS 117
+(c) Giá trị dương đoán đúng là bao nhiêu? Tại sao nó lại khác xa recall
+đến vậy?
+8. (Phát hiện gian lận) Mô hình của đồng nghiệp bạn đạt AUC = 0.99.
+Bằng ba cách nào họ có thể vô tình làm cho điểm số này bị thổi phồng?
+9. Một mô hình có độ chính xác 100% trên tập huấn luyện / 60% trên tập kiểm tra. Một mô
+hình khác có 70% trên tập huấn luyện / 65% trên tập kiểm tra. Mô hình nào tốt hơn và vì
+sao?
+
+===== PAGE 118 =====
+
+118 CHAPTER 5. MODEL EVALUATION

@@ -1,0 +1,511 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 65-80
+
+
+===== PAGE 65 =====
+
+Chương 3
+Chuẩn bị dữ liệu và kỹ thuật
+đặc trưng
+Nhiều dữ liệu hơn đánh bại thuật toán
+thông minh, nhưng dữ liệu tốt hơn
+đánh bại nhiều dữ liệu hơn.
+Peter Norvig
+3.1 Giới thiệu: Vì sao chuẩn bị dữ liệu quan trọng
+Bạn đã thu thập một bộ dữ liệu, chọn một thuật toán đầy triển vọng, và bạn
+sẵn sàng huấn luyện mô hình học máy đầu tiên. Bạn chạy mã, chờ kết quả,
+và... mô hình hoạt động tệ hại. Điều gì đã sai?
+Chín lần trong mười lần, vấn đề không nằm ở thuật toán. Vấn đề nằm ở dữ
+liệu.
+Thuật toán học máy là những bộ tìm mẫu mạnh mẽ một cách đáng kinh ngạc,
+nhưng chúng cũng rất cứng nhắc, hiểu mọi thứ theo đúng nghĩa đen. Chúng
+tìm mọi mẫu có trong dữ liệu bạn đưa cho chúng — kể cả những mẫu bạn
+không hề mong muốn. Nếu dữ liệu chứa lỗi, thuật toán sẽ học những lỗi đó.
+Nếu dữ liệu có giá trị thiếu, thuật toán hoặc là gặp lỗi sập, hoặc là bịa ra con
+số. Nếu một đặc trưng được đo bằng hàng triệu trong khi đặc trưng khác đo
+bằng số thập phân, thuật toán chỉ chú ý đến những con số lớn.
+65
+
+===== PAGE 66 =====
+
+66 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Quy tắc vàng của học máy
+Chất lượng mô hình của bạn bị giới hạn bởi chất lượng dữ liệu của
+bạn. “Rác vào, rác ra.” Không thuật toán nào, dù tinh vi đến đâu, có thể
+trích xuất những mẫu có ý nghĩa từ dữ liệu xấu.
+Chương này đề cập các bước thiết yếu của chuẩn bị dữ liệu. Biến dữ liệu thô,
+lộn xộn thành định dạng sạch mà thuật toán có thể học hiệu quả.
+3.2 Hiểu về cấu trúc dữ liệu
+Học máy làm việc với dữ liệu dạng bảng: hàng đại diện cho đối tượng (còn
+gọi là thực thể hoặc mẫu), và cột đại diện cho thuộc tính (còn gọi là đặc
+trưng hoặc biến).
+Age Height Weight Color Label
+25 175 70 Blue Yes
+30 160 55 Red No
+Objects
+Attributes
+Hình 3.1: Dữ liệu dạng bảng: hàng là đối tượng, cột là thuộc tính.
+Thuộc tính số nhận giá trị liên tục (tuổi, chiều cao, nhiệt độ). Thuộc tính phân
+loại nhận giá trị từ một tập cố định (màu sắc, quốc gia, kích cỡ). Phân biệt này
+quyết định cách bạn xử lý từng thuộc tính.
+3.3 Vấn đề chất lượng dữ liệu
+Dữ liệu thực tế rất lộn xộn. Trước khi xây dựng bất kỳ mô hình nào, bạn phải
+xác định và xử lý các vấn đề chất lượng.
+Nhiễu là những lỗi ngẫu nhiên che mờ các mẫu thật. Sự thiếu chính xác của
+phép đo, lỗi nhập dữ liệu, và biến thiên tự nhiên đều góp phần tạo ra nhiễu
+khiến việc học trở nên khó khăn hơn.
+Ngoại lai là những điểm dữ liệu khác biệt một cách kịch tính so với phần còn lại. Một ngoại
+lai duy nhất có thể làm biến dạng nghiêm trọng các mẫu đã học — một biệt thự định giá C50
+triệu trong bộ dữ liệu nhà cửa giá C300 000 có thể làm lệch hoàn toàn một mô hình hồi quy.
+
+===== PAGE 67 =====
+
+3.4. FEATURE SCALING 67
+x
+y
+Outlier
+True pattern
+Distorted fit
+Hình 3.2: Một ngoại lai có thể làm biến dạng kịch tính mẫu đã học.
+Giá trị thiếu xảy ra khi một số thuộc tính không được ghi nhận. Bạn phải xóa
+các hàng không hoàn chỉnh (mất dữ liệu) hoặc điền khuyết giá trị thiếu bằng
+ước lượng như trung bình hoặc trung vị của cột.
+Trùng lặp làm tăng trọng số cho một số ví dụ nhất định, làm lệch các mẫu đã học.
+3.4 Chuẩn hóa đặc trưng
+Nhiều thuật toán nhạy cảm với thang đặc trưng. Nếu thu nhập dao động từ
+C20 000 đến C200 000 trong khi tuổi dao động từ 18 đến 80, chênh lệch thu
+nhập sẽ áp đảo mọi phép tính khoảng cách, khiến thuật toán thực tế phớt lờ
+tuổi.
+Chuẩn hóa z-score biến đổi mỗi đặc trưng để có trung bình 0 và độ lệch
+chuẩn 1:
+˜xi = xi − µ
+σ
+Ví dụ: Chuẩn hóa z-score
+Dữ liệu: [10, 20, 30, 40, 50]
+Trung bình: µ = 30, Độ lệch chuẩn: σ ≈ 14.14
+Đã chuẩn hóa: [−1.41, −0.71, 0, 0.71, 1.41]
+Chuẩn hóa min-max biến đổi các đặc trưng về khoảng [0, 1]:
+˜xi = xi − xmin
+xmax − xmin
+3.5 Mã hóa các biến phân loại
+Các thuật toán cần số, nhưng việc gán số tùy ý (đỏ=1, xanh=2) ngụ ý một thứ
+tự sai. Mã hóa one-hot chuyển một đặc trưng phân loại có k giá trị thành k cột
+nhị phân.
+
+===== PAGE 68 =====
+
+68 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Color
+Red
+Blue
+is_Red is_Blue
+1 0
+0 1
+Hình 3.3: Mã hóa one-hot tạo các cột nhị phân cho từng danh mục.
+3.6 Chia tập huấn luyện–kiểm định–kiểm tra
+Để đánh giá mô hình khái quát hóa tốt đến đâu trên dữ liệu mới, chúng ta chia
+bộ dữ liệu thành các phần với vai trò khác nhau.
+Phép ẩn dụ kỳ thi
+Hãy coi tập huấn luyện là sách giáo khoa của bạn, tập kiểm định là các
+bài thi thử, và tập kiểm tra là kỳ thi cuối kỳ. Xem Chương 5 để thảo
+luận chi tiết về phương pháp đánh giá và cách chia dữ liệu.
+Tập huấn luyện (thường 70%) là nơi việc học diễn ra. Tập kiểm định (15%)
+dùng để tinh chỉnh siêu tham số và đưa ra các quyết định về mô hình hóa. Tập
+kiểm tra (15%) được giữ riêng hoàn toàn cho đến khi đánh giá cuối cùng. Nó
+đại diện cho dữ liệu thực sự chưa từng thấy.
+Quy tắc tối thượng
+Không bao giờ huấn luyện trên dữ liệu kiểm tra. Không bao giờ dùng dữ liệu kiểm tra để ra quyết định.
+Khi bạn ngó thấy hiệu năng kiểm tra và điều chỉnh mô hình, tập kiểm tra
+không còn đại diện cho dữ liệu mới. Xem Chương 5 để thảo luận chi
+tiết về phương pháp đánh giá.
+3.7 Kỹ thuật đặc trưng
+Dữ liệu thô hiếm khi đến ở dạng lý tưởng cho học máy. Kỹ thuật đặc trưng là
+quá trình biến đổi dữ liệu thô thành các đặc trưng đại diện tốt hơn cho các
+mẫu nền, thường cải thiện đáng kể hiệu năng mô hình.
+3.7.1 Tạo đặc trưng mới
+Đôi khi các đặc trưng thô không phải là dạng đại diện có sức dự đoán cao nhất.
+Hãy xét việc dự đoán giá nhà:
+• Đặc trưng thô: chiều dài, chiều rộng của lô đất
+
+===== PAGE 69 =====
+
+3.7. FEATURE ENGINEERING 69
+• Đặc trưng tốt hơn: diện tích = chiều dài × chiều rộng
+Diện tích nắm bắt điều thực sự quan trọng (mất bao nhiêu đất) một cách trực
+tiếp hơn so với các chiều kích thước thô.
+Các kỹ thuật đặc trưng phổ biến:
+• Đặc trưng đa thức: Tạo x2, x1 · x2, v.v. để nắm bắt các quan hệ phi
+tuyến
+• Nhóm giá trị (binning): Chuyển biến liên tục thành các danh mục (tuổi
+→ nhóm tuổi)
+• Biến đổi log: Nén thang của các biến bị lệch rất nhiều
+• Đặc trưng ngày/giờ: Trích xuất thứ trong tuần, tháng, năm, is_weekend
+từ các dấu thời gian
+3.7.2 Kiến thức miền
+Những đặc trưng tốt nhất thường đến từ việc hiểu vấn đề miền (domain).
+Một kỹ sư học máy làm việc về chấm điểm tín dụng nên tham vấn các chuyên
+gia tài chính để hiểu những tỷ lệ nào (nợ trên thu nhập, mức sử dụng tín dụng)
+là những dấu hiệu dự đoán có ý nghĩa.
+Ví dụ: Kỹ thuật đặc trưng cho phát hiện gian lận
+Đặc trưng thô: số tiền giao dịch, danh mục thương gia, dấu thời gian.
+Đặc trưng được kỹ thuật hóa:
+• Số tiền giao dịch tương đối so với mức trung bình của người dùng
+• Thời gian kể từ giao dịch cuối cùng
+• Số lượng giao dịch trong giờ qua
+• Khoảng cách đến các vị trí điển hình của người dùng
+• Liệu danh mục thương gia có bất thường đối với người dùng này không
+Những đặc trưng được kỹ thuật hóa này nắm bắt các mẫu hành vi mà
+đặc trưng thô không thể nắm bắt.
+3.7.3 Rò rỉ dữ liệu: Một cạm bẫy nghiêm trọng
+Rò rỉ dữ liệu xảy ra khi thông tin vốn không khả dụng vào thời điểm dự đoán
+lại được sử dụng trong quá trình huấn luyện. Điều này tạo ra các điểm kiểm
+định cao một cách giả tạo, sụp đổ khi mô hình gặp dữ liệu thực tế. Rò rỉ xuất
+hiện ở hai dạng khác biệt nhau.
+
+===== PAGE 70 =====
+
+70 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Rò rỉ mục tiêu
+Rò rỉ mục tiêu xảy ra khi một đặc trưng được suy ra từ, hoặc là biến thế
+(proxy) của, nhãn mà bạn đang cố gắng dự đoán.
+Ví dụ: Rò rỉ mục tiêu
+Bạn đang dự đoán liệu bệnh nhân có nhập viện trở lại trong vòng 30
+ngày hay không. Mô hình của bạn đạt độ chính xác 99% trên dữ liệu
+kiểm định. Sau đó bạn nhận thấy một trong các đặc trưng của mình:
+readmission_date. Trường này chỉ được điền cho những bệnh nhân đã
+nhập viện trở lại. Đặc trưng này mã hóa trực tiếp nhãn.
+Các ví dụ khác:
+• Dự đoán vỡ nợ khoản vay bằng “số lần trả nợ trễ” (điều này
+chính là vỡ nợ)
+• Dự đoán bệnh bằng “thuốc được kê đơn cho bệnh đó”
+• Dự đoán khách hàng rời đi bằng “lý do hủy”
+Mẫu: bất kỳ đặc trưng nào chỉ có thể tồn tại vì kết quả đều là rò rỉ mục
+tiêu.
+Rò rỉ đặc trưng (ô nhiễm huấn luyện–kiểm tra)
+Rò rỉ đặc trưng xảy ra khi thông tin từ tập kiểm tra làm nhiễm bẩn quá trình
+huấn luyện, mặc dù không có đặc trưng riêng lẻ nào được suy ra từ nhãn.
+Ví dụ: Rò rỉ đặc trưng
+Các nguồn rò rỉ đặc trưng phổ biến:
+• Khớp một bộ chuẩn hóa trên toàn bộ bộ dữ liệu (bao gồm cả dữ
+liệu kiểm tra) trước khi chia tập
+• Tính trung bình cho việc điền khuyết giá trị thiếu bằng tất cả các
+hàng, rồi mới chia tập
+• Các hàng trùng lặp hoặc gần trùng lặp xuất hiện ở cả tập huấn
+luyện và tập kiểm tra
+• Dữ liệu chuỗi thời gian bị xáo trộn ngẫu nhiên thay vì được chia
+theo thứ tự thời gian
+Mẫu: bất kỳ bước tiền xử lý nào cho phép thống kê của tập kiểm tra
+ảnh hưởng đến phép biến đổi của huấn luyện đều là rò rỉ đặc trưng.
+Cách đúng là chỉ khớp (fit) mọi phép biến đổi trên tập huấn luyện, rồi
+áp dụng các phép biến đổi đó cho tập kiểm định và tập kiểm tra.
+
+===== PAGE 71 =====
+
+3.8. SAMPLING BIAS: PROBLEMS BEFORE MODELING BEGINS 71
+Rò rỉ mục tiêu so với rò rỉ đặc trưng
+Rò rỉ mục tiêu Rò rỉ đặc trưng
+Cái gì bị rò rỉ? Thông tin từ nhãn vào
+một đặc trưng
+Thông tin từ tập kiểm tra vào quá
+trình huấn luyện
+Nguyên nhân Đặc trưng được suy ra từ kết
+quả
+Tiền xử lý dùng dữ liệu tương
+lai/kiểm tra
+Phát hiện “Tôi có thứ này trước
+kết quả không?”
+“Dữ liệu kiểm tra có ảnh hưởng
+đến huấn luyện không?”
+Fix Bỏ đặc trưng đó Sửa thứ tự tiền xử lý
+Liên hệ với thiên vị–phương sai (Chương 5)
+Kỹ thuật đặc trưng ảnh hưởng trực tiếp đến đánh đổi thiên vị–phương sai:
+• Quá ít đặc trưng: Thiên vị cao (thiếu khớp), mô hình không nắm
+bắt được các mẫu quan trọng
+• Quá nhiều đặc trưng: Phương sai cao (quá khớp), mô hình ghi
+nhớ nhiễu
+• Đặc trưng bị rò rỉ: Lỗi huấn luyện và kiểm định thấp một cách
+giả tạo, nhưng lỗi kiểm tra thảm khốc
+Mục tiêu là có những đặc trưng nắm bắt tín hiệu thật mà không đưa vào
+nhiễu hay rò rỉ.
+Liên kết then chốt: Rò rỉ và lỗi kiểm định
+Cả hai dạng rò rỉ đều gây ra lỗi kiểm định lạc quan: điểm kiểm chéo
+của bạn trông tuyệt vời, nhưng hiệu năng thực tế lại tệ hại. Rò rỉ mục
+tiêu làm thổi phồng điểm vì mô hình có quyền truy cập câu trả lời. Rò rỉ
+đặc trưng làm thổi phồng điểm vì tập kiểm định không còn thực sự độc
+lập.
+Chỉ tập kiểm tra cuối cùng (hoặc việc triển khai thực tế) mới bộc lộ
+sự thật. Xem Chương 5 để biết vì sao phương pháp kiểm định đúng
+đắn rất cần thiết và rò rỉ làm suy yếu điều đó như thế nào.
+3.8 Thiên vị lấy mẫu: Vấn đề trước khi bắt đầu mô hình hóa
+Ngay cả trước khi chọn thuật toán, bộ dữ liệu của bạn có thể đã khiếm khuyết
+vì cách dữ liệu được thu thập. Thiên vị lấy mẫu (sampling bias) nghĩa là dữ
+liệu không đại diện cho quần thể mà bạn muốn đưa ra dự đoán.
+
+===== PAGE 72 =====
+
+72 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.8.1 Thiên vị chọn lọc
+Thiên vị chọn lọc xảy ra khi quá trình thu thập dữ liệu loại trừ có hệ thống
+một số nhóm hoặc tình huống nhất định. Bộ dữ liệu thu được không đại diện
+cho toàn bộ quần thể.
+Một nghiên cứu y khoa chỉ thực hiện ở bệnh viện thành phố sẽ đại diện thiếu bệnh nhân
+nông thôn. Một cuộc khảo sát chỉ bằng tiếng Anh sẽ bỏ lỡ những người không nói tiếng
+Anh. Một AI được huấn luyện trên dữ liệu từ một quốc gia có thể thất bại ở quốc gia
+khác.
+3.8.2 Thiên vị sống sót
+Thiên kiến sống sót xảy ra khi dữ liệu của bạn chỉ chứa những ví dụ đã “sống
+sót” qua một quá trình chọn lọc nào đó, và bạn rút ra kết luận như thể chúng đại
+diện cho toàn bộ các trường hợp.
+Ví dụ kinh điển: Thiên kiến sống sót
+Trong Thế chiến thứ hai, các kỹ sư nghiên cứu các lỗ hổng đạn trên máy
+bay quay về từ chiến trường và đề xuất gia cố những vùng bị trúng đạn
+nhiều nhất. Nhà thống kê Abraham Wald chỉ ra lỗ hổng trong đó: họ chỉ
+nhìn thấy những máy bay đã sống sót. Những máy bay bị trúng đạn ở
+các vùng khác không bao giờ quay về. Quân đội nên gia cố những vùng
+không có lỗ hổng đạn trên máy bay sống sót.
+Trong học máy, thiên kiến sống sót xuất hiện khi bạn huấn luyện trên dữ liệu
+từ những khách hàng đã ở lại (bỏ qua những người đã rời đi), những công ty
+đã thành công (bỏ qua những công ty thất bại), hoặc những bệnh nhân đã hoàn
+thành nghiên cứu (bỏ qua những người đã bỏ cuộc).
+3.8.3 Chọn mẫu thuận tiện
+Chọn mẫu thuận tiện nghĩa là thu thập dữ liệu từ bất kỳ nguồn nào dễ tiếp cận
+nhất. Huấn luyện một hệ thống nhận dạng khuôn mặt trên ảnh của sinh viên đại
+học (vì họ ở gần đó) sẽ tạo ra một mô hình thiên lệch về nhóm dân số trẻ, có học
+vấn và sống trong khuôn viên trường. Huấn luyện một mô hình ngôn ngữ trên văn
+bản Internet sẽ đại diện quá mức cho những người dùng nói tiếng Anh và có kỹ
+năng kỹ thuật.
+Hầu hết các tập dữ liệu huấn luyện AI quy mô lớn đều mắc phải mức độ chọn
+mẫu thuận tiện nhất định.
+3.8.4 Thiên kiến không phản hồi
+Khi bạn thu thập dữ liệu qua khảo sát hoặc tham gia tự nguyện, những người
+trả lời có thể khác có hệ thống so với những người không trả lời. Đánh giá sản
+phẩm nghiêng về những người có cảm xúc mạnh (hoặc rất hài lòng, hoặc rất
+
+===== PAGE 73 =====
+
+3.9. DISTRIBUTION SHIFT: WHEN THE WORLD CHANGES 73
+thất vọng). Các nghiên cứu y tế mất đi những người tham gia khi bệnh quá nặng để tiếp
+tục. Khảo sát mức độ hài lòng công việc lại đại diện thiếu cho những người đã nghỉ
+việc.
+Kết nối với IAIO: Nhận diện thiên kiến chọn mẫu
+Các bài thi IAIO có thể đưa ra một tập dữ liệu và yêu cầu bạn nhận
+diện những thiên kiến chọn mẫu tiềm ẩn. Với mỗi tập dữ liệu, hãy hỏi:
+• Ai hoặc cái gì bị thiếu khỏi dữ liệu này?
+• Quá trình nào đã tạo ra dữ liệu này, và quá trình đó loại trừ ai?
+• Kết quả có thay đổi không nếu dữ liệu bị thiếu được đưa vào?
+3.9 Dịch chuyển phân phối: Khi thế giới thay đổi
+Một mô hình được huấn luyện trên một phân phối dữ liệu này có thể gặp một
+phân phối khác khi triển khai. Điều này được gọi là dịch chuyển phân phối, và
+nó là một trong những lý do phổ biến nhất khiến các mô hình đã triển khai thất
+bại.
+3.9.1 Dịch chuyển đồng biến (covariate shift)
+Phân phối đầu vào thay đổi, nhưng mối quan hệ giữa đầu vào và đầu ra vẫn
+giữ nguyên.
+Ví dụ: Một mô hình được huấn luyện để chẩn đoán bệnh từ ảnh X-quang tại
+Bệnh viện A được triển khai tại Bệnh viện B, nơi dùng các máy X-quang khác.
+Những hình ảnh này trông khác nhau (đầu vào bị dịch chuyển), nhưng mối quan
+hệ cơ bản giữa bệnh lý và các đặc trưng ảnh không hề thay đổi. Mô hình vẫn
+có thể thất bại bởi vì nó đã học các đặc trưng riêng của thiết bị tại Bệnh viện
+A.
+Về mặt hình thức: Ptrain(X) ̸= Pdeploy(X), nhưng P (Y |X) vẫn giữ nguyên.
+3.9.2 Dịch chuyển nhãn (label shift)
+Phân phối kết quả thay đổi, nhưng mối quan hệ từ kết quả tới đặc trưng vẫn
+giữ nguyên.
+Ví dụ: Một bộ lọc thư rác được huấn luyện khi 5% email là thư rác, rồi được
+triển khai khi 40% email là thư rác. Ngưỡng của bộ lọc, vốn được hiệu chỉnh
+cho tỉ lệ thư rác 5%, sẽ bỏ sót nhiều email thư rác. Bản thân thư rác trông như
+nhau; chỉ là có nhiều hơn thôi.
+Về mặt hình thức: Ptrain(Y ) ̸= Pdeploy(Y ), nhưng P (X|Y ) vẫn giữ nguyên.
+
+===== PAGE 74 =====
+
+74 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.9.3 Trôi dạng khái niệm (concept drift)
+Mối quan hệ cơ bản giữa đầu vào và đầu ra thay đổi theo thời gian.
+Ví dụ: Một mô hình dự đoán người vay “đủ khả năng tín dụng” được huấn
+luyện trước một cuộc suy thoái lớn. Trong thời kỳ suy thoái, chính các đặc
+trưng thu nhập và việc làm đó không còn dự đoán việc trả nợ theo cách như
+trước nữa, bởi chính nền kinh tế đã thay đổi. Khái niệm “đủ khả năng tín
+dụng” đã dịch chuyển.
+Về mặt hình thức: Ptrain(Y |X) ̸= Pdeploy(Y |X).
+Ba loại dịch chuyển phân phối
+Loại Điều gì thay đổi Ví dụ
+Covariate shift Phân phối đầu vào P (X) Bệnh viện mới, thiết bị khác
+Dịch chuyển nhãn (label shift) Phân phối đầu ra P (Y ) Tỉ lệ thư rác tăng
+Concept drift Mối quan hệ P (Y |X) Suy thoái làm thay đổi các kiểu
+hình vỡ nợ
+Trôi dạng khái niệm nguy hiểm nhất, vì các quy tắc mà mô hình đã học trở nên
+sai, chứ không chỉ lệch độ chính xác. Các mô hình được triển khai trong những
+môi trường thay đổi cần được theo dõi liên tục.
+3.10 Khi nào một tập kiểm tra là hợp lệ?
+Tập kiểm tra đo lường sự khái quát hóa: mô hình sẽ hoạt động tốt ra sao trên
+dữ liệu mới. Nhưng phép đo này chỉ có ý nghĩa nếu tập kiểm tra đại diện cho
+dữ liệu mà mô hình thực sự sẽ gặp khi triển khai.
+3.10.1 Yêu cầu về tính đại diện
+Nếu bạn huấn luyện và kiểm tra trên dữ liệu bệnh viện từ năm 2020, độ chính
+xác kiểm tra cho bạn biết mô hình hoạt động tốt ra sao trên dữ liệu bệnh viện
+năm 2020. Nó không nói gì về hiệu năng vào năm 2025, ở một bệnh viện khác,
+ở một quốc gia khác, hay trên một nhóm bệnh nhân khác.
+Một tập kiểm tra chỉ hợp lệ nếu:
+• Nó được lấy từ cùng phân phối mà mô hình sẽ gặp khi triển khai
+• Nó không được dùng để đưa ra bất kỳ quyết định xây dựng mô hình nào (không ngầm nhìn trộm)
+• Nó đủ lớn để ước lượng độ chính xác là đáng tin cậy về mặt thống kê
+
+===== PAGE 75 =====
+
+3.10. WHEN IS A TEST SET VALID? 75
+3.10.2 Khi tập kiểm tra nói dối
+Tập kiểm tra có thể tạo ra cảm giác an toàn giả
+Hãy xét một mô hình được huấn luyện và kiểm tra trên dữ liệu từ một
+bệnh viện. Độ chính xác kiểm tra là 95%. Sau đó mô hình được triển
+khai tại một bệnh viện thứ hai, nơi độ chính xác giảm xuống còn 70%.
+Chuyện gì đã sai? Tập kiểm tra không sai, nó đo chính xác hiệu năng
+trên dữ liệu của bệnh viện đó. Nhưng nó gây hiểu lầm vì không đại diện
+cho bối cảnh triển khai. Điểm kiểm tra không phải là lời bảo đảm. Nó
+chỉ là một ước lượng, và chỉ hợp lệ dưới giả định rằng dữ liệu triển
+khai giống dữ liệu kiểm tra.
+3.10.3 Chia theo thời gian
+Với dữ liệu phụ thuộc thời gian, cách chia ngẫu nhiên là không hợp lệ. Nếu
+bạn trộn ngẫu nhiên giá cổ phiếu từ 2020–2024 rồi chia thành tập huấn luyện
+và tập kiểm tra, mô hình có thể dùng giá trong tương lai để dự đoán giá trong
+quá khứ.
+Cách đúng đắn: huấn luyện trên dữ liệu trước đó, kiểm tra trên dữ liệu sau đó.
+Điều này mô phỏng đúng bối cảnh triển khai thực tế, nơi bạn luôn dự đoán
+tương lai chỉ dựa vào quá khứ.
+3.10.4 Kết nối các mảnh lại với nhau
+Thiên kiến chọn mẫu, dịch chuyển phân phối và tính hợp lệ của tập kiểm tra
+đều là những mặt khác nhau của cùng một vấn đề: dữ liệu của bạn có đại
+diện cho tình huống mà mô hình sẽ được sử dụng hay không?
+• Thiên kiến chọn mẫu nghĩa là dữ liệu huấn luyện chưa bao giờ mang tính
+đại diện ngay từ đầu
+• Dịch chuyển phân phối nghĩa là thế giới đã thay đổi sau khi dữ liệu được thu thập
+• Tập kiểm tra không hợp lệ nghĩa là bạn thậm chí không thể đo lường vấn đề
+
+===== PAGE 76 =====
+
+76 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.11 Tóm tắt
+Điểm cần nhớ
+Chất lượng dữ liệu: Xử lý nhiễu, ngoại lai, giá trị thiếu và dữ liệu
+trùng lặp trước khi xây dựng mô hình.
+Chuẩn hóa đặc trưng: Dùng chuẩn hóa theo trung bình và độ lệch
+chuẩn, hoặc chuẩn hóa min-max, để mọi đặc trưng đóng góp như nhau.
+Mã hóa biến phân loại: Dùng mã hóa one-hot để tránh tạo ra một thứ tự
+giả.
+Chia tập dữ liệu: Huấn luyện để học, kiểm định để tinh chỉnh, kiểm
+tra để đánh giá cuối cùng. Không bao giờ ngầm nhìn vào dữ liệu kiểm
+tra.
+Kỹ thuật đặc trưng: Biến dữ liệu thô thành những đặc trưng đại diện
+tốt hơn cho các mô hình nền tảng. Kiến thức chuyên ngành là vô cùng
+quý giá. Rò rỉ: Rò rỉ mục tiêu (các đặc trưng suy ra từ nhãn) và rò rỉ đặc
+trưng (dữ liệu kiểm tra làm nhiễu dữ liệu huấn luyện) đều tạo ra kết
+quả lạc quan một cách sai lệch.
+Thiên kiến chọn mẫu: Thiên kiến chọn lọc, thiên kiến sống sót, chọn
+mẫu thuận tiện và thiên kiến không phản hồi đều có thể tạo ra những
+tập dữ liệu không mang tính đại diện.
+Dịch chuyển phân phối: Dịch chuyển đồng biến, dịch chuyển nhãn và
+trôi dạng khái niệm khiến mô hình thất bại khi thế giới thay đổi sau khi
+huấn luyện. Tính hợp lệ của tập kiểm tra: Điểm kiểm tra chỉ có ý nghĩa
+nếu tập kiểm tra đại diện cho bối cảnh triển khai.
+3.12 Bài tập luyện
+1. Cho dữ liệu [2, 4, 6, 8, 10], hãy tính trung bình và độ lệch chuẩn, sau đó
+áp dụng chuẩn hóa theo trung bình và độ lệch chuẩn.
+2. Một đặc trưng “Size” có các giá trị {Small, Medium, Large}. Mã hóa
+one-hot tạo ra bao nhiêu cột? Mã hóa của “Medium” là gì?
+3. Với 5000 mẫu và cách chia 70-15-15, mỗi tập sẽ có bao nhiêu mẫu?
+4. Bạn có một tập dữ liệu với các cột: timestamp, user_id, purchase_amount,
+product_category. Hãy đề xuất ba đặc trưng được thiết kế có thể giúp dự
+đoán liệu người dùng có mua hàng vào tuần sau hay không.
+5. Một tập dữ liệu có 10% giá trị thiếu trong cột “income”. Hãy mô tả hai
+cách tiếp cận khác nhau để xử lý điều này, và thảo luận khi nào bạn có thể
+ưu tiên mỗi cách.
+
+===== PAGE 77 =====
+
+3.12. PRACTICE PROBLEMS 77
+6. Tại sao việc áp dụng phép biến đổi logarithm cho đặc trưng “house price”
+có thể cải thiện hiệu năng của mô hình?
+7. (Tư duy đối kháng) Bạn nhận được một tập dữ liệu mà việc áp dụng
+tiền xử lý tiêu chuẩn đạt độ chính xác 98%, nhưng mô hình lại hoàn toàn
+thất bại trên dữ liệu thực tế mới. Hãy mô tả ba cách cụ thể mà quy trình tiền
+xử lý có thể đã gây ra vấn đề này.
+8. (Nếu-thì) Một tập dữ liệu có các đặc trưng với thang đo rất khác nhau:
+age (0–100), income ($0–$1,000,000), và số con (0–10).
+(a) Những vấn đề nào có thể phát sinh nếu bạn huấn luyện một bộ phân
+loại kNN mà không chuẩn hóa?
+(b) Những vấn đề nào có thể phát sinh nếu bạn huấn luyện một cây
+quyết định mà không chuẩn hóa?
+(c) Dựa trên các câu trả lời của bạn, những thuật toán nào là “bất biến
+theo thang đo” (scale-invariant) và vì sao?
+9. (Nhiều phần) Một tập dữ liệu có 10% giá trị thiếu trong cột “income”.
+(a) Mô tả ba chiến lược khác nhau để xử lý những giá trị thiếu này.
+(b) Với mỗi chiến lược, hãy mô tả một tình huống mà nó sẽ là lựa chọn
+tốt nhất.
+(c) Với mỗi chiến lược, hãy mô tả một tình huống mà nó sẽ gây hại.
+10. (Phát hiện rò rỉ đặc trưng) Bạn đang dự đoán khách hàng rời bỏ (liệu
+khách hàng có hủy đăng ký hay không). Một đồng nghiệp đề xuất những đặc
+trưng sau:
+(a) Số ngày kể từ lần đăng nhập gần nhất
+(b) Tổng số lượt mua trong suốt vòng
+đời (c) “Lý do hủy” (trường văn bản)
+(d) Thời lượng phiên trung bình (e) Số
+phiếu hỗ trợ đã gửi
+Đặc trưng nào có thể là rò rỉ? Với mỗi khả năng rò rỉ, hãy giải thích lý do
+và cách bạn sẽ kiểm chứng.
+11. (Đối kháng: Khi nào KHÔNG nên hành động) Bạn đang xây dựng một
+mô hình dự đoán giá nhà. Một đồng nghiệp lo ngại về những đặc trưng sau:
+(a) Diện tích mặt bằng của ngôi nhà
+
+===== PAGE 78 =====
+
+78 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+(b) Số phòng ngủ
+(c) Năm ngôi nhà được xây
+(d) Toạ độ vĩ độ và kinh độ
+Họ lo rằng những đặc trưng này có thể là “rò rỉ” vì chúng tương quan
+mạnh với giá. Hãy giải thích vì sao đây không phải là rò rỉ và nên được
+giữ lại trong mô hình. Điều gì phân biệt đặc trưng dự đoán hợp lệ với rò
+rỉ thực sự?
+12. (Rò rỉ mục tiêu và rò rỉ đặc trưng) Hãy phân loại từng mục sau là rò rỉ
+mục tiêu, rò rỉ đặc trưng hay không phải rò rỉ. Hãy lý giải cho từng câu trả lời.
+(a) Dự đoán điểm thi bằng “số giờ đã học” (thu thập trước kỳ thi)
+(b) Dự đoán điểm thi bằng “mức độ hài lòng của học sinh với điểm số
+của họ” (thu thập sau)
+(c) Dùng giá trị trung bình của toàn bộ tập dữ liệu (huấn luyện + kiểm
+tra) để điền các giá trị thiếu
+(d) Dự đoán khả năng nhập viện lại bằng “thời gian nằm viện ban đầu”
+(biết được vào lúc xuất viện)
+13. (Thiên kiến chọn mẫu) Với mỗi tình huống, hãy nhận diện loại thiên
+kiến chọn mẫu và giải thích nhóm dân số nào bị đại diện thiếu:
+(a) Một xe tự lái được huấn luyện trên hình quay từ camera hành trình
+tại California (b) Một mô hình phân tích cảm xúc được huấn luyện trên
+các đánh giá sản phẩm (c) Một nghiên cứu về hiệu quả của một loại
+thuốc mới, trong đó 30% người tham gia đã bỏ cuộc trước khi hoàn
+thành
+(d) Một tập dữ liệu về các “startup thành công” được dùng để dự đoán
+startup nào sẽ thành công
+14. (Dịch chuyển phân phối) Một mô hình dự đoán nhu cầu taxi tại Thành phố
+New York được huấn luyện trên dữ liệu năm 2019 và triển khai vào tháng 3 năm
+2020.
+(a) Loại dịch chuyển phân phối nào đã xảy ra? Hãy lý giải cho câu trả lời
+của bạn. (b) Huấn luyện lại trên dữ liệu tháng 1–2 năm 2020 có giúp ích
+không? Vì sao hoặc vì sao không?
+(c) Đề xuất một chiến lược theo dõi có thể phát hiện sớm thất bại này.
+15. (Tính hợp lệ của tập kiểm tra) Một nhóm huấn luyện một mô hình phát
+hiện ung thư da trên ảnh từ các phòng khám da liễu ở Bắc Âu. Tập kiểm tra là
+
+===== PAGE 79 =====
+
+3.12. PRACTICE PROBLEMS 79
+một phần ngẫu nhiên 15% từ chính các phòng khám đó. Độ chính xác kiểm tra là 94%.
+(a) Mô hình được triển khai tại các phòng khám ở Châu Phi Hậu Sahara.
+Tại sao hiệu năng có thể giảm?
+(b) Độ chính xác kiểm tra 94% có “sai” không? Hãy giải thích nó cho bạn
+biết điều gì và không cho bạn biết điều gì.
+(c) Nhóm nên xây dựng tập kiểm tra của mình như thế nào nếu họ biết
+mô hình sẽ được triển khai trên toàn cầu?
+
+===== PAGE 80 =====
+
+80 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING

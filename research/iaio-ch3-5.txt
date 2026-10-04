@@ -1,0 +1,1930 @@
+SOURCE: IAIO-Training-Eljakim-Schrijvers-vi.pdf
+PAGES: 381
+RANGE: 65-118
+
+
+===== PAGE 65 =====
+
+Chương 3
+Chuẩn bị dữ liệu và kỹ thuật
+đặc trưng
+Nhiều dữ liệu hơn đánh bại thuật toán
+thông minh, nhưng dữ liệu tốt hơn
+đánh bại nhiều dữ liệu hơn.
+Peter Norvig
+3.1 Giới thiệu: Vì sao chuẩn bị dữ liệu quan trọng
+Bạn đã thu thập một bộ dữ liệu, chọn một thuật toán đầy triển vọng, và bạn
+sẵn sàng huấn luyện mô hình học máy đầu tiên. Bạn chạy mã, chờ kết quả,
+và... mô hình hoạt động tệ hại. Điều gì đã sai?
+Chín lần trong mười lần, vấn đề không nằm ở thuật toán. Vấn đề nằm ở dữ
+liệu.
+Thuật toán học máy là những bộ tìm mẫu mạnh mẽ một cách đáng kinh ngạc,
+nhưng chúng cũng rất cứng nhắc, hiểu mọi thứ theo đúng nghĩa đen. Chúng
+tìm mọi mẫu có trong dữ liệu bạn đưa cho chúng — kể cả những mẫu bạn
+không hề mong muốn. Nếu dữ liệu chứa lỗi, thuật toán sẽ học những lỗi đó.
+Nếu dữ liệu có giá trị thiếu, thuật toán hoặc là gặp lỗi sập, hoặc là bịa ra con
+số. Nếu một đặc trưng được đo bằng hàng triệu trong khi đặc trưng khác đo
+bằng số thập phân, thuật toán chỉ chú ý đến những con số lớn.
+65
+
+===== PAGE 66 =====
+
+66 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Quy tắc vàng của học máy
+Chất lượng mô hình của bạn bị giới hạn bởi chất lượng dữ liệu của
+bạn. “Rác vào, rác ra.” Không thuật toán nào, dù tinh vi đến đâu, có thể
+trích xuất những mẫu có ý nghĩa từ dữ liệu xấu.
+Chương này đề cập các bước thiết yếu của chuẩn bị dữ liệu. Biến dữ liệu thô,
+lộn xộn thành định dạng sạch mà thuật toán có thể học hiệu quả.
+3.2 Hiểu về cấu trúc dữ liệu
+Học máy làm việc với dữ liệu dạng bảng: hàng đại diện cho đối tượng (còn
+gọi là thực thể hoặc mẫu), và cột đại diện cho thuộc tính (còn gọi là đặc
+trưng hoặc biến).
+Age Height Weight Color Label
+25 175 70 Blue Yes
+30 160 55 Red No
+Objects
+Attributes
+Hình 3.1: Dữ liệu dạng bảng: hàng là đối tượng, cột là thuộc tính.
+Thuộc tính số nhận giá trị liên tục (tuổi, chiều cao, nhiệt độ). Thuộc tính phân
+loại nhận giá trị từ một tập cố định (màu sắc, quốc gia, kích cỡ). Phân biệt này
+quyết định cách bạn xử lý từng thuộc tính.
+3.3 Vấn đề chất lượng dữ liệu
+Dữ liệu thực tế rất lộn xộn. Trước khi xây dựng bất kỳ mô hình nào, bạn phải
+xác định và xử lý các vấn đề chất lượng.
+Nhiễu là những lỗi ngẫu nhiên che mờ các mẫu thật. Sự thiếu chính xác của
+phép đo, lỗi nhập dữ liệu, và biến thiên tự nhiên đều góp phần tạo ra nhiễu
+khiến việc học trở nên khó khăn hơn.
+Ngoại lai là những điểm dữ liệu khác biệt một cách kịch tính so với phần còn lại. Một ngoại
+lai duy nhất có thể làm biến dạng nghiêm trọng các mẫu đã học — một biệt thự định giá C50
+triệu trong bộ dữ liệu nhà cửa giá C300 000 có thể làm lệch hoàn toàn một mô hình hồi quy.
+
+===== PAGE 67 =====
+
+3.4. FEATURE SCALING 67
+x
+y
+Outlier
+True pattern
+Distorted fit
+Hình 3.2: Một ngoại lai có thể làm biến dạng kịch tính mẫu đã học.
+Giá trị thiếu xảy ra khi một số thuộc tính không được ghi nhận. Bạn phải xóa
+các hàng không hoàn chỉnh (mất dữ liệu) hoặc điền khuyết giá trị thiếu bằng
+ước lượng như trung bình hoặc trung vị của cột.
+Trùng lặp làm tăng trọng số cho một số ví dụ nhất định, làm lệch các mẫu đã học.
+3.4 Chuẩn hóa đặc trưng
+Nhiều thuật toán nhạy cảm với thang đặc trưng. Nếu thu nhập dao động từ
+C20 000 đến C200 000 trong khi tuổi dao động từ 18 đến 80, chênh lệch thu
+nhập sẽ áp đảo mọi phép tính khoảng cách, khiến thuật toán thực tế phớt lờ
+tuổi.
+Chuẩn hóa z-score biến đổi mỗi đặc trưng để có trung bình 0 và độ lệch
+chuẩn 1:
+˜xi = xi − µ
+σ
+Ví dụ: Chuẩn hóa z-score
+Dữ liệu: [10, 20, 30, 40, 50]
+Trung bình: µ = 30, Độ lệch chuẩn: σ ≈ 14.14
+Đã chuẩn hóa: [−1.41, −0.71, 0, 0.71, 1.41]
+Chuẩn hóa min-max biến đổi các đặc trưng về khoảng [0, 1]:
+˜xi = xi − xmin
+xmax − xmin
+3.5 Mã hóa các biến phân loại
+Các thuật toán cần số, nhưng việc gán số tùy ý (đỏ=1, xanh=2) ngụ ý một thứ
+tự sai. Mã hóa one-hot chuyển một đặc trưng phân loại có k giá trị thành k cột
+nhị phân.
+
+===== PAGE 68 =====
+
+68 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Color
+Red
+Blue
+is_Red is_Blue
+1 0
+0 1
+Hình 3.3: Mã hóa one-hot tạo các cột nhị phân cho từng danh mục.
+3.6 Chia tập huấn luyện–kiểm định–kiểm tra
+Để đánh giá mô hình khái quát hóa tốt đến đâu trên dữ liệu mới, chúng ta chia
+bộ dữ liệu thành các phần với vai trò khác nhau.
+Phép ẩn dụ kỳ thi
+Hãy coi tập huấn luyện là sách giáo khoa của bạn, tập kiểm định là các
+bài thi thử, và tập kiểm tra là kỳ thi cuối kỳ. Xem Chương 5 để thảo
+luận chi tiết về phương pháp đánh giá và cách chia dữ liệu.
+Tập huấn luyện (thường 70%) là nơi việc học diễn ra. Tập kiểm định (15%)
+dùng để tinh chỉnh siêu tham số và đưa ra các quyết định về mô hình hóa. Tập
+kiểm tra (15%) được giữ riêng hoàn toàn cho đến khi đánh giá cuối cùng. Nó
+đại diện cho dữ liệu thực sự chưa từng thấy.
+Quy tắc tối thượng
+Không bao giờ huấn luyện trên dữ liệu kiểm tra. Không bao giờ dùng dữ liệu kiểm tra để ra quyết định.
+Khi bạn ngó thấy hiệu năng kiểm tra và điều chỉnh mô hình, tập kiểm tra
+không còn đại diện cho dữ liệu mới. Xem Chương 5 để thảo luận chi
+tiết về phương pháp đánh giá.
+3.7 Kỹ thuật đặc trưng
+Dữ liệu thô hiếm khi đến ở dạng lý tưởng cho học máy. Kỹ thuật đặc trưng là
+quá trình biến đổi dữ liệu thô thành các đặc trưng đại diện tốt hơn cho các
+mẫu nền, thường cải thiện đáng kể hiệu năng mô hình.
+3.7.1 Tạo đặc trưng mới
+Đôi khi các đặc trưng thô không phải là dạng đại diện có sức dự đoán cao nhất.
+Hãy xét việc dự đoán giá nhà:
+• Đặc trưng thô: chiều dài, chiều rộng của lô đất
+
+===== PAGE 69 =====
+
+3.7. FEATURE ENGINEERING 69
+• Đặc trưng tốt hơn: diện tích = chiều dài × chiều rộng
+Diện tích nắm bắt điều thực sự quan trọng (mất bao nhiêu đất) một cách trực
+tiếp hơn so với các chiều kích thước thô.
+Các kỹ thuật đặc trưng phổ biến:
+• Đặc trưng đa thức: Tạo x2, x1 · x2, v.v. để nắm bắt các quan hệ phi
+tuyến
+• Nhóm giá trị (binning): Chuyển biến liên tục thành các danh mục (tuổi
+→ nhóm tuổi)
+• Biến đổi log: Nén thang của các biến bị lệch rất nhiều
+• Đặc trưng ngày/giờ: Trích xuất thứ trong tuần, tháng, năm, is_weekend
+từ các dấu thời gian
+3.7.2 Kiến thức miền
+Những đặc trưng tốt nhất thường đến từ việc hiểu vấn đề miền (domain).
+Một kỹ sư học máy làm việc về chấm điểm tín dụng nên tham vấn các chuyên
+gia tài chính để hiểu những tỷ lệ nào (nợ trên thu nhập, mức sử dụng tín dụng)
+là những dấu hiệu dự đoán có ý nghĩa.
+Ví dụ: Kỹ thuật đặc trưng cho phát hiện gian lận
+Đặc trưng thô: số tiền giao dịch, danh mục thương gia, dấu thời gian.
+Đặc trưng được kỹ thuật hóa:
+• Số tiền giao dịch tương đối so với mức trung bình của người dùng
+• Thời gian kể từ giao dịch cuối cùng
+• Số lượng giao dịch trong giờ qua
+• Khoảng cách đến các vị trí điển hình của người dùng
+• Liệu danh mục thương gia có bất thường đối với người dùng này không
+Những đặc trưng được kỹ thuật hóa này nắm bắt các mẫu hành vi mà
+đặc trưng thô không thể nắm bắt.
+3.7.3 Rò rỉ dữ liệu: Một cạm bẫy nghiêm trọng
+Rò rỉ dữ liệu xảy ra khi thông tin vốn không khả dụng vào thời điểm dự đoán
+lại được sử dụng trong quá trình huấn luyện. Điều này tạo ra các điểm kiểm
+định cao một cách giả tạo, sụp đổ khi mô hình gặp dữ liệu thực tế. Rò rỉ xuất
+hiện ở hai dạng khác biệt nhau.
+
+===== PAGE 70 =====
+
+70 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+Rò rỉ mục tiêu
+Rò rỉ mục tiêu xảy ra khi một đặc trưng được suy ra từ, hoặc là biến thế
+(proxy) của, nhãn mà bạn đang cố gắng dự đoán.
+Ví dụ: Rò rỉ mục tiêu
+Bạn đang dự đoán liệu bệnh nhân có nhập viện trở lại trong vòng 30
+ngày hay không. Mô hình của bạn đạt độ chính xác 99% trên dữ liệu
+kiểm định. Sau đó bạn nhận thấy một trong các đặc trưng của mình:
+readmission_date. Trường này chỉ được điền cho những bệnh nhân đã
+nhập viện trở lại. Đặc trưng này mã hóa trực tiếp nhãn.
+Các ví dụ khác:
+• Dự đoán vỡ nợ khoản vay bằng “số lần trả nợ trễ” (điều này
+chính là vỡ nợ)
+• Dự đoán bệnh bằng “thuốc được kê đơn cho bệnh đó”
+• Dự đoán khách hàng rời đi bằng “lý do hủy”
+Mẫu: bất kỳ đặc trưng nào chỉ có thể tồn tại vì kết quả đều là rò rỉ mục
+tiêu.
+Rò rỉ đặc trưng (ô nhiễm huấn luyện–kiểm tra)
+Rò rỉ đặc trưng xảy ra khi thông tin từ tập kiểm tra làm nhiễm bẩn quá trình
+huấn luyện, mặc dù không có đặc trưng riêng lẻ nào được suy ra từ nhãn.
+Ví dụ: Rò rỉ đặc trưng
+Các nguồn rò rỉ đặc trưng phổ biến:
+• Khớp một bộ chuẩn hóa trên toàn bộ bộ dữ liệu (bao gồm cả dữ
+liệu kiểm tra) trước khi chia tập
+• Tính trung bình cho việc điền khuyết giá trị thiếu bằng tất cả các
+hàng, rồi mới chia tập
+• Các hàng trùng lặp hoặc gần trùng lặp xuất hiện ở cả tập huấn
+luyện và tập kiểm tra
+• Dữ liệu chuỗi thời gian bị xáo trộn ngẫu nhiên thay vì được chia
+theo thứ tự thời gian
+Mẫu: bất kỳ bước tiền xử lý nào cho phép thống kê của tập kiểm tra
+ảnh hưởng đến phép biến đổi của huấn luyện đều là rò rỉ đặc trưng.
+Cách đúng là chỉ khớp (fit) mọi phép biến đổi trên tập huấn luyện, rồi
+áp dụng các phép biến đổi đó cho tập kiểm định và tập kiểm tra.
+
+===== PAGE 71 =====
+
+3.8. SAMPLING BIAS: PROBLEMS BEFORE MODELING BEGINS 71
+Rò rỉ mục tiêu so với rò rỉ đặc trưng
+Rò rỉ mục tiêu Rò rỉ đặc trưng
+Cái gì bị rò rỉ? Thông tin từ nhãn vào
+một đặc trưng
+Thông tin từ tập kiểm tra vào quá
+trình huấn luyện
+Nguyên nhân Đặc trưng được suy ra từ kết
+quả
+Tiền xử lý dùng dữ liệu tương
+lai/kiểm tra
+Phát hiện “Tôi có thứ này trước
+kết quả không?”
+“Dữ liệu kiểm tra có ảnh hưởng
+đến huấn luyện không?”
+Fix Bỏ đặc trưng đó Sửa thứ tự tiền xử lý
+Liên hệ với thiên vị–phương sai (Chương 5)
+Kỹ thuật đặc trưng ảnh hưởng trực tiếp đến đánh đổi thiên vị–phương sai:
+• Quá ít đặc trưng: Thiên vị cao (thiếu khớp), mô hình không nắm
+bắt được các mẫu quan trọng
+• Quá nhiều đặc trưng: Phương sai cao (quá khớp), mô hình ghi
+nhớ nhiễu
+• Đặc trưng bị rò rỉ: Lỗi huấn luyện và kiểm định thấp một cách
+giả tạo, nhưng lỗi kiểm tra thảm khốc
+Mục tiêu là có những đặc trưng nắm bắt tín hiệu thật mà không đưa vào
+nhiễu hay rò rỉ.
+Liên kết then chốt: Rò rỉ và lỗi kiểm định
+Cả hai dạng rò rỉ đều gây ra lỗi kiểm định lạc quan: điểm kiểm chéo
+của bạn trông tuyệt vời, nhưng hiệu năng thực tế lại tệ hại. Rò rỉ mục
+tiêu làm thổi phồng điểm vì mô hình có quyền truy cập câu trả lời. Rò rỉ
+đặc trưng làm thổi phồng điểm vì tập kiểm định không còn thực sự độc
+lập.
+Chỉ tập kiểm tra cuối cùng (hoặc việc triển khai thực tế) mới bộc lộ
+sự thật. Xem Chương 5 để biết vì sao phương pháp kiểm định đúng
+đắn rất cần thiết và rò rỉ làm suy yếu điều đó như thế nào.
+3.8 Thiên vị lấy mẫu: Vấn đề trước khi bắt đầu mô hình hóa
+Ngay cả trước khi chọn thuật toán, bộ dữ liệu của bạn có thể đã khiếm khuyết
+vì cách dữ liệu được thu thập. Thiên vị lấy mẫu (sampling bias) nghĩa là dữ
+liệu không đại diện cho quần thể mà bạn muốn đưa ra dự đoán.
+
+===== PAGE 72 =====
+
+72 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.8.1 Thiên vị chọn lọc
+Thiên vị chọn lọc xảy ra khi quá trình thu thập dữ liệu loại trừ có hệ thống
+một số nhóm hoặc tình huống nhất định. Bộ dữ liệu thu được không đại diện
+cho toàn bộ quần thể.
+Một nghiên cứu y khoa chỉ thực hiện ở bệnh viện thành phố sẽ đại diện thiếu bệnh nhân
+nông thôn. Một cuộc khảo sát chỉ bằng tiếng Anh sẽ bỏ lỡ những người không nói tiếng
+Anh. Một AI được huấn luyện trên dữ liệu từ một quốc gia có thể thất bại ở quốc gia
+khác.
+3.8.2 Thiên vị sống sót
+Thiên kiến sống sót xảy ra khi dữ liệu của bạn chỉ chứa những ví dụ đã “sống
+sót” qua một quá trình chọn lọc nào đó, và bạn rút ra kết luận như thể chúng đại
+diện cho toàn bộ các trường hợp.
+Ví dụ kinh điển: Thiên kiến sống sót
+Trong Thế chiến thứ hai, các kỹ sư nghiên cứu các lỗ hổng đạn trên máy
+bay quay về từ chiến trường và đề xuất gia cố những vùng bị trúng đạn
+nhiều nhất. Nhà thống kê Abraham Wald chỉ ra lỗ hổng trong đó: họ chỉ
+nhìn thấy những máy bay đã sống sót. Những máy bay bị trúng đạn ở
+các vùng khác không bao giờ quay về. Quân đội nên gia cố những vùng
+không có lỗ hổng đạn trên máy bay sống sót.
+Trong học máy, thiên kiến sống sót xuất hiện khi bạn huấn luyện trên dữ liệu
+từ những khách hàng đã ở lại (bỏ qua những người đã rời đi), những công ty
+đã thành công (bỏ qua những công ty thất bại), hoặc những bệnh nhân đã hoàn
+thành nghiên cứu (bỏ qua những người đã bỏ cuộc).
+3.8.3 Chọn mẫu thuận tiện
+Chọn mẫu thuận tiện nghĩa là thu thập dữ liệu từ bất kỳ nguồn nào dễ tiếp cận
+nhất. Huấn luyện một hệ thống nhận dạng khuôn mặt trên ảnh của sinh viên đại
+học (vì họ ở gần đó) sẽ tạo ra một mô hình thiên lệch về nhóm dân số trẻ, có học
+vấn và sống trong khuôn viên trường. Huấn luyện một mô hình ngôn ngữ trên văn
+bản Internet sẽ đại diện quá mức cho những người dùng nói tiếng Anh và có kỹ
+năng kỹ thuật.
+Hầu hết các tập dữ liệu huấn luyện AI quy mô lớn đều mắc phải mức độ chọn
+mẫu thuận tiện nhất định.
+3.8.4 Thiên kiến không phản hồi
+Khi bạn thu thập dữ liệu qua khảo sát hoặc tham gia tự nguyện, những người
+trả lời có thể khác có hệ thống so với những người không trả lời. Đánh giá sản
+phẩm nghiêng về những người có cảm xúc mạnh (hoặc rất hài lòng, hoặc rất
+
+===== PAGE 73 =====
+
+3.9. DISTRIBUTION SHIFT: WHEN THE WORLD CHANGES 73
+thất vọng). Các nghiên cứu y tế mất đi những người tham gia khi bệnh quá nặng để tiếp
+tục. Khảo sát mức độ hài lòng công việc lại đại diện thiếu cho những người đã nghỉ
+việc.
+Kết nối với IAIO: Nhận diện thiên kiến chọn mẫu
+Các bài thi IAIO có thể đưa ra một tập dữ liệu và yêu cầu bạn nhận
+diện những thiên kiến chọn mẫu tiềm ẩn. Với mỗi tập dữ liệu, hãy hỏi:
+• Ai hoặc cái gì bị thiếu khỏi dữ liệu này?
+• Quá trình nào đã tạo ra dữ liệu này, và quá trình đó loại trừ ai?
+• Kết quả có thay đổi không nếu dữ liệu bị thiếu được đưa vào?
+3.9 Dịch chuyển phân phối: Khi thế giới thay đổi
+Một mô hình được huấn luyện trên một phân phối dữ liệu này có thể gặp một
+phân phối khác khi triển khai. Điều này được gọi là dịch chuyển phân phối, và
+nó là một trong những lý do phổ biến nhất khiến các mô hình đã triển khai thất
+bại.
+3.9.1 Dịch chuyển đồng biến (covariate shift)
+Phân phối đầu vào thay đổi, nhưng mối quan hệ giữa đầu vào và đầu ra vẫn
+giữ nguyên.
+Ví dụ: Một mô hình được huấn luyện để chẩn đoán bệnh từ ảnh X-quang tại
+Bệnh viện A được triển khai tại Bệnh viện B, nơi dùng các máy X-quang khác.
+Những hình ảnh này trông khác nhau (đầu vào bị dịch chuyển), nhưng mối quan
+hệ cơ bản giữa bệnh lý và các đặc trưng ảnh không hề thay đổi. Mô hình vẫn
+có thể thất bại bởi vì nó đã học các đặc trưng riêng của thiết bị tại Bệnh viện
+A.
+Về mặt hình thức: Ptrain(X) ̸= Pdeploy(X), nhưng P (Y |X) vẫn giữ nguyên.
+3.9.2 Dịch chuyển nhãn (label shift)
+Phân phối kết quả thay đổi, nhưng mối quan hệ từ kết quả tới đặc trưng vẫn
+giữ nguyên.
+Ví dụ: Một bộ lọc thư rác được huấn luyện khi 5% email là thư rác, rồi được
+triển khai khi 40% email là thư rác. Ngưỡng của bộ lọc, vốn được hiệu chỉnh
+cho tỉ lệ thư rác 5%, sẽ bỏ sót nhiều email thư rác. Bản thân thư rác trông như
+nhau; chỉ là có nhiều hơn thôi.
+Về mặt hình thức: Ptrain(Y ) ̸= Pdeploy(Y ), nhưng P (X|Y ) vẫn giữ nguyên.
+
+===== PAGE 74 =====
+
+74 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.9.3 Trôi dạng khái niệm (concept drift)
+Mối quan hệ cơ bản giữa đầu vào và đầu ra thay đổi theo thời gian.
+Ví dụ: Một mô hình dự đoán người vay “đủ khả năng tín dụng” được huấn
+luyện trước một cuộc suy thoái lớn. Trong thời kỳ suy thoái, chính các đặc
+trưng thu nhập và việc làm đó không còn dự đoán việc trả nợ theo cách như
+trước nữa, bởi chính nền kinh tế đã thay đổi. Khái niệm “đủ khả năng tín
+dụng” đã dịch chuyển.
+Về mặt hình thức: Ptrain(Y |X) ̸= Pdeploy(Y |X).
+Ba loại dịch chuyển phân phối
+Loại Điều gì thay đổi Ví dụ
+Covariate shift Phân phối đầu vào P (X) Bệnh viện mới, thiết bị khác
+Dịch chuyển nhãn (label shift) Phân phối đầu ra P (Y ) Tỉ lệ thư rác tăng
+Concept drift Mối quan hệ P (Y |X) Suy thoái làm thay đổi các kiểu
+hình vỡ nợ
+Trôi dạng khái niệm nguy hiểm nhất, vì các quy tắc mà mô hình đã học trở nên
+sai, chứ không chỉ lệch độ chính xác. Các mô hình được triển khai trong những
+môi trường thay đổi cần được theo dõi liên tục.
+3.10 Khi nào một tập kiểm tra là hợp lệ?
+Tập kiểm tra đo lường sự khái quát hóa: mô hình sẽ hoạt động tốt ra sao trên
+dữ liệu mới. Nhưng phép đo này chỉ có ý nghĩa nếu tập kiểm tra đại diện cho
+dữ liệu mà mô hình thực sự sẽ gặp khi triển khai.
+3.10.1 Yêu cầu về tính đại diện
+Nếu bạn huấn luyện và kiểm tra trên dữ liệu bệnh viện từ năm 2020, độ chính
+xác kiểm tra cho bạn biết mô hình hoạt động tốt ra sao trên dữ liệu bệnh viện
+năm 2020. Nó không nói gì về hiệu năng vào năm 2025, ở một bệnh viện khác,
+ở một quốc gia khác, hay trên một nhóm bệnh nhân khác.
+Một tập kiểm tra chỉ hợp lệ nếu:
+• Nó được lấy từ cùng phân phối mà mô hình sẽ gặp khi triển khai
+• Nó không được dùng để đưa ra bất kỳ quyết định xây dựng mô hình nào (không ngầm nhìn trộm)
+• Nó đủ lớn để ước lượng độ chính xác là đáng tin cậy về mặt thống kê
+
+===== PAGE 75 =====
+
+3.10. WHEN IS A TEST SET VALID? 75
+3.10.2 Khi tập kiểm tra nói dối
+Tập kiểm tra có thể tạo ra cảm giác an toàn giả
+Hãy xét một mô hình được huấn luyện và kiểm tra trên dữ liệu từ một
+bệnh viện. Độ chính xác kiểm tra là 95%. Sau đó mô hình được triển
+khai tại một bệnh viện thứ hai, nơi độ chính xác giảm xuống còn 70%.
+Chuyện gì đã sai? Tập kiểm tra không sai, nó đo chính xác hiệu năng
+trên dữ liệu của bệnh viện đó. Nhưng nó gây hiểu lầm vì không đại diện
+cho bối cảnh triển khai. Điểm kiểm tra không phải là lời bảo đảm. Nó
+chỉ là một ước lượng, và chỉ hợp lệ dưới giả định rằng dữ liệu triển
+khai giống dữ liệu kiểm tra.
+3.10.3 Chia theo thời gian
+Với dữ liệu phụ thuộc thời gian, cách chia ngẫu nhiên là không hợp lệ. Nếu
+bạn trộn ngẫu nhiên giá cổ phiếu từ 2020–2024 rồi chia thành tập huấn luyện
+và tập kiểm tra, mô hình có thể dùng giá trong tương lai để dự đoán giá trong
+quá khứ.
+Cách đúng đắn: huấn luyện trên dữ liệu trước đó, kiểm tra trên dữ liệu sau đó.
+Điều này mô phỏng đúng bối cảnh triển khai thực tế, nơi bạn luôn dự đoán
+tương lai chỉ dựa vào quá khứ.
+3.10.4 Kết nối các mảnh lại với nhau
+Thiên kiến chọn mẫu, dịch chuyển phân phối và tính hợp lệ của tập kiểm tra
+đều là những mặt khác nhau của cùng một vấn đề: dữ liệu của bạn có đại
+diện cho tình huống mà mô hình sẽ được sử dụng hay không?
+• Thiên kiến chọn mẫu nghĩa là dữ liệu huấn luyện chưa bao giờ mang tính
+đại diện ngay từ đầu
+• Dịch chuyển phân phối nghĩa là thế giới đã thay đổi sau khi dữ liệu được thu thập
+• Tập kiểm tra không hợp lệ nghĩa là bạn thậm chí không thể đo lường vấn đề
+
+===== PAGE 76 =====
+
+76 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+3.11 Tóm tắt
+Điểm cần nhớ
+Chất lượng dữ liệu: Xử lý nhiễu, ngoại lai, giá trị thiếu và dữ liệu
+trùng lặp trước khi xây dựng mô hình.
+Chuẩn hóa đặc trưng: Dùng chuẩn hóa theo trung bình và độ lệch
+chuẩn, hoặc chuẩn hóa min-max, để mọi đặc trưng đóng góp như nhau.
+Mã hóa biến phân loại: Dùng mã hóa one-hot để tránh tạo ra một thứ tự
+giả.
+Chia tập dữ liệu: Huấn luyện để học, kiểm định để tinh chỉnh, kiểm
+tra để đánh giá cuối cùng. Không bao giờ ngầm nhìn vào dữ liệu kiểm
+tra.
+Kỹ thuật đặc trưng: Biến dữ liệu thô thành những đặc trưng đại diện
+tốt hơn cho các mô hình nền tảng. Kiến thức chuyên ngành là vô cùng
+quý giá. Rò rỉ: Rò rỉ mục tiêu (các đặc trưng suy ra từ nhãn) và rò rỉ đặc
+trưng (dữ liệu kiểm tra làm nhiễu dữ liệu huấn luyện) đều tạo ra kết
+quả lạc quan một cách sai lệch.
+Thiên kiến chọn mẫu: Thiên kiến chọn lọc, thiên kiến sống sót, chọn
+mẫu thuận tiện và thiên kiến không phản hồi đều có thể tạo ra những
+tập dữ liệu không mang tính đại diện.
+Dịch chuyển phân phối: Dịch chuyển đồng biến, dịch chuyển nhãn và
+trôi dạng khái niệm khiến mô hình thất bại khi thế giới thay đổi sau khi
+huấn luyện. Tính hợp lệ của tập kiểm tra: Điểm kiểm tra chỉ có ý nghĩa
+nếu tập kiểm tra đại diện cho bối cảnh triển khai.
+3.12 Bài tập luyện
+1. Cho dữ liệu [2, 4, 6, 8, 10], hãy tính trung bình và độ lệch chuẩn, sau đó
+áp dụng chuẩn hóa theo trung bình và độ lệch chuẩn.
+2. Một đặc trưng “Size” có các giá trị {Small, Medium, Large}. Mã hóa
+one-hot tạo ra bao nhiêu cột? Mã hóa của “Medium” là gì?
+3. Với 5000 mẫu và cách chia 70-15-15, mỗi tập sẽ có bao nhiêu mẫu?
+4. Bạn có một tập dữ liệu với các cột: timestamp, user_id, purchase_amount,
+product_category. Hãy đề xuất ba đặc trưng được thiết kế có thể giúp dự
+đoán liệu người dùng có mua hàng vào tuần sau hay không.
+5. Một tập dữ liệu có 10% giá trị thiếu trong cột “income”. Hãy mô tả hai
+cách tiếp cận khác nhau để xử lý điều này, và thảo luận khi nào bạn có thể
+ưu tiên mỗi cách.
+
+===== PAGE 77 =====
+
+3.12. PRACTICE PROBLEMS 77
+6. Tại sao việc áp dụng phép biến đổi logarithm cho đặc trưng “house price”
+có thể cải thiện hiệu năng của mô hình?
+7. (Tư duy đối kháng) Bạn nhận được một tập dữ liệu mà việc áp dụng
+tiền xử lý tiêu chuẩn đạt độ chính xác 98%, nhưng mô hình lại hoàn toàn
+thất bại trên dữ liệu thực tế mới. Hãy mô tả ba cách cụ thể mà quy trình tiền
+xử lý có thể đã gây ra vấn đề này.
+8. (Nếu-thì) Một tập dữ liệu có các đặc trưng với thang đo rất khác nhau:
+age (0–100), income ($0–$1,000,000), và số con (0–10).
+(a) Những vấn đề nào có thể phát sinh nếu bạn huấn luyện một bộ phân
+loại kNN mà không chuẩn hóa?
+(b) Những vấn đề nào có thể phát sinh nếu bạn huấn luyện một cây
+quyết định mà không chuẩn hóa?
+(c) Dựa trên các câu trả lời của bạn, những thuật toán nào là “bất biến
+theo thang đo” (scale-invariant) và vì sao?
+9. (Nhiều phần) Một tập dữ liệu có 10% giá trị thiếu trong cột “income”.
+(a) Mô tả ba chiến lược khác nhau để xử lý những giá trị thiếu này.
+(b) Với mỗi chiến lược, hãy mô tả một tình huống mà nó sẽ là lựa chọn
+tốt nhất.
+(c) Với mỗi chiến lược, hãy mô tả một tình huống mà nó sẽ gây hại.
+10. (Phát hiện rò rỉ đặc trưng) Bạn đang dự đoán khách hàng rời bỏ (liệu
+khách hàng có hủy đăng ký hay không). Một đồng nghiệp đề xuất những đặc
+trưng sau:
+(a) Số ngày kể từ lần đăng nhập gần nhất
+(b) Tổng số lượt mua trong suốt vòng
+đời (c) “Lý do hủy” (trường văn bản)
+(d) Thời lượng phiên trung bình (e) Số
+phiếu hỗ trợ đã gửi
+Đặc trưng nào có thể là rò rỉ? Với mỗi khả năng rò rỉ, hãy giải thích lý do
+và cách bạn sẽ kiểm chứng.
+11. (Đối kháng: Khi nào KHÔNG nên hành động) Bạn đang xây dựng một
+mô hình dự đoán giá nhà. Một đồng nghiệp lo ngại về những đặc trưng sau:
+(a) Diện tích mặt bằng của ngôi nhà
+
+===== PAGE 78 =====
+
+78 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+(b) Số phòng ngủ
+(c) Năm ngôi nhà được xây
+(d) Toạ độ vĩ độ và kinh độ
+Họ lo rằng những đặc trưng này có thể là “rò rỉ” vì chúng tương quan
+mạnh với giá. Hãy giải thích vì sao đây không phải là rò rỉ và nên được
+giữ lại trong mô hình. Điều gì phân biệt đặc trưng dự đoán hợp lệ với rò
+rỉ thực sự?
+12. (Rò rỉ mục tiêu và rò rỉ đặc trưng) Hãy phân loại từng mục sau là rò rỉ
+mục tiêu, rò rỉ đặc trưng hay không phải rò rỉ. Hãy lý giải cho từng câu trả lời.
+(a) Dự đoán điểm thi bằng “số giờ đã học” (thu thập trước kỳ thi)
+(b) Dự đoán điểm thi bằng “mức độ hài lòng của học sinh với điểm số
+của họ” (thu thập sau)
+(c) Dùng giá trị trung bình của toàn bộ tập dữ liệu (huấn luyện + kiểm
+tra) để điền các giá trị thiếu
+(d) Dự đoán khả năng nhập viện lại bằng “thời gian nằm viện ban đầu”
+(biết được vào lúc xuất viện)
+13. (Thiên kiến chọn mẫu) Với mỗi tình huống, hãy nhận diện loại thiên
+kiến chọn mẫu và giải thích nhóm dân số nào bị đại diện thiếu:
+(a) Một xe tự lái được huấn luyện trên hình quay từ camera hành trình
+tại California (b) Một mô hình phân tích cảm xúc được huấn luyện trên
+các đánh giá sản phẩm (c) Một nghiên cứu về hiệu quả của một loại
+thuốc mới, trong đó 30% người tham gia đã bỏ cuộc trước khi hoàn
+thành
+(d) Một tập dữ liệu về các “startup thành công” được dùng để dự đoán
+startup nào sẽ thành công
+14. (Dịch chuyển phân phối) Một mô hình dự đoán nhu cầu taxi tại Thành phố
+New York được huấn luyện trên dữ liệu năm 2019 và triển khai vào tháng 3 năm
+2020.
+(a) Loại dịch chuyển phân phối nào đã xảy ra? Hãy lý giải cho câu trả lời
+của bạn. (b) Huấn luyện lại trên dữ liệu tháng 1–2 năm 2020 có giúp ích
+không? Vì sao hoặc vì sao không?
+(c) Đề xuất một chiến lược theo dõi có thể phát hiện sớm thất bại này.
+15. (Tính hợp lệ của tập kiểm tra) Một nhóm huấn luyện một mô hình phát
+hiện ung thư da trên ảnh từ các phòng khám da liễu ở Bắc Âu. Tập kiểm tra là
+
+===== PAGE 79 =====
+
+3.12. PRACTICE PROBLEMS 79
+một phần ngẫu nhiên 15% từ chính các phòng khám đó. Độ chính xác kiểm tra là 94%.
+(a) Mô hình được triển khai tại các phòng khám ở Châu Phi Hậu Sahara.
+Tại sao hiệu năng có thể giảm?
+(b) Độ chính xác kiểm tra 94% có “sai” không? Hãy giải thích nó cho bạn
+biết điều gì và không cho bạn biết điều gì.
+(c) Nhóm nên xây dựng tập kiểm tra của mình như thế nào nếu họ biết
+mô hình sẽ được triển khai trên toàn cầu?
+
+===== PAGE 80 =====
+
+80 CHAPTER 3. DATA PREPARATION AND FEATURE ENGINEERING
+
+===== PAGE 81 =====
+
+Chương 4
+Học có giám sát
+Mọi mô hình đều sai, nhưng có
+mô hình lại rất hữu ích.
+George Box
+4.1 Giới thiệu về học có giám sát
+Hãy tưởng tượng bạn dạy một đứa trẻ nhận biết động vật. Bạn đưa cho
+chúng từng tấm hình một: “Đây là mèo,” “Đây là chó,” “Đây là mèo,” “Đây là
+chó.” Sau khi xem đủ nhiều ví dụ, một điều kỳ diệu xảy ra. Khi được đưa một
+tấm hình hoàn toàn mới (một con vật chúng chưa từng thấy), đứa trẻ vẫn phân
+biệt được đúng đó là mèo hay chó. Nó đã học được cách khái quát từ những ví
+dụ cụ thể sang một khái niệm rộng hơn.
+Đây chính xác là cách học có giám sát hoạt động. Chúng ta cung cấp cho thuật
+toán một bộ ví dụ mà ta đã biết đáp án đúng, và thuật toán tự tìm ra khuôn mẫu
+ẩn bên dưới nối đầu vào với đầu ra. Khi đã học được khuôn mẫu đó, nó có thể
+dự đoán cho những ví dụ mới mà nó chưa từng gặp.
+Thuật ngữ “giám sát” xuất phát từ ý tưởng rằng chúng ta đang giám sát quá
+trình học bằng cách đưa ra đáp án đúng. Hãy hình dung như giáo viên chấm bài
+tập: với mỗi câu, học sinh (tức thuật toán) vừa thấy đề bài vừa thấy đáp án
+đúng, và học được từ những chỗ làm sai dọc đường.
+81
+
+===== PAGE 82 =====
+
+82 CHAPTER 4. SUPERVISED LEARNING
+4.1.1 Cấu trúc của học có giám sát
+Trong học có giám sát, dữ liệu của ta gồm các cặp đầu vào – đầu ra. Các đầu
+vào được gọi là đặc trưng, đó là những thông tin ta dùng để đưa ra dự đoán.
+Với một bức ảnh, đặc trưng có thể là các giá trị điểm ảnh. Với một ngôi nhà,
+đặc trưng có thể gồm diện tích, số phòng ngủ và vị trí. Với một bệnh nhân,
+đặc trưng có thể gồm tuổi, huyết áp và mức cholesterol.
+Các đầu ra được gọi là nhãn, đó là thứ ta muốn dự đoán. Với bức ảnh, nhãn
+có thể là “mèo” hay “chó.” Với ngôi nhà, nhãn có thể là giá của nó. Với bệnh
+nhân, nhãn có thể là người đó có mắc một bệnh cụ thể hay không.
+Tập các cặp đầu vào – đầu ra mà ta dùng để huấn luyện thuật toán được gọi là tập
+huấn luyện. Đó là dữ liệu mà thuật toán học từ đó. Song song với đó, ta giữ lại một
+tập kiểm thử, tức dữ liệu mà thuật toán không bao giờ được thấy trong lúc huấn
+luyện. Ta dùng tập này để đánh giá thuật toán đã học được mức độ khái quát tốt
+đến đâu.
+Thuật ngữ quan trọng
+Đặc trưng (ký hiệu x): Các biến đầu vào dùng để đưa ra dự đoán.
+Cũng gọi là biến dự đoán, thuộc tính, hay biến độc lập. Nhãn (ký hiệu
+y): Biến đầu ra mà ta muốn dự đoán. Cũng gọi là biến mục tiêu, biến
+đáp ứng, hay biến phụ thuộc.
+Tập huấn luyện: Tập hợp các cặp (đặc trưng, nhãn) dùng để huấn
+luyện mô hình. Thuật toán học từ những ví dụ này.
+Tập kiểm thử: Dữ liệu được tách ra khỏi quá trình huấn luyện, dùng
+để đánh giá mô hình khái quát tốt đến đâu trên những ví dụ mới, chưa
+từng thấy.
+4.1.2 Vì sao học có giám sát lại hiệu quả
+Giả định nền tảng của học có giám sát là dữ liệu chứa các khuôn mẫu: những
+quy luật nối đầu vào với đầu ra. Nếu giá nhà hoàn toàn ngẫu nhiên, không liên
+quan gì đến diện tích, vị trí hay bất kỳ đặc trưng nào đo lường được, thì chẳng
+thuật toán nào dự đoán được. Nhưng thực tế thì ngôi nhà lớn hơn thường đắt
+hơn, nhà ở khu vực mong muốn cũng thường đắt hơn, và cứ thế. Những khuôn
+mẫu ấy nằm sẵn trong dữ liệu, chờ được khám phá.
+Việc của một thuật toán học có giám sát là tìm một hàm h (gọi là giả thuyết)
+ánh xạ từ đầu vào sang đầu ra: với các đặc trưng x, hàm tạo ra một dự đoán
+h(x) vốn phải gần với nhãn thật y. Thuật toán tìm ra khuôn mẫu thật càng
+chính xác, dự đoán của nó trên dữ liệu mới càng chuẩn.
+
+===== PAGE 83 =====
+
+4.2. CLASSIFICATION VS. REGRESSION 83
+4.2 Phân loại so với Hồi quy
+Bài toán học có giám sát gồm hai dạng chính, tùy thuộc vào bản chất của thứ
+mà ta muốn dự đoán.
+4.2.1 Hồi quy: Dự đoán các giá trị liên tục
+Trong các bài toán hồi quy, nhãn là một số thực liên tục. Nó có thể nhận bất kỳ
+giá trị nào trong một khoảng nào đó. Khi dự đoán nhiệt độ ngày mai, bạn có thể
+nhận được 22.4°C hoặc 20.4°C hay con số nào khác. Khi dự đoán giá nhà, bạn
+có thể nhận được C247 500 hoặc C312 000 hay bất cứ số nào ở giữa.
+Các bài toán hồi quy thường gặp gồm dự đoán giá nhà dựa trên đặc điểm của
+nó, dự báo giá cổ phiếu hoặc doanh số, ước lượng tuổi một người qua ảnh
+chụp, và dự đoán một chiếc máy sẽ chạy được bao lâu thì hỏng. Trong mỗi
+trường hợp, đầu ra là một con số có thể thay đổi liên tục.
+Đặc điểm then chốt của hồi quy là những thay đổi nhỏ ở đầu vào có thể dẫn
+tới những thay đổi nhỏ ở đầu ra. Một ngôi nhà lớn hơn một chút có thể được
+dự đoán là đắt hơn một chút. Chính mối liên hệ mượt mà giữa đầu vào và đầu
+ra làm nên sự khác biệt giữa hồi quy và phân loại.
+4.2.2 Phân loại: Dự đoán các nhóm
+Trong các bài toán phân loại, nhãn là một nhóm rời rạc. Nó thuộc về một trong
+số hữu hạn các lớp có thể có. Khi phân loại một email, nó hoặc là spam hoặc
+không phải spam; không có kiểu “37% là spam.” Khi chẩn đoán một bệnh, bệnh
+nhân hoặc mắc hoặc không mắc. Khi nhận dạng một chữ số viết tay, đó là 0, 1,
+2, 3, 4, 5, 6, 7, 8, hay 9, không có kiểu “chữ số 3.7.”
+Khi có đúng hai lớp khả dĩ, ta gọi đó là phân loại nhị phân. Ví dụ gồm phát
+hiện spam (spam so với không spam), chẩn đoán y tế (có bệnh so với không
+bệnh), và phát hiện gian lận (gian lận so với hợp lệ). Khi có nhiều hơn hai lớp,
+ta gọi đó là phân loại đa lớp. Ví dụ gồm nhận dạng chữ số viết tay (10 lớp),
+nhận dạng loài động vật (nhiều lớp), và phân loại bài báo theo chủ đề.
+Sự khác biệt căn bản so với hồi quy là những thay đổi nhỏ ở đầu vào có thể
+dẫn tới những thay đổi đột ngột ở đầu ra. Một email rất giống spam vẫn có
+thể bị phân loại là không spam nếu nó rơi vào phía đúng của ranh giới quyết
+định. Bản chất rời rạc, trắng đen của phân loại đòi hỏi những thuật toán và
+phương pháp đánh giá khác hẳn so với hồi quy.
+
+===== PAGE 84 =====
+
+84 CHAPTER 4. SUPERVISED LEARNING
+Size
+Price
+Regression
+Predict a continuous value
+x1
+x2
+Classification
+Predict a discrete category
+Hình 4.1: Trong hồi quy, ta khớp một đường thẳng (hoặc đường cong) để dự
+đoán các giá trị liên tục. Trong phân loại, ta tìm một ranh giới tách các nhóm
+khác nhau.
+4.3 Hồi quy tuyến tính
+4.3.1 Hàm mất mát: Thứ mà thuật toán tối ưu
+Mọi thuật toán học có giám sát đều hoạt động bằng cách cực tiểu hóa một hàm
+mất mát: thước đo xem dự đoán của nó sai nhiều đến đâu. Việc chọn hàm mất
+mát quyết định mô hình quan tâm đến loại lỗi nào nhất, và mỗi nhiệm vụ khác
+nhau lại cần một hàm mất mát khác nhau.
+Mất mát bình phương (dùng trong hồi quy) phạt những lỗi lớn theo bình phương:
+L(y, ˆy) = (y − ˆy)2
+Một dự đoán lệch 10 bị phạt nặng gấp 100 lần một dự đoán lệch 1. Điều này
+khiến các mô hình hồi quy nhạy cảm với ngoại lệ: chỉ một dự đoán sai lầm
+khủng khiếp cũng đủ chi phối toàn bộ mất mát.
+Mất mát log / chéo entropy (dùng trong hồi quy logistic) đo mức khớp giữa
+xác suất dự đoán và các lớp thực tế:
+L(y, ˆp) = −[y log( ˆp) + (1 − y) log(1 − ˆp)]
+Một dự đoán sai mà vẫn tự tin (dự đoán 0.99 trong khi nhãn thật là 0) gây ra
+mức mất mát khổng lồ. Một dự đoán đúng mà tự tin gần như không gây mất
+mát nào. Điều này buộc các bộ phân loại phải tạo ra các xác suất tách bạch rõ
+ràng.
+Mất mát hinge (dùng trong SVM) chỉ quan tâm xem dự đoán có nằm ở phía
+đúng của biên hay không:
+L(y, f (x)) = max(0, 1 − y · f (x))
+Nếu dự đoán đúng và tự tin (cách xa biên), mất mát hinge bằng không. Nó chỉ
+phạt những dự đoán sai hoặc nằm quá gần
+
+===== PAGE 85 =====
+
+4.3. LINEAR REGRESSION 85
+ranh giới. Đó là lý do SVM tạo ra các bộ phân loại biên tối đa: mất mát hinge
+chủ động thưởng cho biên lớn.
+Vì sao hàm mất mát lại quan trọng
+Hàm mất mát định hình cách mô hình hoạt động:
+• Mất mát bình phương: Nhạy cảm với ngoại lệ; dự đoán là liên tục
+• Mất mát log: Đẩy dự đoán về 0 hoặc 1; đầu ra là xác suất
+• Mất mát hinge: Bỏ qua các ví dụ “dễ”; tập trung vào ranh giới
+quyết định
+Chọn sai hàm mất mát cho nhiệm vụ của bạn có thể tạo ra một mô hình
+đi tối ưu nhầm thứ.
+4.3.2 Giả thuyết và hàm chi phí
+Hồi quy tuyến tính là thuật toán đơn giản nhất và nền tảng nhất trong học có
+giám sát. Ý tưởng cốt lõi: nếu đầu vào và đầu ra có mối quan hệ đường thẳng,
+thì hãy tìm đường thẳng đó.
+Để dự đoán giá nhà từ diện tích, ta mô hình hóa mối quan hệ như sau:
+hθ(x) = θ0 + θ1x (4.1)
+Đây đơn thuần là một đường thẳng: θ0 là giao điểm với trục y, θ1 là độ dốc.
+Những giá trị tham số khác nhau cho những đường thẳng khác nhau; thuật toán
+tìm các giá trị khớp dữ liệu huấn luyện tốt nhất.
+Để đo một đường thẳng khớp tốt đến đâu, ta dùng Sai số bình phương trung bình (MSE):
+J (θ0, θ1) = 1
+2m
+mX
+i=1
+
+hθ(x(i)) − y(i)
+2
+(4.2)
+Hàm chi phí này đo mức dự đoán lệch khỏi giá trị thực tế nhiều đến đâu. Mục
+tiêu của ta là cực tiểu hóa nó.
+4.3.3 Giảm gradient
+Giảm gradient tìm điểm cực tiểu bằng cách liên tục bước theo hướng làm
+giảm chi phí:1
+θj := θj − α ∂
+∂θj
+J (θ0, θ1) (4.3)
+1See Appendix D for partial derivatives and the chain rule.
+
+===== PAGE 86 =====
+
+86 CHAPTER 4. SUPERVISED LEARNING
+Tốc độ học  α điều khiển độ dài bước. Quá nhỏ: hội tụ chậm. Quá lớn: bước
+vượt qua cực tiểu hoặc phân kỳ.
+Một tính chất then chốt: hàm chi phí của hồi quy tuyến tính là hàm lồi, có hình
+cái bát với đúng một điểm cực tiểu. Giảm gradient chắc chắn sẽ tìm được nó.
+4.3.4 Nhiều đặc trưng
+Đến đây, ta mới chỉ xét việc dự đoán giá nhà từ riêng diện tích. Nhưng thực tế
+có nhiều đặc trưng ảnh hưởng tới giá: số phòng ngủ, tuổi của ngôi nhà, chất
+lượng khu vực, và vân vân. Hồi quy tuyến tính dễ dàng mở rộng sang nhiều
+đặc trưng:
+hθ(x) = θ0 + θ1x1 + θ2x2 + · · · + θnxn (4.4)
+Ở đây, x1, x2, . . . , xn là các đặc trưng n khác nhau, và mỗi cái có tham số
+riêng θj quyết định mức đóng góp của đặc trưng đó vào dự đoán. Tham số θ0
+vẫn là hệ số chặn.
+Dùng ký hiệu vector, ta có thể viết gọn hơn là hθ(x) = θT x, trong đó θ và x
+đều là vector. Ký hiệu này trở nên thiết yếu khi làm việc với nhiều đặc trưng.
+4.3.5 Hồi quy đa thức
+Còn nếu mối quan hệ giữa đầu vào và đầu ra không phải đường thẳng thì sao?
+Có lẽ giá nhà tăng nhanh hơn với những ngôi nhà lớn hơn, hàm ý một mối quan
+hệ cong. Ta có thể nắm bắt điều này bằng cách thêm các đặc trưng đa thức:
+hθ(x) = θ0 + θ1x + θ2x2 + θ3x3 + · · · (4.5)
+Điều thú vị là đây vẫn gọi là hồi quy “tuyến tính” vì giả thuyết tuyến tính theo
+các tham số θ. Ta chỉ đơn giản tạo ra các đặc trưng mới (x2, x3, v.v.) từ đặc
+trưng gốc x. Cùng thuật toán giảm gradient vẫn dùng để tìm các tham số tối
+ưu.
+Sức mạnh của hồi quy đa thức đi kèm một lời cảnh báo: đa thức bậc cao có
+thể khớp rất sát dữ liệu huấn luyện nhưng lại có thể hoạt động tệ trên dữ liệu
+mới. Vấn đề này, gọi là quá khớp, sẽ được bàn tới sau trong chương này.
+4.4 Hồi quy logistic
+Dù cái tên có chữ “regression”, hồi quy logistic thực ra là một thuật toán phân
+loại. Nó được dùng khi đầu ra là phân loại chứ không phải
+
+===== PAGE 87 =====
+
+4.4. LOGISTIC REGRESSION 87
+liên tục, phổ biến nhất là phân loại nhị phân khi ta muốn dự đoán một trong hai
+lớp.
+4.4.1 Vì sao hồi quy tuyến tính thất bại khi phân loại
+Bạn có thể tự hỏi: sao không dùng luôn hồi quy tuyến tính để phân loại? Giả sử
+ta gán email spam là 1 và email hợp lệ là 0. Ta có thể huấn luyện một mô hình
+hồi quy tuyến tính rồi xếp email vào spam nếu dự đoán lớn hơn 0.5.
+Vấn đề là hồi quy tuyến tính có thể cho ra dự đoán nhỏ hơn 0 hoặc lớn hơn 1.
+Nó có thể dự đoán −0.3 cho một email và 1.7 cho email khác, những giá trị
+chẳng có nghĩa gì khi hiểu là xác suất. Chưa kể, một ngoại lệ duy nhất cũng có
+thể đẩy đường hồi quy lệch mạnh, làm thay đổi phân loại của nhiều ví dụ
+khác.
+Điều ta cần là một hàm luôn cho giá trị nằm trong khoảng từ 0 đến 1, mà ta có
+thể diễn giải như xác suất. Đó chính xác là điều hồi quy logistic mang lại.
+4.4.2 Hàm sigmoid
+Thành phần then chốt của hồi quy logistic là hàm sigmoid (còn gọi là hàm
+logistic):
+σ(z) = 1
+1 + e−z (4.6)
+Hàm này có một đường cong chữ S rất đẹp. Dù bạn đưa vào giá trị  z nào, đầu
+ra luôn nằm giữa 0 và 1. Khi z là số dương lớn, σ(z) xấp xỉ 1. Khi z là số âm
+lớn, σ(z) xấp xỉ 0. Khi z = 0, σ(z) = 0.5 đúng bằng 0.5.
+z
+σ(z)
+0.5
+1
+0
+Hình 4.2: Hàm sigmoid ánh xạ trơn tru mọi số thực về một giá trị trong khoảng
+0 đến 1, khiến nó hoàn hảo để biểu diễn xác suất.
+
+===== PAGE 88 =====
+
+88 CHAPTER 4. SUPERVISED LEARNING
+4.4.3 Giả thuyết của hồi quy logistic
+Trong hồi quy logistic, ta lấy tổ hợp tuyến tính của các đặc trưng (giống hệt
+trong hồi quy tuyến tính) rồi cho đi qua hàm sigmoid:
+hθ(x) = σ(θT x) = 1
+1 + e−θT x (4.7)
+Đầu ra hθ(x) giờ luôn nằm giữa 0 và 1, và ta diễn giải nó là xác suất mà đầu
+vào thuộc lớp 1. Cụ thể, hθ(x) = P (y = 1|x; θ), là xác suất mà y bằng 1,
+với các đặc trưng x và tham số θ.
+Để ra quyết định phân loại cuối cùng, ta dùng một ngưỡng, thường là 0.5:
+Predict y =
+(
+1 if hθ(x) ≥ 0.5
+0 if hθ(x) < 0.5 (4.8)
+Điều này có nghĩa ta dự đoán lớp 1 khi mô hình tin rằng xác suất thuộc lớp 1 ít
+nhất là 50%. Ngưỡng có thể điều chỉnh tùy ứng dụng, chẳng hạn trong chẩn
+đoán y tế ta có thể dùng ngưỡng thấp hơn để tránh bỏ sót bệnh.
+4.4.4 Ranh giới quyết định
+Ranh giới quyết định là mặt trong không gian đặc trưng nơi dự đoán đổi từ
+lớp này sang lớp khác. Với hồi quy logistic có hai đặc trưng, ranh giới này là
+nơi hθ(x) = 0.5, điều xảy ra đúng khi θT x = 0.
+Với hai đặc trưng x1 và x2, phương trình θ0 + θ1x1 + θ2x2 = 0 xác định
+một đường thẳng. Các điểm ở một phía được xếp vào lớp 0; các điểm ở phía
+kia được xếp vào lớp 1. Việc của thuật toán là tìm đường thẳng (do θ0, θ1, θ2
+quyết định) tách hai lớp tốt nhất.
+4.4.5 Hàm chi phí của hồi quy logistic
+Ta không thể dùng sai số bình phương trung bình cho hồi quy logistic vì hàm chi
+phí thu được sẽ không lồi, với nhiều cực tiểu cục bộ nơi giảm gradient có thể
+mắc kẹt.
+Thay vào đó, ta dùng mất mát chéo entropy nhị phân, vốn có một trực giác rất
+đẹp. Nếu nhãn thật là y = 1, ta muốn hθ(x) xấp xỉ 1. Số hạng
+− log(hθ(x)) nhỏ khi hθ(x) gần 1, nhưng lại lớn dần khi hθ(x) tiến về 0.
+Tương tự, nếu y = 0, số hạng − log(1 − hθ(x)) phạt những dự đoán gần
+1.
+
+===== PAGE 89 =====
+
+4.5. REGULARIZATION: PREVENTING OVERFITTING 89
+Gộp các trường hợp này lại:
+J (θ) = − 1
+m
+mX
+i=1
+h
+y(i) log(hθ(x(i))) + (1 − y(i)) log(1 − hθ(x(i)))
+i
+(4.9)
+Hàm chi phí này lồi, nên giảm gradient tìm được cực tiểu toàn cục. Các quy tắc
+cập nhật trông gần giống hồi quy tuyến tính, và nhiều thư viện phần mềm giúp
+việc huấn luyện hồi quy logistic trở nên thật dễ.
+4.5 Hiệu chỉnh: Ngăn ngừa quá khớp
+Một trong những khái niệm quan trọng nhất của học máy là sự phân biệt giữa
+việc khớp dữ liệu huấn luyện và việc khái quát sang dữ liệu mới. Một mô hình
+làm rất tốt trên dữ liệu huấn luyện nhưng lại tệ trên dữ liệu mới đã bị quá
+khớp, nó chỉ ghi nhớ các ví dụ huấn luyện thay vì học khuôn mẫu ẩn phía sau.
+4.5.1 Hiểu về quá khớp
+Hãy tưởng tượng bạn khớp một đa thức vào một tập dữ liệu nhỏ. Một đường
+thẳng (bậc 1) có thể không nắm bắt được khuôn mẫu, đó là thiếu khớp. Một
+đa thức bậc 2 có thể khớp ổn thỏa. Nhưng đa thức bậc 20 lại có thể đi qua
+đúng từng điểm huấn luyện, đạt sai số huấn luyện bằng không. Nghe thì tuyệt,
+nhưng đa thức sẽ ngoằn ngoèo dữ dội giữa các điểm, cho những dự đoán tồi
+tệ trên dữ liệu mới.
+Đa thức bậc 20 có quá nhiều tham số so với lượng dữ liệu huấn luyện. Nó đủ
+linh hoạt để khớp không chỉ khuôn mẫu thật mà cả nhiễu ngẫu nhiên trong dữ
+liệu. Đó chính là quá khớp.
+4.5.2 Hiệu chỉnh: Thêm hình phạt cho độ phức tạp
+Hiệu chỉnh ngăn quá khớp bằng cách thêm một số hạng phạt vào hàm chi phí,
+làm nản những giá trị tham số lớn. Trực giác là các giá trị tham số cực đoan
+thường cho thấy mô hình đang cố quá sức để khớp dữ liệu huấn luyện.
+Hiệu chỉnh L2 (còn gọi là hồi quy Ridge) cộng vào tổng bình phương các tham
+số:
+JL2(θ) = J (θ) + λ
+nX
+j=1
+θ2
+j (4.10)
+Siêu tham số λ điều khiển độ mạnh của hiệu chỉnh. Giá trị λ lớn hơn áp dụng
+hình phạt mạnh hơn, đẩy các tham số về những giá trị nhỏ hơn. Khi
+
+===== PAGE 90 =====
+
+90 CHAPTER 4. SUPERVISED LEARNING
+λ = 0, không có hiệu chỉnh nào được áp dụng. Lưu ý rằng ta thường không
+hiệu chỉnh θ0 (hệ số chặn).
+Hiệu chỉnh L2 thu nhỏ mọi tham số về phía không, nhưng chúng hiếm khi trở thành
+không hoàn toàn. Mô hình giữ lại toàn bộ đặc trưng nhưng giảm ảnh hưởng của
+chúng.
+Hiệu chỉnh L1 (còn gọi là Lasso) cộng vào tổng các giá trị tuyệt đối:
+JL1(θ) = J (θ) + λ
+nX
+j=1
+|θj| (4.11)
+Hiệu chỉnh L1 có một tính chất đáng chú ý: nó có xu hướng làm một số tham số
+thành không hoàn toàn. Nhờ đó mà việc chọn đặc trưng tự động được thực
+hiện, những đặc trưng không quan trọng bị loại bỏ hẳn. Điều này rất có giá trị
+khi bạn có nhiều đặc trưng và muốn xác định cái nào thực sự quan trọng.
+Việc chọn giá trị λ đúng là rất quan trọng. Quá nhỏ thì hiệu chỉnh hầu như
+không có tác dụng; quá lớn thì mô hình trở nên quá đơn giản, thiếu khớp dữ
+liệu. Kiểm chéo (sẽ bàn sau) thường được dùng để chọn λ.
+Tạm dừng khái niệm: So sánh các mô hình tuyến tính
+Trước khi sang những thuật toán phức tạp hơn, hãy cùng ôn lại những gì ta đã
+học về mô hình tuyến tính.
+Method Use When Strengths Weaknesses
+Linear Regres-
+sion
+Predicting continu-
+ous values; rela-
+tionship is approxi-
+mately linear
+Simple, inter-
+pretable, fast;
+closed-form solu-
+tion
+Cannot capture non-
+linear patterns
+Logistic Re-
+gression
+Binary/multi-class
+classification; want
+probabilities
+Outputs calibrated
+probabilities; works
+with many features
+Assumes linear deci-
+sion boundary
+Ridge (L2) Many features;
+want to prevent
+overfitting
+Shrinks all coeffi-
+cients; stable
+No feature selection
+Lasso (L1) Many features;
+want sparsity
+Automatic feature
+selection
+May select arbitrar-
+ily among corre-
+lated features
+4.6 Máy vectorsupport
+Máy vectorsupport (SVM) tiếp cận bài toán phân loại từ một góc khác: thay vì
+mô hình hóa xác suất như hồi quy logistic, chúng tập trung tìm ranh giới tách
+các lớp với biên rộng nhất.
+
+===== PAGE 91 =====
+
+4.6. SUPPORT VECTOR MACHINES 91
+4.6.1 Ý tưởng biên rộng nhất
+Xét một bài toán phân loại nhị phân mà hai lớp phân tách tuyến tính được.
+Nghĩa là ta có thể vẽ một đường thẳng (hoặc siêu mặt phẳng ở số chiều cao
+hơn) tách hoàn hảo chúng. Có vô số đường như vậy. Nên chọn đường nào?
+SVM chọn đường thẳng nằm xa nhất so với các điểm huấn luyện gần nhất
+của mỗi lớp. Khoảng cách này gọi là biên. Trực giác là một đường có biên lớn
+sẽ vững hơn. Những nhiễu động nhỏ hay nhiễu trong dữ liệu ít gây ra phân
+loại nhầm hơn.
+x1
+x2
+Margin
+Support vectors
+Hình 4.3: SVM tìm ranh giới quyết định (đường liền) cực đại hóa biên (khoảng
+cách tới các đường nét đứt). Các điểm khoanh tròn là support vector. Chúng là
+những ví dụ huấn luyện gần ranh giới nhất.
+4.6.2 Support vector
+Những điểm nằm ngay trên các đường biên được gọi là support vector. Đây là
+những ví dụ huấn luyện “chống đỡ” cho ranh giới quyết định. Nếu bạn bỏ đi
+bất kỳ điểm huấn luyện nào khác, ranh giới tối ưu cũng không đổi. Chỉ các
+support vector mới quyết định bộ phân loại.
+Đây là một tính chất đẹp: lời giải của SVM chỉ phụ thuộc vào một tập con của
+dữ liệu huấn luyện. Ngược lại, các phương pháp như hồi quy logistic lại dùng
+mọi điểm huấn luyện để xác định tham số.
+4.6.3 Biên mềm và tham số C
+Trong thực tế, dữ liệu hiếm khi tách được hoàn hảo. Có thể có vài điểm của
+lớp này xen vào lớp kia, hoặc hai lớp chồng lên nhau khá nhiều. Một SVM “biên
+cứng” đòi hỏi tách hoàn hảo sẽ thất bại trên dữ liệu như vậy.
+SVM biên mềm cho phép một số điểm vi phạm biên hoặc thậm chí nằm sai
+phía ranh giới. Bài toán tối ưu trở thành một sự đánh đổi: ta
+
+===== PAGE 92 =====
+
+92 CHAPTER 4. SUPERVISED LEARNING
+muốn biên lớn, nhưng đồng thời cũng muốn giảm thiểu phân loại nhầm. Tham
+số C điều khiển sự đánh đổi này:
+min
+w,b
+1
+2 ∥w∥2 + C
+mX
+i=1
+ξi (4.12)
+Ở đây, ξi cho biết điểm i vi phạm biên nhiều đến đâu (bằng không nếu không
+vi phạm). Giá trị C lớn phạt nặng những vi phạm, dẫn tới biên nhỏ hơn nhưng
+ít phân loại nhầm hơn. Điều này có thể gây quá khớp dữ liệu nhiễu. Giá trị C
+nhỏ chịu được nhiều vi phạm hơn để đổi lấy biên lớn hơn. Điều này có thể
+gây thiếu khớp nếu dữ liệu tách được sạch.
+4.6.4 Phương pháp kernel: Bước ra không tuyến tính
+Còn nếu không có đường thẳng nào tách được các lớp thì sao? SVM xử lý điều
+này qua thủ thuật kernel, một trong những ý tưởng tinh tế nhất của học máy.
+Thủ thuật kernel ngầm ánh xạ dữ liệu sang một không gian số chiều cao hơn,
+nơi có thể tách tuyến tính được. Ví dụ, dữ liệu tạo thành hai đường tròn đồng
+tâm trong 2D không thể tách bằng một đường thẳng. Nhưng nếu ta thêm chiều
+thứ ba z = x2
+1 + x2
+2 (bình phương khoảng cách tới gốc tọa độ), hai đường
+tròn trở thành hai mặt phẳng song song có thể tách bằng một siêu mặt phẳng.
+Điểm đáng kinh ngạc là ta chưa bao giờ thực sự tính ánh xạ cao chiều này.
+Thay vào đó, ta dùng một hàm kernel K(x, z) tính trực tiếp tích vô hướng
+trong không gian cao chiều ngay từ các đặc trưng gốc. Những kernel phổ biến
+gồm:
+Kernel tuyến tính K(x, z) = xT z tương ứng với không có biến đổi nào, nó
+cho một SVM tuyến tính tiêu chuẩn.
+Kernel đa thức K(x, z) = (xT z + c)d tương ứng với các đặc trưng đa thức
+bậc d.
+Kernel RBF (Gaussian) K(x, z) = exp(−γ∥x − z∥2) là loại phổ biến nhất,
+tương ứng với một không gian vô hạn chiều. Nó có thể tạo ra những ranh giới
+quyết định phức tạp tùy ý.
+4.7 Cây quyết định
+Cây quyết định đi một hướng hoàn toàn khác để phân loại: chúng học một loạt
+quy tắc if-then chia không gian đặc trưng thành các vùng, mỗi vùng gán cho một
+lớp. Kết quả rất dễ diễn giải, bạn lần được đúng lý do từng dự đoán được
+đưa ra.
+
+===== PAGE 93 =====
+
+4.7. DECISION TREES 93
+4.7.1 Cấu trúc của cây
+Một cây quyết định được dựng từ ba loại nút. Nút gốc nằm ở trên cùng và
+chứa quyết định đầu tiên.Các nút bên trong đại diện cho những quyết định
+tiếp theo khi bạn đi xuống cây.Các nút lá nằm ở dưới cùng và chứa những dự
+đoán lớp cuối cùng.
+Tại mỗi nút bên trong, cây đặt một câu hỏi về một đặc trưng, thường dạng
+“Đặc trưng xj có lớn hơn một ngưỡng nào đó không?” Dựa vào câu trả lời, ta
+đi theo nhánh này hoặc nhánh kia. Cuối cùng ta tới một nút lá cho biết lớp được
+dự đoán.
+Size > 1500?
+Age > 20?
+Low
+Yes
+Medium
+No
+No
+High
+Yes
+Hình 4.4: Một cây quyết định đơn giản để dự đoán nhóm giá nhà. Bắt đầu từ
+nút gốc, ta đi theo các nhánh dựa trên câu trả lời cho tới khi tới một nút lá chứa
+dự đoán.
+4.7.2 Chọn các cách chia tốt nhất
+Câu hỏi then chốt khi dựng một cây quyết định là: tại mỗi nút, nên chia theo
+đặc trưng nào, và ở ngưỡng nào? Ta muốn những cách chia tách các lớp tốt
+nhất.
+Đo mức một tập ví dụ “hỗn tạp” hay “bất thuần” đến đâu, ta dùng entropy:
+H(S) = −
+X
+c
+pc log2(pc) (4.13)
+Ở đây, pc là tỷ lệ các ví dụ thuộc lớp c. Nếu mọi ví dụ đều thuộc một lớp
+(pc = 1 cho lớp đó), entropy bằng 0. Không có sự không chắc chắn nào về lớp.
+Nếu các ví dụ chia đều cho hai lớp (pc = 0.5 cho mỗi lớp), entropy bằng 1.
+Không chắc chắn tối đa.
+Một cách chia tốt sẽ giảm entropy, sau khi chia, các tập con thu được nên thuần
+khiết hơn tập ban đầu.Lợi thông tin đo mức giảm này:
+Gain(S, A) = H(S) −
+X
+v∈Values(A)
+|Sv|
+|S| H(Sv) (4.14)
+
+===== PAGE 94 =====
+
+94 CHAPTER 4. SUPERVISED LEARNING
+Điều này tính entropy trước khi chia trừ trung bình có trọng số của entropy sau
+khi chia. Thuộc tính có lợi thông tin cao nhất sẽ được chọn để chia.
+Example: Computing Information Gain
+Consider a dataset with 10 examples: 5 positive and 5 negative.
+The entropy is H(S) = −0.5 log2(0.5) − 0.5 log2(0.5) = 1.0
+(maximum uncertainty).
+Suppose splitting on attribute A produces two branches: one with 4
+positive and 1 negative, another with 1 positive and 4 negative.
+For the first branch: H = − 4
+5 log2
+4
+5 − 1
+5 log2
+1
+5 ≈ 0.72
+For the second branch: same calculation gives H ≈ 0.72
+Weighted average entropy after split: 5
+10 (0.72) + 5
+10 (0.72) = 0.72
+Information Gain = 1.0 − 0.72 = 0.28
+This split reduces uncertainty by 0.28 bits.
+4.7.3 Dựng cây: Thuật toán ID3
+Thuật toán kinh điển để dựng cây quyết định, gọi là ID3, chạy đệ quy:
+Thứ nhất, nếu mọi ví dụ trong tập hiện tại cùng một lớp, tạo một nút lá mang
+nhãn lớp đó. Thứ hai, nếu không còn thuộc tính nào để chia, tạo một nút lá
+mang lớp đa số. Nếu không, chọn thuộc tính có lợi thông tin cao nhất, tạo nút
+cho thuộc tính đó, và với mỗi giá trị khả dĩ của thuộc tính, dựng đệ quy một cây
+con cho các ví dụ mang giá trị ấy.
+Cách tham lam này dựng cây theo chiều từ trên xuống, luôn chọn phương án tối
+ưu cục bộ ở mỗi bước. Dù nó không bảo đảm cây tối ưu toàn cục, nó hoạt
+động tốt trong thực tế.
+4.7.4 Cắt tỉa: Tránh quá khớp
+Cây quyết định có xu hướng quá khớp, nhất là khi mọc sâu. Một cây có nhiều
+tầng có thể tạo ra những quy tắc quá cụ thể, khớp hoàn hảo dữ liệu huấn luyện
+nhưng không khái quát được.
+Cắt tỉa xử lý điều này bằng cách loại bỏ những nhánh không cải thiện hiệu
+năng trên dữ liệu kiểm định. Cắt tỉa trước dừng việc mọc cây sớm, còn cắt tỉa
+sau mọc cây đầy đủ rồi gỡ bỏ những nhánh vô ích. Các tham số như độ sâu tối
+đa, số mẫu tối thiểu mỗi lá, và lợi thông tin tối thiểu để chia giúp kiểm soát độ
+phức tạp của cây.
+
+===== PAGE 95 =====
+
+4.8. NAÏVE BAYES CLASSIFICATION 95
+4.7.5 Phương pháp tập hợp: Kết hợp nhiều cây
+Một cây quyết định đơn lẻ dễ quá khớp và có phương sai cao: thay đổi nhỏ
+trong dữ liệu huấn luyện có thể cho ra một cây rất khác.Các phương pháp tập
+hợp khắc phục điểm yếu này bằng cách kết hợp nhiều cây thành một bộ dự
+đoán vững hơn.
+Bagging (Bootstrap Aggregating) huấn luyện nhiều cây trên các mẫu con ngẫu
+nhiên của dữ liệu huấn luyện (rút có hoàn lại) rồi lấy trung bình dự đoán của
+chúng. Vì mỗi cây thấy một tập dữ liệu hơi khác, chúng mắc những lỗi khác
+nhau, và việc lấy trung bình làm giảm phương sai.
+Một Rừng ngẫu nhiên mở rộng bagging bằng cách còn ngẫu nhiên hóa cả
+những đặc trưng xét tới ở mỗi lần chia. Tại mỗi nút, chỉ một tập con đặc trưng
+ngẫu nhiên được đánh giá, buộc các cây phải khác nhau. Rừng ngẫu nhiên
+thuộc nhóm những bộ phân loại sẵn dùng đáng tin cậy nhất trong thực tế:
+chúng xử lý được mẫu không tuyến tính, cần rất ít tinh chỉnh, chống quá khớp,
+và làm tốt cả trên tập dữ liệu nhỏ lẫn lớn.
+Boosting đi hướng khác: nó huấn luyện các cây tuần tự, trong đó cây mới tập
+trung vào những ví dụ mà các cây trước dự đoán sai.AdaBoost tăng trọng số
+của các ví dụ bị phân loại sai trước khi huấn luyện cây tiếp theo.Gradient
+Boosting khớp cây mới vào phần sai số còn lại của tập hợp cho tới thời điểm
+đó. Boosting thường cho độ chính xác cao hơn bagging nhưng nhạy hơn với dữ
+liệu nhiễu và cần tinh chỉnh cẩn thận hơn.
+Ý chính: Vì sao tập hợp lại hiệu quả
+Một cây đơn lẻ giống như hỏi một người chỉ đường: bạn có thể nhận
+câu trả lời tuyệt vời hoặc câu trả lời rất tệ. Một tập hợp giống như hỏi
+nhiều người rồi lấy phiếu. Những lỗi cá nhân triệt tiêu nhau, và đồng
+thuận thường đáng tin cậy hơn bất kỳ ý kiến riêng lẻ nào.
+4.8 Phân loại Naïve Bayes
+2
+Naïve Bayes là bộ phân loại xác suất dựa trên định lý Bayes kèm một giả định
+đơn giản hóa làm phép tính khả thi. Bất chấp sự đơn giản của nó, nó thường
+hoạt động tốt đến bất ngờ, nhất là cho phân loại văn bản.
+2See Appendix C for a review of Bayes’ theorem and conditional probability.
+
+===== PAGE 96 =====
+
+96 CHAPTER 4. SUPERVISED LEARNING
+4.8.1 Định lý Bayes
+Định lý Bayes liên hệ xác suất của một giả thuyết khi có bằng chứng với xác
+suất của bằng chứng khi có giả thuyết:
+P (y|x) = P (x|y) · P (y)
+P (x) (4.15)
+Ở khía cạnh phân loại: P (y|x) là xác suất của lớp y khi biết các đặc trưng x
+(cái ta muốn). P (x|y) là xác suất khi thấy các đặc trưng x với điều kiện lớp y
+(hàm khả năng). P (y) là xác suất tiên nghiệm của lớp y trước khi thấy bất kỳ
+đặc trưng nào. P (x) là xác suất của các đặc trưng, đóng vai trò hằng số chuẩn
+hóa.
+Để phân loại, ta tính P (y|x) cho mỗi lớp khả dĩ y và dự đoán lớp có xác suất
+cao nhất.
+4.8.2 Giả định độc lập kiểu Naïve
+Khó khăn nằm ở việc tính P (x|y), xác suất của một tổ hợp đặc trưng cụ thể
+khi biết một lớp. Với nhiều đặc trưng, số tổ hợp khả dĩ là khổng lồ.
+Giả định “naïve” giải quyết điều này bằng cách giả sử các đặc trưng độc lập có
+điều kiện với nhau khi đã biết lớp. Nói cách khác, một khi đã biết lớp, biết giá
+trị của một đặc trưng không cho ta biết gì về giá trị của các đặc trưng khác.
+Nhờ thế ta có thể phân tích xác suất:
+P (x|y) = P (x1|y) · P (x2|y) · . . . · P (xn|y) =
+nY
+i=1
+P (xi|y) (4.16)
+Mỗi P (xi|y) có thể ước lượng trực tiếp từ dữ liệu huấn luyện bằng cách
+đếm tần suất xuất hiện của mỗi giá trị đặc trưng trong từng lớp.
+4.8.3 Quy tắc phân loại
+Bước phân loại cuối cùng chọn lớp cực đại hóa xác suất hậu nghiệm:
+ˆy = arg max
+y
+P (y)
+nY
+i=1
+P (xi|y) (4.17)
+Vì P (x) giống nhau với mọi lớp, ta có thể bỏ qua nó và chỉ so sánh tử số.
+Giả định độc lập gần như luôn sai, các đặc trưng thường tương quan với nhau.
+Vậy mà Naïve Bayes vẫn thường hoạt động tốt đáng kinh ngạc. Một lý do là
+
+===== PAGE 97 =====
+
+4.9. ALGORITHM COMPARISON 97
+việc phân loại chỉ cần xếp hạng đúng các lớp, chứ không cần tính xác suất
+chính xác. Ngay cả khi xác suất sai, thứ hạng vẫn có thể đúng.
+Naïve Bayes đặc biệt phổ biến cho phân loại văn bản (lọc spam, phân tích cảm
+xúc) nơi các đặc trưng là số lần xuất hiện của từ. Nó huấn luyện nhanh, xử lý
+tốt dữ liệu số chiều cao, và cho một đường cơ sở mạnh.
+4.9 So sánh các thuật toán
+Chọn đúng thuật toán đòi hỏi phải hiểu giả định, thế mạnh và kiểu thất bại của
+chúng.
+Algorithm Assumptions Failure Modes Strengths Interpretable?
+Linear Re-
+gression
+Linear re-
+lationship;
+homoscedastic
+errors
+Non-linear patterns;
+outliers distort fit
+Fast; closed-
+form solution;
+coefficients
+meaningful
+Yes
+Logistic Re-
+gression
+Linear deci-
+sion bound-
+ary; features
+independent-ish
+Non-linear bound-
+aries; multi-
+collinearity
+Probabilistic out-
+put; regulariza-
+tion easy
+Yes
+Decision Tree None (non-
+parametric)
+Overfits with depth;
+axis-aligned only
+Handles mixed
+types; no scaling
+needed
+Yes
+SVM (linear) Linearly separa-
+ble (soft margin
+helps)
+Very non-linear
+data; large datasets
+slow
+Max-margin =
+good generaliza-
+tion
+Somewhat
+SVM (RBF) Data has local
+structure
+Too many features;
+sensitive to γ, C
+Captures com-
+plex boundaries
+No
+Naïve Bayes Features condi-
+tionally indepen-
+dent
+Correlated features;
+continuous features
+tricky
+Fast; works with
+little data; han-
+dles many fea-
+tures
+Yes
+Bảng 4.1: Các thuật toán học có giám sát: giả định, kiểu thất bại và khả năng
+diễn giải.
+
+===== PAGE 98 =====
+
+98 CHAPTER 4. SUPERVISED LEARNING
+Khi nào dùng gì
+Bắt đầu đơn giản: Hồi quy tuyến tính/logistic làm đường cơ sở.
+Cần khả năng diễn giải: Cây quyết định hoặc mô hình tuyến tính có
+hiệu chỉnh.
+Mẫu không tuyến tính: SVM với kernel RBF, hoặc tập hợp cây như
+Rừng ngẫu nhiên.
+Dữ liệu thưa, số chiều cao (ví dụ: văn bản): Naïve Bayes hoặc SVM
+tuyến tính.
+Loại đặc trưng pha trộn: Cây quyết định xử lý đặc trưng phân loại
+một cách tự nhiên.
+Trạm kiểm tra đạo đức: Tính công bằng của bộ phân loại
+Bạn đã huấn luyện một cây quyết định để dự báo vỡ nợ. Cón đạt độ
+chính xác 92% tổng thể.
+Câu hỏi kỹ thuật – đạo đức:
+1. Bạn phát hiện cây dùng “zip code” làm một cách chia hàng đầu. Vì
+sao điều này có thể thành vấn đề dù zip code có tính dự đoán? 2. Cón
+có độ nhạy (recall) 85% với Nhóm A nhưng chỉ 60% với Nhóm B. Cả
+hai nhóm có cùng tỷ lệ nền về vỡ nợ. Điều này có công bằng không?
+Định nghĩa nào về công bằng bị vi phạm?
+3. Bạn gỡ zip code khỏi danh sách đặc trưng. Độ chính xác giảm còn
+89%. Một quản lý nói “chúng ta đang hy sinh hiệu năng vì chính trị
+đúng đắn.” Bạn đáp lại thế nào?
+Đây chính là dạng bài lai kỹ thuật – đạo đức xuất hiện ở IAIO. Xem
+Chương 2 để biết các định nghĩa về công bằng.
+Tạm dừng khái niệm: So sánh các bộ phân loại
+Đến đây chúng ta đã thấy vài thuật toán phân loại. Sau đây là cách so sánh
+chúng:
+
+===== PAGE 99 =====
+
+4.9. ALGORITHM COMPARISON 99
+Method Decision
+Boundary
+Best For Many Fea-
+tures?
+Interpretable?
+Logistic Re-
+gression
+Linear (hyper-
+plane)
+Linearly separa-
+ble data; proba-
+bility outputs
+Yes, with regu-
+larization
+Yes (coeffi-
+cients)
+SVM (linear) Linear (max
+margin)
+High-
+dimensional
+data; clear mar-
+gin
+Yes Somewhat
+SVM (ker-
+nel)
+Non-linear Complex bound-
+aries; moderate
+data
+Depends No
+Decision Tree Axis-aligned
+rectangles
+Mixed feature
+types; inter-
+pretability
+Can struggle Yes (rules)
+Naïve Bayes Quadratic Text classifica-
+tion; indepen-
+dent features
+Yes Yes (probabili-
+ties)
+Những lỗi thường gặp
+• Dùng SVM mà không chuẩn hóa: SVM nhạy với thang của đặc
+trưng. Luôn chuẩn hóa trước.
+• Cây quyết định sâu mà không cắt tỉa: Chúng sẽ ghi nhớ dữ liệu
+huấn luyện.
+• Naïve Bayes với đặc trưng tương quan: Giả định độc lập bị vi
+phạm; xác suất sẽ sai (nhưng việc phân loại vẫn có thể chạy
+được).
+• Hồi quy logistic cho ranh giới không tuyến tính: Nó sẽ thiếu
+khớp. Hãy cân nhắc SVM kernel hoặc cây.
+Đánh giá mô hình
+Huấn luyện mô hình mới chỉ là một nửa vấn đề. Việc đánh giá nghiêm
+ngặt trên dữ liệu giữ lại là điều bắt buộc.
+Nguyên tắc then chốt: Không bao giờ đánh giá trên dữ liệu huấn luyện,
+nó cho ra kết quả lạc quan một cách gây hiểu lầm.
+Để biết đầy đủ về các phương pháp đánh giá, các số đo và kiểm chéo,
+hãy xem Chương 5.
+
+===== PAGE 100 =====
+
+100 CHAPTER 4. SUPERVISED LEARNING
+4.10 Tóm tắt
+Hồi quy tuyến tính mô hình hóa biến mục tiêu liên tục dưới dạng tổng có trọng số của các
+đặc trưng. Giảm gradient tìm trọng số tối ưu bằng cách liên tục giảm sai số bình phương.3
+Hồi quy logistic xử lý phân loại bằng cách áp hàm sigmoid lên một tổ hợp
+tuyến tính, tạo ra xác suất. Mất mát chéo entropy cho phép học dựa trên
+gradient.
+Hiệu chỉnh (L1/L2) ngăn quá khớp bằng cách phạt các trọng số lớn. L1 tạo mô
+hình thưa; L2 thu nhỏ mọi trọng số.
+SVM tìm các ranh giới quyết định biên rộng nhất. Kernel cho phép phân loại
+không tuyến tính mà không cần tính toán đặc trưng tường minh.
+Cây quyết định học các cách chia thẳng hàng trục, phân vùng đệ quy không
+gian đặc trưng. Entropy/lợi thông tin dẫn hướng việc chọn cách chia.
+Naïve Bayes áp dụng định lý Bayes4 kèm giả định độc lập có điều kiện. Dù
+“sai”, nó thường hoạt động tốt.
+Lựa chọn thuật toán phụ thuộc vào đặc điểm dữ liệu, nhu cầu diễn giải và
+ràng buộc tính toán. Không thuật toán nào là tốt nhất cho mọi bài toán.
+4.11 Bài tập luyện tập
+1. Một mô hình hồi quy tuyến tính dự đoán giá nhà: h(x) = 50,000 +
+100x, trong đó x là diện tính theo feet vuông. Mô hình dự báo giá bao nhiêu
+cho một nhà 2000 feet vuông? Các hệ số được hiểu thế nào?
+2. Một mô hình hồi quy logistic cho ra hθ(x) = 0.73. Với ngưỡng 0.5, lớp
+nào được dự đoán? Con số 0.73 nghĩa là gì?
+3. Khi dựng một cây quyết định, việc chia theo thuộc tính A tạo ra các nhánh
+có (4+, 0−) và (1+, 5−). Nếu entropy ban đầu là 1.0, hãy tính lợi thông
+tin.
+4. Giải thích vì sao SVM được gọi là “bộ phân loại biên rộng.”  C ảnh
+hưởng tới biên như thế nào?
+5. So sánh hiệu chỉnh L1 và L2. Khi nào bạn chọn cái nào?
+6. (Dạng IAIO: Một thuật toán bạn chưa từng thấy)
+Một đồng nghiệp đề xuất “Bộ phân loại hàng xóm có trọng số” (WNC):
+3See Appendix D for calculus of gradients.
+4See Appendix C for probability review.
+
+===== PAGE 101 =====
+
+4.11. PRACTICE PROBLEMS 101
+(a) Với một điểm kiểm thử x, tính khoảng cách di tới mỗi điểm huấn
+luyện xi (b) Gán trọng số wi = exp(−d2
+i /σ2) cho mỗi điểm huấn
+luyện (c) Dự đoán: ˆy = sign (P
+i wi · yi) trong đó yi ∈ {−1, +1}
+Hãy trả lời các câu sau:
+(a) Điều gì xảy ra khi σ → 0? Khi σ → ∞? (b) Điều
+này liên quan thế nào tới k-NN? Tới các phương pháp
+kernel? (c) Ranh giới quyết định có hình dạng gì? Nó có
+tuyến tính không? (d) Những kiểu thất bại của thuật toán
+này là gì? (e) Đề xuất một cách sửa để xử lý lệch lớp.
+7. (Nhiều phần) Xét bài toán XOR với các điểm (0, 0), (0, 1), (1, 0), (1, 1) và các
+nhãn 0, 1, 1, 0.
+(a) Chứng minh không bộ phân loại tuyến tính nào giải được bài này.
+(b) Cho thấy việc thêm đặc trưng x3 = x1 · x2 làm nó phân tách tuyến tính được.
+(c) Vẽ một cây quyết định giải XOR.
+(d) Điều này liên quan thế nào tới thủ thuật kernel?
+8. (Kỹ thuật – Đạo đức) Hồi quy logistic của một ngân hàng dùng “số năm
+ở địa chỉ hiện tại” (hệ số = âm thì rủi ro vỡ nợ thấp hơn). Biến này tương
+quan với tuổi.
+(a) Vì sao điều này có thể cấu thành phân biệt đối xử theo tuổi dù tuổi
+không phải là một đặc trưng?
+(b) Việc bỏ biến này làm AUC giảm từ 0.82 xuống 0.79. Hãy định
+lượng sự đánh đổi này.
+(c) Bạn sẽ tính những số đo công bằng nào?
+9. (Dạng IAIO: Một thuật toán khác bạn chưa từng thấy)
+Xét “Bộ phân loại nguyên mẫu”:
+(a) Với mỗi lớp c, tính điểm centroid (giá trị trung bình) của tất cả điểm
+huấn luyện trong lớp đó: µc = 1
+|Cc|
+P
+x∈Cc x
+(b) Để phân loại một điểm mới x, gán nó vào lớp có centroid gần nhất:
+ˆy = arg minc ∥x − µc∥
+Hãy trả lời các câu sau:
+
+===== PAGE 102 =====
+
+102 CHAPTER 4. SUPERVISED LEARNING
+(a) Hình dạng của ranh giới quyết định giữa hai lớp là gì? (Gợi ý: 
+∥x − µ1∥ = ∥x − µ2∥ nằm ở đâu?)
+(b) Điều này so với k-NN với k = mọi điểm trong mỗi lớp thì thế nào?
+(c) Giả định nào về dữ liệu sẽ làm bộ phân loại này hoạt động tốt?
+(d) Hãy dựng một tập dữ liệu 2D đơn giản mà bộ phân loại này hỏng
+nặng. Tập dữ liệu của bạn có tính chất gì?
+(e) Bộ phân loại này lưu bao nhiêu tham số? So với k-NN và hồi quy
+logistic.
+
+===== PAGE 103 =====
+
+Chương 5
+Đánh giá mô hình
+The purpose of computing is
+insight, not numbers.
+Richard Hamming
+5.1 Giới thiệu: Vấn đề khái quát hóa
+Giả sử bạn đang chuẩn bị cho một học sinh kỳ thi quan trọng. Bạn đưa cho cậu
+100 bài tập luyện, và cậu học rất chăm chỉ. Khi bạn kiểm tra cậu bằng chính
+100 bài đó, cậu trả lời đúng từng câu một. Thật ấn tượng! Nhưng khi kỳ thi
+thật sự đến với những câu hỏi khác, cậu trượt chét. Chuyện gì đã xảy ra?
+Học sinh chỉ ghi nhớ đáp án cụ thể của các bài tập luyện thay vì học các nguyên
+lý đằng sau đó. Cậu có thể tái hiện những đáp án đã từng thấy nhưng lại không
+thể áp dụng kiến thức của mình cho những tình huống mới. Đây là phiên bản
+trong giáo dục của một vấn đề cơ bản trong học máy: sự khác biệt giữa ghi
+nhớ và khái quát hóa.
+Các mô hình học máy đối mặt với đúng thách thức này. Một mô hình hoạt
+động hoàn hảo trên dữ liệu huấn luyện nhưng thất bại trên dữ liệu mới chưa
+từng thấy thì chưa thực sự học được điều gì. Nó chỉ đơn thuần là ghi nhớ. Mô
+hình như vậy vô dụng trên thực tế, bởi toàn bộ ý nghĩa của học máy là đưa ra
+dự đoán về dữ liệu mà ta chưa từng thấy.
+103
+
+===== PAGE 104 =====
+
+104 CHAPTER 5. MODEL EVALUATION
+Thách thức cốt lõi
+Một mô hình hoạt động hoàn hảo trên dữ liệu huấn luyện nhưng thất bại trên dữ liệu
+mới thì vô dụng. Toàn bộ giá trị của học máy nằm ở khái quát hóa. Ở khả năng áp
+dụng các khuôn mẫu đã học vào những tình huống mới. Các phương pháp đánh giá
+của chúng ta phải đo lường sự khái quát hóa, chứ không chỉ hiệu năng trên tập huấn
+luyện.
+5.2 Tham số và siêu tham số
+Trước khi đi sâu vào các phương pháp đánh giá, chúng ta cần làm rõ một sự
+phân biệt làm nhiều người mới bắt đầu bối rối.
+Tham số là những giá trị mà mô hình tự động học được từ dữ liệu trong quá
+trình huấn luyện. Trong một mạng nơ-ron, đó là các trọng số nối giữa các
+nơ-ron. Thuật toán học điều chỉnh những trọng số này để khớp với dữ liệu
+huấn luyện.
+Siêu tham số là những thiết lập do con người chọn trước khi bắt đầu huấn
+luyện. Chúng điều khiển cách thức học diễn ra nhưng không được học từ dữ
+liệu. Ví dụ gồm tốc độ học, số kỳ (epoch), kiến trúc mạng và cường độ chuẩn
+hóa (regularization).
+Parameters
+Learned automatically
+from data during training
+e.g., neural network weights
+Hyperparameters
+Set by humans
+before training begins
+e.g., learning rate, # layers
+Hình 5.1: Tham số được học; siêu tham số do con người chọn.
+5.3 Tầm quan trọng của việc chia dữ liệu
+Nguyên tắc nền tảng nhất trong đánh giá mô hình là: không bao giờ đánh giá
+một mô hình trên chính dữ liệu đã dùng để huấn luyện nó.
+Nếu ta huấn luyện trên một phần dữ liệu rồi kiểm thử trên chính phần dữ liệu
+đó, mô hình có thể đạt độ chính xác cao chỉ đơn thuần bằng cách ghi nhớ các
+ví dụ huấn luyện. Điều đó không cho chúng ta biết gì về khả năng khái quát
+hóa.
+
+===== PAGE 105 =====
+
+5.4. BIAS AND VARIANCE: UNDERSTANDING ERRORS 105
+Quy tắc vàng
+Không bao giờ kiểm thử trên dữ liệu huấn luyện!
+Đánh giá trên dữ liệu huấn luyện giống như đưa trước đề thi cho học
+sinh. Kết quả cao không nói lên được điều gì về mức độ hiểu bài thực
+sự.
+Ta chia dữ liệu thành các tập riêng biệt với những mục đích khác nhau:
+Full Dataset (100%)
+Training (70%) Val Test
+Model learns here Tune
+settings
+Final eval
+Hình 5.2: Cách chia chuẩn tập huấn luyện – kiểm định – kiểm tra.
+ Tập huấn luyện (60-80%) là nơi diễn ra việc học.  Tập kiểm định (10-20%)
+dùng để kiểm tra tiến độ trong quá trình phát triển và tinh chỉnh siêu tham số. 
+Tập kiểm tra (10-20%) được giữ hoàn toàn nguyên vẹn cho đến khi đánh giá
+cuối cùng, nó cung cấp ước lượng không thiên lệch về hiệu năng ngoài đời
+thực.
+Ẩn dụ: Chuẩn bị cho kỳ thi
+Tập huấn luyện = Giáo trình (học từ đó)
+Tập kiểm định = Kỳ thi luyện tập (kiểm tra tiến độ, điều chỉnh chiến
+lược học)
+Tập kiểm tra = Kỳ thi cuối cùng (đo lường thực sự việc học)
+Khi chia dữ liệu, hãy chọn các ví dụ một cách ngẫu nhiên. Nếu dữ liệu được
+sắp xếp (theo ngày, nhóm, v.v.), việc lấy 70% đầu tiên sẽ tạo ra thành kiến
+(bias).
+5.4 Thiên vị và Phương sai: Hiểu các lỗi
+Mọi mô hình đều mắc lỗi. Hiểu được tại sao sẽ giúp chúng ta sửa chúng.
+Thiếu khớp (thiên vị cao) xảy ra khi mô hình quá đơn giản. Nó không thể nắm bắt
+được các khuôn mẫu ngay cả trong dữ liệu huấn luyện. Cách khắc phục: tăng độ phức
+tạp.
+Quá khớp (phương sai cao) xảy ra khi mô hình quá phức tạp. Nó ghi nhớ dữ liệu
+huấn luyện nhưng thất bại trên dữ liệu mới. Cách khắc phục: giảm độ phức tạp,
+thêm
+
+===== PAGE 106 =====
+
+106 CHAPTER 5. MODEL EVALUATION
+chuẩn hóa (regularization), hoặc thu thập thêm dữ liệu.
+Underfitting Good Fit Overfitting
+Hình 5.3: Thiếu khớp (quá đơn giản), vừa khớp (vừa phải), và quá khớp (quá
+phức tạp).
+Chẩn đoán: Nếu độ chính xác trên tập huấn luyện thấp, mô hình đang thiếu
+khớp. Nếu độ chính xác trên tập huấn luyện cao nhưng độ chính xác trên tập
+kiểm định thấp hơn nhiều, mô hình đang quá khớp.
+5.5 Các số đo cho bài toán phân loại
+Với các bài toán phân loại, chúng ta cần những số đo phù hợp. Ma trận nhầm
+lẫn thể hiện các dự đoán so với nhãn thực tế:
+Dự đoán
+Dương tính Âm tính
+Thực tế Dương tính Dương tính thật (TP) Âm tính giả (FN)
+Âm tính Dương tính giả (FP) Âm tính thật (TN)
+Độ chính xác là tỉ lệ dự đoán đúng: (T P + T N )/(T P + T N + F P + F N )
+Nhưng độ chính xác có thể gây hiểu lầm khi các lớp mất cân bằng! Một máy phát hiện vận
+chuyển trái phép luôn nói “không vận chuyển trái phép” sẽ đạt độ chính xác 99,5% nếu chỉ có
+0,5% số container chứa hàng cấm. Vậy mà nó bắt được không một kẻ vận chuyển trái phép
+nào.
+Độ chính xác (precision) trả lời câu hỏi “trong các dự đoán dương tính của tôi, có bao nhiêu là đúng?”
+Precision = T P
+T P + F P
+Dùng khi dương tính giả tốn kém (ví dụ: bộ lọc thư rác – bạn không muốn bỏ
+sót email thật).
+Độ nhạy (recall) trả lời câu hỏi “Trong tất cả các ca dương tính thực sự, tôi đã bắt được bao nhiêu?”
+Recall = T P
+T P + F N
+
+===== PAGE 107 =====
+
+5.5. CLASSIFICATION METRICS 107
+Dùng khi âm tính giả tốn kém (ví dụ: sàng lọc ung thư, đừng bỏ sót ca bệnh).
+Điểm F1 cân bằng giữa precision và recall:
+F1 = 2 · Precision · Recall
+Precision + Recall
+Ví dụ minh họa
+Một máy phát hiện bệnh: TP=80, FP=20, FN=10, TN=890 Độ chính
+xác = (80 + 890)/(80 + 890 + 20 + 10) = 970/1000 = 97%
+Precision = 80/(80 + 20) = 80/100 = 80%
+Recall = 80/(80 + 10) = 80/90 ≈ 88.9%
+F1 = 2 · (0.80 × 0.889)/(0.80 + 0.889) ≈ 84.2%
+Thông thường có sự đánh đổi giữa precision và recall, được điều khiển bởi
+ngưỡng quyết định. Hầu hết các bộ phân loại đưa ra một xác suất hoặc điểm
+số; bạn chọn một ngưỡng mà trên đó dự đoán là dương tính.
+Tăng ngưỡng (ví dụ, từ 0.5 lên 0.8) nghĩa là bạn chỉ dự đoán dương tính khi
+mô hình rất tự tin. Dương tính giả giảm xuống, nên precision tăng lên. Nhưng
+bạn bỏ sót nhiều dương tính thật hơn, nên recall giảm xuống.
+Hạ ngưỡng (ví dụ, từ 0.5 xuống 0.2) nghĩa là bạn gắn cờ nhiều ca là dương
+tính hơn. Bạn bắt được nhiều dương tính thật hơn, nên recall tăng lên. Nhưng
+nhiều ca âm tính bị gắn cờ sai hơn, nên precision giảm xuống.
+Việc chọn ngưỡng là một quyết định kinh doanh
+Một xét nghiệm sàng lọc ung thư có thể dùng ngưỡng thấp (ví dụ 0.3):
+bỏ sót một ca ung thư còn tệ hơn nhiều so với việc chỉ định thêm một
+xét nghiệm theo dõi không cần thiết. Recall cao quan trọng hơn precision
+cao.
+Một bộ lọc thư rác có thể dùng ngưỡng cao (ví dụ 0.8): xóa nhầm một
+email hợp lệ còn tệ hơn việc để lọt vài thư rác. Precision cao quan trọng
+hơn recall cao.
+Không có ngưỡng “đúng”. Lựa chọn phù hợp phụ thuộc vào chi phí
+tương đối của dương tính giả và âm tính giả trong ứng dụng cụ thể của
+bạn.
+5.5.1 Đường cong ROC và AUC
+Đường cong đặc trưng người nhận (ROC) cung cấp cái nhìn toàn diện về
+hiệu năng của bộ phân loại trên tất cả các ngưỡng có thể có.
+Hầu hết các bộ phân loại đưa ra một xác suất hoặc điểm số chứ không phải một dự
+đoán lớp cứng. Ta chuyển nó thành dự đoán bằng cách chọn một ngưỡng: nếu điểm
+số
+
+===== PAGE 108 =====
+
+108 CHAPTER 5. MODEL EVALUATION
+vượt quá ngưỡng thì dự đoán là dương tính. Các ngưỡng khác nhau tạo ra
+những sự đánh đổi khác nhau giữa việc bắt được dương tính (Tỉ lệ Dương
+tính Thật) và việc gắn cờ sai các ca âm tính (Tỉ lệ Dương tính Giả).
+• Tỉ lệ Dương tính Thật (TPR) = T P
+T P +F N = Recall (tỉ lệ các ca dương
+tính thực sự được nhận diện đúng)
+• Tỉ lệ Dương tính Giả (FPR) = F P
+F P +T N (tỉ lệ các ca âm tính thực sự bị
+gắn cờ sai)
+Đường cong ROC thể hiện TPR (trục tung) theo FPR (trục hoành) cho mọi
+ngưỡng có thể có:
+FPR
+TPR
+Random
+Good classifier
+Perfect
+0 1
+1
+Hình 5.4: Các đường cong ROC của những bộ phân loại khác nhau. Vùng tô
+màu biểu diễn AUC. Một bộ phân loại hoàn hảo ôm sát góc trên-trái; một bộ
+phân loại ngẫu nhiên đi theo đường chéo.
+Hiểu đường cong ROC:
+• Góc trên-trái (0, 1) đại diện cho phân loại hoàn hảo: TPR=1 (bắt được
+toàn bộ dương tính), FPR=0 (không có cảnh báo sai)
+• Đường chéo đại diện cho một bộ phân loại ngẫu nhiên không phân biệt
+được các lớp
+• Một đường cong càng gần góc trên-trái thì càng tốt
+Diện tích dưới đường cong (AUC) tóm tắt đường cong ROC thành một con
+số duy nhất:
+• AUC = 1.0: Bộ phân loại hoàn hảo
+• AUC = 0.5: Đoán bừa (không có sức phân biệt)
+• AUC < 0.5: Tệ hơn cả ngẫu nhiên (dự đoán bị đảo ngược)
+
+===== PAGE 109 =====
+
+5.5. CLASSIFICATION METRICS 109
+Ý nghĩa của AUC
+AUC có một cách diễn giải xác suất tuyệt đẹp: nó bằng xác suất mà một
+ví dụ dương tính được chọn ngẫu nhiên sẽ được xếp hạng cao hơn một
+ví dụ âm tính được chọn ngẫu nhiên.
+AUC = 0.85 nghĩa là: nếu bạn chọn ngẫu nhiên một ví dụ dương tính và
+một ví dụ âm tính, có 85% khả năng bộ phân loại gán điểm cao hơn cho
+ví dụ dương tính.
+Quy tắc kinh nghiệm: AUC > 0.9 là xuất sắc; 0.8–0.9 là tốt; 0.7–0.8 là
+khá; < 0.7 có thể kém.
+Khi nào dùng AUC thay cho các số đo khác:
+• Hãy dùng AUC khi bạn muốn đánh giá khả năng xếp hạng mà không cần
+chốt một ngưỡng cụ thể
+• Hãy dùng precision/recall/F1 khi bạn đã có một ngưỡng cụ thể trong đầu
+hoặc khi sự mất cân bằng lớp quá nghiêm trọng
+• AUC có thể gây hiểu lầm với các tập dữ liệu mất cân bằng nặng nề; khi
+đó nên cân nhắc dùng đường cong precision-recall
+5.5.2 Hiệu chuẩn: Các xác suất có ý nghĩa không?
+Một bộ phân loại có thể xếp hạng chính xác các ca dương tính cao hơn các ca
+âm tính (AUC tốt) trong khi vẫn đưa ra những ước lượng xác suất sai lệch dữ
+dội. Hiệu chuẩn đo lường xem các xác suất dự đoán có khớp với tần suất thực
+tế hay không.
+Một mô hình được hiệu chuẩn tốt nếu, trong số tất cả các ca mà nó dự đoán
+“có 70% khả năng vỡ nợ”, xấp xỉ 70% thực sự vỡ nợ. Một mô hình dự đoán
+70% nhưng chỉ có 30% vỡ nợ thì chính xác về thứ hạng (nó xác định đúng các
+ca rủi ro hơn) nhưng lại hiệu chuẩn kém (những con số xác suất của nó vô
+nghĩa).
+Điều ngược lại cũng có thể xảy ra. Một mô hình có thể hiệu chuẩn tốt nhưng
+không chính xác: nó ước lượng đúng rằng tỉ lệ vỡ nợ chung là 10%, nhưng lại
+gán 10% cho từng người vay. Các xác suất “đúng” về mặt trung bình, nhưng mô
+hình không có sức phân biệt nào.
+Khi nào hiệu chuẩn mới quan trọng
+Hiệu chuẩn quan trọng mỗi khi chính bản thân xác suất dự đoán dẫn dắt
+một quyết định, chứ không chỉ thứ hạng. Nếu một bác sĩ cần nói với
+bệnh nhân “nguy cơ mắc bệnh này của bạn là 30%”, con số đó phải có ý
+nghĩa. Nếu bạn chỉ cần xếp bệnh nhân theo nguy cơ từ cao xuống thấp
+thì thứ hạng (AUC) là đủ.
+
+===== PAGE 110 =====
+
+110 CHAPTER 5. MODEL EVALUATION
+Điểm kiểm tra đạo đức: Khi số đo tốt trở thành xấu
+Một bệnh viện triển khai một mô hình để dự đoán nguy cơ bệnh nhân
+phải nhập viện lại. Mô hình có AUC = 0.85.
+Câu hỏi kỹ thuật – đạo đức:
+1. Bệnh viện dùng mô hình để từ chối chăm sóc theo dõi cho các bệnh
+nhân “rủi ro thấp” (để tiết kiệm chi phí). Mô hình có độ chính xác
+(precision) 90% ở nhóm rủi ro cao nhưng chỉ 70% ở nhóm rủi ro thấp.
+Vấn đề đạo đức nằm ở đâu? 2. Ban lãnh đạo đề xuất hạ ngưỡng để
+gắn cờ nhiều bệnh nhân hơn là rủi ro cao. Điều này làm recall tăng lên
+nhưng precision giảm xuống. Ai được lợi? Ai bị thiệt hại?
+3. Một bác sĩ lập luận: “Tôi nên ghi đè lên mô hình mỗi khi tôi không
+đồng ý với nó.” Người khác lập luận: “Việc áp dụng mô hình nhất quán
+là công bằng hơn phán đoán của con người.” Hãy phân tích cả hai quan
+điểm. Đây chính là dạng bài hỗn hợp kỹ thuật – đạo đức xuất hiện trong
+IAIO.
+Dừng lại để suy nghĩ: Chọn đúng số đo
+Khi có rất nhiều số đo, làm sao chọn?
+Số đo Dùng khi Lưu ý
+Độ chính xác Các lớp cân bằng; mọi lỗi có
+chi phí như nhau
+Gây hiểu lầm với dữ liệu mất cân bằng
+Độ chính xác (precision) Dương tính giả tốn kém (ví
+dụ: thư rác gây phiền nhiễu
+người dùng)
+Bỏ qua âm tính giả
+Độ nhạy (recall) Âm tính giả tốn kém (ví dụ:
+bỏ sót ung thư)
+Bỏ qua dương tính giả
+Điểm F1 Cần sự cân bằng; cần một
+con số duy nhất
+Giả định rằng precision và recall
+cũng quan trọng như nhau
+AUC-ROC Đánh giá qua nhiều ngưỡng;
+so sánh các mô hình
+Không cho biết hiệu năng tại một
+ngưỡng cụ thể
+Trọng số chi phí Các loại lỗi khác nhau có chi
+phí khác nhau
+Đòi hỏi phải biết các chi phí đó
+5.6 Các số đo cho hồi quy
+Với hồi quy (dự đoán các số liên tục), chúng ta đo lường sai số dự đoán.
+Sai số Trung bình Tuyệt đối (MAE) là trung bình của các hiệu tuyệt đối:
+MAE = 1
+n
+nX
+i=1
+|yi − ˆyi|
+
+===== PAGE 111 =====
+
+5.7. CROSS-VALIDATION 111
+MAE dễ diễn giải vì dùng cùng đơn vị với giá trị mục tiêu.
+Sai số Bình phương Trung bình (MSE) bình phương các sai số, khiến sai số lớn bị phạt nặng hơn:
+MSE = 1
+n
+nX
+i=1
+(yi − ˆyi)2
+RMSE =
+√
+MSE trở về đơn vị gốc.
+R bình phương (R2) cho biết phần phân phối mà mô hình giải thích được:
+R2 = 1 −
+P(yi − ˆyi)2
+P(yi − ¯y)2
+R2 = 1 có nghĩa là dự đoán hoàn hảo; R2 = 0 có nghĩa là không tốt hơn việc
+dự đoán giá trị trung bình.
+5.7 Kiểm chéo
+Nếu bạn không có nhiều dữ liệu thì sao? Một cách chia huấn luyện – kiểm định
+đơn lẻ có thể không đáng tin; bạn có thể may mắn hoặc xui xẻo với việc
+những ví dụ nào rơi vào phần nào.
+Kiểm chéo K-fold giải quyết điều này bằng cách dùng toàn bộ dữ liệu cho cả
+huấn luyện lẫn kiểm định:
+Fold
+1 Val → Error1
+2 Val → Error2
+3 Val → Error3
+4 Val → Error4
+5 Val → Error5
+Final Score = Average of all errors
+Hình 5.5: Kiểm chéo 5-fold: mỗi phần đóng vai trò kiểm định đúng một lần.
+Quy trình: chia dữ liệu thành k phần bằng nhau; với mỗi phần i, huấn luyện trên các
+phần còn lại k − 1 và kiểm định trên chính phần i đó; lấy trung bình các k điểm kiểm
+định.
+Lợi ích: ước lượng đáng tin cậy hơn, dùng toàn bộ dữ liệu cho cả huấn luyện
+lẫn kiểm định, mỗi ví dụ đều được kiểm định đúng một lần. Chi phí: phải
+huấn luyện k mô hình thay vì 1. Các lựa chọn phổ biến: k = 5 hoặc k = 10.
+
+===== PAGE 112 =====
+
+112 CHAPTER 5. MODEL EVALUATION
+5.8 Cách mọi người vô tình gian lận
+Ngay cả những người thực hành có thiện chí cũng có thể vô tình làm mất hiệu
+lực của việc đánh giá. Hiểu các cạm bẫy này là điều thiết yếu để tạo ra những
+kết quả đáng tin cậy.
+5.8.1 Quá khớp vào bảng xếp hạng
+Trong các cuộc thi, bảng xếp hạng công khai hiển thị hiệu năng trên một phần
+của dữ liệu kiểm tra. Một kiểu hành vi nguy hiểm xuất hiện:
+1. Gửi dự đoán → xem điểm
+2. Điều chỉnh mô hình → gửi lại → xem điểm
+3. Lặp lại hàng trăm lần
+Mỗi lần gửi đều làm rò rỉ thông tin về tập kiểm tra. Sau đủ nhiều lần gửi, bạn
+đang âm thầm sửa mô hình cho khớp với dữ liệu kiểm tra. Điểm trên bảng xếp
+hạng công khai trở nên vô nghĩa, còn điểm trên bảng xếp hạng riêng (trên dữ
+liệu bị giữ lại) sụp đáng kể.
+Tại sao thứ hạng trên bảng xếp hạng ̸= không phản ánh chất lượng mô hình
+Một thứ hạng cao trên bảng xếp hạng không có nghĩa là bạn có một mô
+hình tốt. Nó có thể có nghĩa là:
+• Bạn may mắn trên tập kiểm tra công khai
+• Bạn đã quá khớp vào dữ liệu kiểm tra công khai qua nhiều lần gửi
+liên tục
+• Cách chia công khai/riêng không khớp với phân phối ngoài đời thực
+Tín hiệu đáng tin cậy duy nhất là điểm kiểm chéo của bạn trên dữ
+liệu của chính bạn.
+Những mô hình xếp hạng tốt trên kiểm chéo nhưng kém trên bảng xếp
+hạng công khai thường tốt hơn so với ngược lại; chúng thường sẽ hoạt
+động tốt hơn trên bảng xếp hạng riêng và khi triển khai thực tế.
+Cách khắc phục: Hãy tin điểm kiểm chéo của mình chứ đừng tin điểm bảng
+xếp hạng. Hạn chế số lần gửi.
+5.8.2 Vì sao “Chỉ xem thêm một lần nữa thôi” phá vỡ các bảo đảm
+Giá trị của tập kiểm tra đến từ một tính chất duy nhất: mô hình chưa từng bị nó
+chi phối. Mỗi lần bạn kiểm tra hiệu năng trên tập kiểm tra rồi điều chỉnh mô
+hình, bạn đang rò rỉ thông tin từ tập kiểm tra vào các quyết định thiết kế mô
+hình. Điều này đúng ngay cả khi bạn không trực tiếp huấn luyện trên đó.
+
+===== PAGE 113 =====
+
+5.8. HOW PEOPLE ACCIDENTALLY CHEAT 113
+Hãy cân nhắc: bạn huấn luyện Mô hình A, kiểm tra điểm trên tập kiểm tra (82%), kết
+luận rằng nó chưa đủ tốt, xây Mô hình B với các đặc trưng khác, kiểm tra lại (85%), tinh
+chỉnh thêm, kiểm tra lại nữa (87%). Sau 20 vòng lặp, bạn báo cáo độ chính xác kiểm tra
+là 87%. Nhưng đây không còn là một ước lượng trung thực nữa. Rõ ràng bạn đã dùng
+tập kiểm tra để lựa chọn trong số 20 mô hình, và chỉ do may rủi thôi, một số mô hình sẽ
+đạt điểm cao hơn trên tập kiểm tra cụ thể này so với khi chúng được đánh giá trên dữ
+liệu mới.
+Đây là cùng một vấn đề thống kê như kiểm định giả thuyết nhiều lần. Nếu bạn đánh giá
+20 mô hình trên cùng một tập kiểm tra, bạn đang thực hiện 20 phép so sánh. Ngay cả khi
+không mô hình nào thực sự tốt hơn, một số mô hình vẫn sẽ trông có vẻ tốt hơn chỉ vì biến
+động ngẫu nhiên. Bạn xem càng nhiều lần, điểm “tốt nhất” của bạn càng bị thổi phồng
+lên.
+Cách khắc phục: Chỉ chạm vào tập kiểm tra đúng một lần. Dùng kiểm chéo cho
+mọi quyết định trong quá trình phát triển. Nếu buộc phải đánh giá nhiều ứng viên
+cuối cùng, hãy áp dụng các hiệu chỉnh thống kê hoặc dùng một tập kiểm tra mới
+hoàn toàn.
+5.8.3 Rò rỉ dữ liệu trong bước tiền xử lý
+Một lỗi tinh vi nhưng phổ biến: thực hiện các bước tiền xử lý trên toàn bộ tập
+dữ liệu trước khi chia.
+Sai và Đúng
+Sai:
+1. Tính trung bình/độ lệch chuẩn của
+toàn bộ dữ liệu 2. Chuẩn hóa toàn bộ dữ
+liệu
+3. Chia thành tập huấn luyện/kiểm tra
+Đúng:
+1. Chia thành tập huấn luyện/kiểm tra
+2. Chỉ tính trung bình/độ lệch chuẩn của tập huấn luyện 3. Chuẩn
+hóa tập huấn luyện bằng số liệu thống kê của tập huấn luyện 4.
+Chuẩn hóa tập kiểm tra bằng số liệu thống kê của tập huấn luyện
+Cáchsai này làm rò rỉ thông tin của tập kiểm tra vào quá trình huấn luyện.
+5.8.4 Rò rỉ theo thời gian
+Với dữ liệu chuỗi thời gian, việc chia tập huấn luyện/kiểm tra một cách ngẫu nhiên là không hợp lệ. Nếu
+bạn huấn luyện trên dữ liệu năm 2023 để dự đoán năm 2022, bạn đang dùng tương lai để dự đoán quá
+khứ.
+Cách khắc phục: Luôn chia theo thời gian. Huấn luyện trên quá khứ, kiểm định trên tương lai.
+5.8.5 Tập kiểm tra tốt ̸= không đồng nghĩa với thực tế tốt
+Ngay cả với một tập kiểm tra được xây dựng hoàn hảo, một quá trình đánh giá trung thực và
+không có rò rỉ, một điểm kiểm tra cao vẫn không bảo đảm mô hình sẽ hoạt động tốt khi triển
+
+===== PAGE 114 =====
+
+114 CHAPTER 5. MODEL EVALUATION
+khai. Tập kiểm tra đo lường hiệu năng trên dữ liệu được lấy từ cùng phân
+phối với dữ liệu huấn luyện. Thế giới thực có thể khác.
+Dân số bệnh nhân thay đổi. Sở thích người tiêu dùng thay đổi. Điều kiện kinh
+tế biến đổi. Một mô hình đạt 95% trên một tập kiểm tra lấy từ dữ liệu bệnh
+viện năm 2024 có thể chỉ đạt 80% trên dữ liệu năm 2026 của một mạng lưới
+bệnh viện khác. Điểm kiểm tra không sai; nó chính xác đo lường hiệu năng
+dưới điều kiện của năm 2024. Nhưng nó không phải là một lời hứa về tương
+lai.
+Đây là lý do Chương 3 nhấn mạnh về dịch chuyển phân phối và tính hợp lệ của
+tập kiểm tra. Điểm kiểm tra là một ước lượng dưới những giả định cụ thể.
+Khi những giả định ấy không còn đúng, ước lượng cũng không còn đúng.
+5.9 Tinh chỉnh siêu tham số
+Việc tìm được các siêu tham số tốt có thể làm nên khác biệt giữa thành công và
+thất bại.
+Tìm kiếm lưới thử mọi tổ hợp của các giá trị đã chỉ định. Đơn giản nhưng tốn
+kém. 5 siêu tham số với 10 giá trị mỗi cái nghĩa là 105 = 100, 000 tổ hợp.
+Tìm kiếm ngẫu nhiên lấy mẫu các tổ hợp một cách ngẫu nhiên. thường tìm ra
+lời giải tốt nhanh hơn vì không phải siêu tham số nào cũng quan trọng như
+nhau.
+Mẹo thực hành: bắt đầu với tốc độ học (thường là yếu tố quan trọng nhất).
+Dùng thang logarit (hãy thử 0.001, 0.01, 0.1, chứ đừng thử 0.1, 0.2, 0.3). Không
+tinh chỉnh quá mức. Quá nhiều thí nghiệm có thể khiến bạn quá khớp vào chính
+tập kiểm định.
+
+===== PAGE 115 =====
+
+5.10. SUMMARY 115
+5.10 Tóm tắt
+Điểm cần nhớ
+Chia dữ liệu: Huấn luyện (70%) để học, Kiểm định (15%) để tinh
+chỉnh, Kiểm tra (15%) để đánh giá cuối cùng. Không bao giờ kiểm thử
+trên dữ liệu huấn luyện. Thiên vị – Phương sai: Thiếu khớp = quá đơn
+giản (thiên vị cao). Quá khớp = quá phức tạp (phương sai cao). Điểm
+ngọt nằm ở giữa phụ thuộc vào độ lớn dữ liệu và mức nhiễu.
+Các số đo phân loại: Độ chính xác gây hiểu lầm với dữ liệu mất cân
+bằng. Hãy dùng precision (dương tính giả tốn kém), recall (âm tính giả
+tốn kém), hoặc F1 (cân bằng). Lựa chọn ngưỡng là một quyết định kinh
+doanh.
+Hiệu chuẩn: Thứ hạng tốt (AUC) không kéo theo xác suất có ý nghĩa.
+Hiệu chuẩn quan trọng khi chính giá trị xác suất dẫn dắt quyết định.
+ROC và AUC: ROC thể hiện TPR so với FPR qua các ngưỡng. AUC
+tóm tắt khả năng phân biệt.
+Kiểm chéo: Kiểm chéo K-fold dùng toàn bộ dữ liệu cho cả huấn luyện
+lẫn kiểm định, cho ra các ước lượng đáng tin cậy hơn.
+Tính toàn vẹn của tập kiểm tra: Mỗi lần nhìn vào tập kiểm tra đều làm
+rò rỉ thông tin. “Chỉ xem thêm một lần nữa thôi” chính là cùng một sai
+lầm thống kê như kiểm định giả thuyết nhiều lần.
+Kiểm thử ̸= Triển khai: Hiệu năng kiểm thử tốt đo độ chính xác dưới
+điều kiện kiểm thử. Dịch chuyển phân phối có thể khiến ước lượng đó
+trở nên vô nghĩa trong thế giới thực.
+1
+5.11 Bài tập luyện
+1. Với 10.000 điểm dữ liệu, hãy mô tả cách bạn sẽ chia dữ liệu để tinh chỉnh
+siêu tham số. Tỉ lệ cho mỗi tập là bao nhiêu?
+2. Một mô hình đạt độ chính xác huấn luyện 99% nhưng chỉ đạt độ chính
+xác kiểm định 65%. Hãy chẩn đoán bằng góc nhìn thiên vị – phương sai.
+3. Hãy tính precision, recall và F1 từ ma trận nhầm lẫn sau đây:
+Pred + Pred –
+Actual + 450 50
+Actual – 100 400
+1The theory of why cross-validation works is covered in Chapter 11 (PAC learning and
+generalization bounds).
+
+===== PAGE 116 =====
+
+116 CHAPTER 5. MODEL EVALUATION
+4. Khi nào bạn nên tối ưu theo precision thay vì recall? Hãy cho một ví dụ
+ngoài đời thực.
+5. (Dạng bài chứng minh: Vì sao kiểm chéo hoạt động)
+Trong kiểm chéo  k-fold, ta huấn luyện k mô hình, mỗi mô hình trên
+(k − 1)/k dữ liệu, rồi lấy trung bình sai số kiểm định của chúng.
+(a) Hãy giải thích trực giác về sao việc lấy trung bình trên k phần cho
+ước lượng đáng tin cậy hơn so với một cách chia huấn luyện/kiểm tra
+đơn lẻ.
+(b) Khi  k tăng lên và tiến gần  n (kiểm chéo loại-trừ-một), điều gì xảy ra với:
+• Thiên vị của ước lượng sai số?
+• Phương sai của ước lượng sai số?
+• Chi phí tính toán?
+(c) Tại sao  k = 5 hay  k = 10 thường là một sự thỏa hiệp tốt? (d) Nếu dữ liệu
+của bạn có các nhóm tự nhiên (ví dụ: nhiều mẫu cho cùng một bệnh nhân), tại sao
+kiểm chéo  k-fold tiêu chuẩn lại có thể cho ra các ước lượng lạc quan? Bạn nên làm gì
+thay thế?
+6. (Dạng bài chứng minh: Phân rã thiên vị – phương sai)
+Với hồi quy có hàm thật f (x) và mô hình ˆf (x):
+E[(f (x) − ˆf (x))2] = Bias2 + Variance + Noise
+(a) Hãy định nghĩa thiên vị theo E[ ˆf (x)] và f (x).
+(b) Một mô hình hằng số ˆf (x) = c có thiên vị cao. Vì sao? (c) Một mô
+hình nội suy qua mọi điểm huấn luyện có phương sai cao. Vì sao?
+(d) Chuẩn hóa làm tăng thiên vị. Vì sao điều này thường lại cải thiện sai
+số kiểm thử?
+7. (Nhiều phần: Khi độ chính xác đánh lừa) Một xét nghiệm bệnh (tỉ lệ
+mắc 1%) cho:
+Test + Test –
+Has Disease 90 10
+No Disease 495 9405
+(a) Hãy tính độ chính xác, precision, recall, F1.
+(b) Tại sao độ chính xác 94,95% là gây hiểu lầm?
+
+===== PAGE 117 =====
+
+5.11. PRACTICE PROBLEMS 117
+(c) Giá trị dương đoán đúng là bao nhiêu? Tại sao nó lại khác xa recall
+đến vậy?
+8. (Phát hiện gian lận) Mô hình của đồng nghiệp bạn đạt AUC = 0.99.
+Bằng ba cách nào họ có thể vô tình làm cho điểm số này bị thổi phồng?
+9. Một mô hình có độ chính xác 100% trên tập huấn luyện / 60% trên tập kiểm tra. Một mô
+hình khác có 70% trên tập huấn luyện / 65% trên tập kiểm tra. Mô hình nào tốt hơn và vì
+sao?
+
+===== PAGE 118 =====
+
+118 CHAPTER 5. MODEL EVALUATION
