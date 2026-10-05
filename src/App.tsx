@@ -48,7 +48,7 @@ export default function App() {
       case "practice": return <PracticePage initialTopic={params.get("topic") ?? undefined} initialModule={params.get("module") ?? undefined} onlyMistakes={params.get("mistakes") === "1"} />;
       case "exam": return <ExamPage diagnostic={diagnosticMode} onDiagnosticComplete={completeOnboarding} navigate={navigate} />;
       case "mistakes": return <MistakesPage navigate={navigate} />;
-      case "formulas": return <FormulasPage />;
+      case "formulas": return <FormulasPage navigate={navigate} />;
       case "labs": return <LabsPage />;
       case "traps": return <TrapsPage />;
       case "plan": return <StudyPlanPage />;

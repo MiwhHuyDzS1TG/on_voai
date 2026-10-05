@@ -27,7 +27,8 @@ export function SourcesPage() {
   return <div className="page sources-page">
     <header className="page-header"><div><p className="eyebrow">Nguồn & dữ liệu</p><h1>Minh bạch về phạm vi và tiến độ.</h1><p>VAIO là đề cương chính. IAIO chỉ được dùng để diễn giải sâu Chương 3-5.</p></div></header>
     <div className="sources-grid">
-      <section className="panel"><FileText /><h2>Nội dung ôn tập VAIO 2026</h2><p>Phạm vi chính thức cho toàn bộ 5 module, từ nền tảng ML tới framework giải bài toán AI thực tế.</p><span>Nguồn chính</span></section>
+      <section className="panel"><FileText /><h2>noi_dung_on_tap_SoLoaiVAIO_v2.pdf</h2><p>Curriculum chính cho toàn bộ 5 module. Mọi mục “Học sinh cần làm được” đã được map vào lesson, ví dụ và practice.</p><span>Nguồn chính · VAIO v2</span></section>
+      <section className="panel"><FileText /><h2>Trắc nghiệm ôn Theo nội dung.docx</h2><p>174 câu hợp lệ, không trùng và đúng phạm vi đã được chuẩn hóa từ question bank; phần nâng cao ngoài VAIO v2 bị loại.</p><span>Question bank</span></section>
       <section className="panel"><FileText /><h2>Eljakim Schrijvers, IAIO Training, 2026</h2><p>Chỉ Chương 3, 4 và 5 được dùng. Nội dung được diễn giải và ghi công theo giấy phép Creative Commons Ghi công - Phi thương mại 4.0 (CC BY-NC 4.0) nêu trong tài liệu nguồn.</p><span>Nguồn bổ trợ · CC BY-NC 4.0</span></section>
       <section className="panel"><ShieldCheck /><h2>Quy tắc toàn vẹn nguồn</h2><p>Mở rộng ngoài VAIO được gắn nhãn. Preset thi thử không được mô tả là format thi chính thức. Tỷ lệ split là ví dụ, không phải luật.</p><span>Source integrity</span></section>
     </div>

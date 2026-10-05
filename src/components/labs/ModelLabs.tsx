@@ -51,6 +51,37 @@ export function BayesLab() {
   return <div className="lab-body"><div className="triple-controls"><label className="field"><span>Prior P(y): {prior.toFixed(2)}</span><input type="range" min="0.01" max="0.5" step="0.01" value={prior} onChange={(event) => setPrior(Number(event.target.value))} /></label><label className="field"><span>Likelihood P(x|y): {likelihood.toFixed(2)}</span><input type="range" min="0.05" max="1" step="0.05" value={likelihood} onChange={(event) => setLikelihood(Number(event.target.value))} /></label><label className="field"><span>Evidence P(x): {evidence.toFixed(2)}</span><input type="range" min="0.05" max="1" step="0.05" value={evidence} onChange={(event) => setEvidence(Number(event.target.value))} /></label></div><div className="bayes-equation"><span>{likelihood.toFixed(2)}</span><b>×</b><span>{prior.toFixed(2)}</span><b>÷</b><span>{evidence.toFixed(2)}</span><b>=</b><strong>{posterior.toFixed(3)}</strong></div><p className="lab-result">Nếu kết quả vượt 1, ba xác suất nhập vào không nhất quán; lab giới hạn hiển thị ở 1.</p></div>;
 }
 
+const knnPoints = [
+  { x: 18, y: 24, label: "A" }, { x: 28, y: 36, label: "A" }, { x: 34, y: 18, label: "A" },
+  { x: 68, y: 72, label: "B" }, { x: 78, y: 58, label: "B" }, { x: 62, y: 48, label: "B" },
+];
+
+export function KNNLab() {
+  const [k, setK] = useState(3);
+  const [testX, setTestX] = useState(50);
+  const [testY, setTestY] = useState(45);
+  const [scaled, setScaled] = useState(false);
+  const distances = useMemo(() => knnPoints.map((point) => {
+    const dx = scaled ? (point.x - testX) / 100 : point.x - testX;
+    const dy = scaled ? (point.y - testY) / 20 : point.y - testY;
+    return { ...point, distance: Math.sqrt(dx * dx + dy * dy) };
+  }).sort((a, b) => a.distance - b.distance), [scaled, testX, testY]);
+  const neighbors = distances.slice(0, k);
+  const votes = neighbors.reduce((items, point) => ({ ...items, [point.label]: (items[point.label] ?? 0) + 1 }), {} as Record<string, number>);
+  const prediction = (votes.A ?? 0) >= (votes.B ?? 0) ? "A" : "B";
+  return <div className="lab-body"><div className="triple-controls"><label className="field"><span>k = {k}</span><input type="range" min="1" max="5" step="2" value={k} onChange={(event) => setK(Number(event.target.value))} /></label><label className="field"><span>Test x = {testX}</span><input type="range" min="5" max="95" value={testX} onChange={(event) => setTestX(Number(event.target.value))} /></label><label className="field"><span>Test y = {testY}</span><input type="range" min="5" max="95" value={testY} onChange={(event) => setTestY(Number(event.target.value))} /></label></div><label className="toggle-control"><input type="checkbox" checked={scaled} onChange={(event) => setScaled(event.target.checked)} />Chuẩn hóa hai trục trước khi tính distance</label><svg className="knn-chart" viewBox="0 0 100 100" role="img" aria-label="Các điểm KNN và test point">{knnPoints.map((point, index) => { const neighbor = neighbors.some((item) => item.x === point.x && item.y === point.y); return <g key={index}><circle className={`knn-point class-${point.label.toLowerCase()} ${neighbor ? "neighbor" : ""}`} cx={point.x} cy={100-point.y} r={neighbor ? 5 : 3.5} /><text x={point.x+3} y={97-point.y}>{point.label}</text></g>; })}<circle className="knn-test" cx={testX} cy={100-testY} r="5" /></svg><div className="lab-table"><div><strong>Hàng xóm</strong><strong>Distance</strong></div>{neighbors.map((point, index) => <div key={`${point.x}-${point.y}`}><span>{index+1}. Class {point.label} ({point.x}, {point.y})</span><code>{point.distance.toFixed(3)}</code></div>)}</div><p className="lab-result">Vote A={votes.A ?? 0}, B={votes.B ?? 0}. Dự đoán: <strong>Class {prediction}</strong></p></div>;
+}
+
+export function GradientDescentLab() {
+  const [x, setX] = useState(4);
+  const [learningRate, setLearningRate] = useState(.2);
+  const gradient = 2 * x;
+  const next = x - learningRate * gradient;
+  const region = learningRate < .1 ? "Học chậm" : learningRate <= .6 ? "Hội tụ" : "Dao động hoặc phân kỳ";
+  const step = () => setX(Math.abs(next) < .001 ? 0 : Number(next.toFixed(4)));
+  return <div className="lab-body"><div className="split-controls"><label className="field"><span>x hiện tại = {x.toFixed(3)}</span><input type="range" min="-5" max="5" step=".1" value={x} onChange={(event) => setX(Number(event.target.value))} /></label><label className="field"><span>Learning rate η = {learningRate.toFixed(2)}</span><input type="range" min=".02" max="1.1" step=".02" value={learningRate} onChange={(event) => setLearningRate(Number(event.target.value))} /></label></div><svg className="gradient-chart" viewBox="0 0 240 130"><path d="M10 10 Q120 220 230 10" /><line x1={120+x*20} y1={115-Math.min(100,x*x*4)} x2={120+next*20} y2={115-Math.min(100,next*next*4)} /><circle cx={120+x*20} cy={115-Math.min(100,x*x*4)} r="5" /></svg><div className="gradient-equation"><span>gradient = 2x = {gradient.toFixed(3)}</span><span>x mới = {x.toFixed(3)} - {learningRate.toFixed(2)} × {gradient.toFixed(3)} = <strong>{next.toFixed(3)}</strong></span></div><div className="lab-actions"><button type="button" className="button primary" onClick={step}>Chạy một update</button><button type="button" className="button ghost" onClick={() => setX(4)}>Đặt lại</button></div><p className="lab-result">Chẩn đoán learning rate: <strong>{region}</strong></p></div>;
+}
+
 export function BiasVarianceLab() {
   const [complexity, setComplexity] = useState(50);
   const train = Math.max(5, 82 - complexity * 0.72);

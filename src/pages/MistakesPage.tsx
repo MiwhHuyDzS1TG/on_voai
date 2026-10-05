@@ -13,6 +13,7 @@ export function MistakesPage({ navigate }: { navigate: (route: string) => void }
       <h2>{item.prompt}</h2>
       <div className="answer-compare"><p><span>Bạn chọn</span><strong>{answerToText(item.selected)}</strong></p><p><span>Đáp án đúng</span><strong>{answerToText(item.correct)}</strong></p></div>
       <p className="mistake-explanation">{item.explanation}</p>
+      <div className="mistake-actions"><button type="button" className="button secondary" onClick={() => navigate(`learn${item.lessonId ? `?lesson=${item.lessonId}` : ""}`)}>Học lại kiến thức liên quan</button><button type="button" className="button ghost" onClick={() => navigate(`practice?topic=${encodeURIComponent(item.topic)}&mistakes=1`)}>Luyện lỗi này</button></div>
       <footer><div>{item.misconceptionTags.map((tag) => <code key={tag}>{tag}</code>)}</div><span>Ôn: {new Date(item.nextReviewAt).toLocaleString("vi-VN")}</span></footer>
     </article>)}</div>}
   </div>;

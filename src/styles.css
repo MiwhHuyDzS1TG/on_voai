@@ -208,7 +208,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .focus-session p { margin: 0; font-size: .83rem; }
 
 /* Learn */
-.learn-layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 28px; align-items: start; }
+.learn-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr) 180px; gap: 24px; align-items: start; }
 .knowledge-nav { position: sticky; top: 96px; max-height: calc(100dvh - 120px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 .knowledge-heading { display: flex; justify-content: space-between; padding: 5px 5px 14px; border-bottom: 1px solid var(--line); }
 .knowledge-heading span { font-weight: 800; }
@@ -223,11 +223,72 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .knowledge-nav details button:hover, .knowledge-nav details button.active { background: var(--accent-soft); color: var(--accent-ink); }
 .lesson-dot { width: 14px; height: 14px; border: 1px solid var(--line-strong); border-radius: 50%; flex: 0 0 auto; }
 .lesson-content { min-width: 0; max-width: 950px; }
+.lesson-toc { position: sticky; top: 96px; display: grid; gap: 14px; padding: 4px 0; }
+.lesson-toc > strong { font-size: .75rem; color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.lesson-toc nav { display: grid; gap: 2px; border-left: 1px solid var(--line); }
+.lesson-toc a { padding: 6px 10px; color: var(--muted); font-size: .74rem; text-decoration: none; line-height: 1.3; }
+.lesson-toc a:hover { color: var(--accent); border-left: 2px solid var(--accent); margin-left: -1px; }
+.lesson-toc .button { width: 100%; margin-top: 4px; }
 .lesson-hero { padding: 22px 0 30px; border-bottom: 1px solid var(--line); }
 .lesson-hero > div:first-child { display: flex; align-items: center; }
 .lesson-hero h1 { font-size: clamp(2.2rem, 5vw, 4.2rem); margin: 16px 0 14px; }
 .lesson-hero p { max-width: 730px; font-size: 1.04rem; }
 .lesson-section.objectives { margin: 24px 0; display: grid; grid-template-columns: auto 1fr; gap: 16px; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.chapter-section { scroll-margin-top: 90px; padding: 34px 0; border-top: 1px solid var(--line); }
+.chapter-section > p { max-width: 78ch; }
+.chapter-section h3 { margin: 14px 0 8px; }
+.chapter-kicker { display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: .74rem; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }
+.chapter-opening { border-top: 0; padding-top: 12px; }
+.chapter-opening p:first-of-type { font-size: 1.08rem; color: var(--text); }
+.concept-stack { display: grid; gap: 24px; }
+.concept-stack section { max-width: 78ch; }
+.concept-stack section + section { padding-top: 20px; border-top: 1px solid var(--line); }
+.chapter-formulas { display: grid; gap: 14px; }
+.chapter-formulas article { min-width: 0; overflow: hidden; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.chapter-formulas article h3 { margin-top: 0; }
+.chapter-formulas dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0 14px; }
+.chapter-formulas dl div { padding: 10px 12px; border-radius: 8px; background: var(--surface-2); }
+.chapter-formulas dt { color: var(--accent); font-size: .68rem; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+.chapter-formulas dd { margin: 5px 0 0; color: var(--muted); font-size: .79rem; line-height: 1.5; }
+.chapter-formulas details, .vaio-problem details { border-top: 1px solid var(--line); padding-top: 12px; }
+.chapter-formulas summary, .vaio-problem summary { cursor: pointer; color: var(--accent); font-size: .78rem; font-weight: 800; }
+.chapter-formulas details ul { color: var(--muted); line-height: 1.75; }
+.worked-steps { display: grid; gap: 9px; padding-left: 24px; color: var(--muted); line-height: 1.65; }
+.worked-steps li::marker { color: var(--accent); font-weight: 850; }
+.worked-conclusion { padding: 14px 16px; background: var(--accent-soft); border-radius: 9px; color: var(--accent-ink); }
+.vaio-problem { padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.misconception-section > div:last-child { display: grid; gap: 12px; }
+.misconception-section article { padding: 18px; border-left: 3px solid var(--warning); background: var(--warning-soft); border-radius: 0 10px 10px 0; }
+.misconception-section article h3 { margin-top: 0; }
+.misconception-section article p { margin-bottom: 6px; }
+.remember-section ol { display: grid; gap: 10px; padding-left: 24px; }
+.remember-section li { padding-left: 6px; }
+.remember-section li::marker { color: var(--accent); font-weight: 900; }
+.simpler-section { margin: 12px 0 34px; }
+.simpler-section > div { margin-top: 12px; padding: 20px; background: var(--accent-soft); border-radius: var(--radius); }
+.simpler-section > div h3 { margin-top: 0; }
+.chapter-practice { scroll-margin-top: 90px; }
+.topic-practice-button { margin-top: 10px; }
+.chapter-footer > div:last-child { flex-wrap: wrap; justify-content: flex-end; }
+.case-workshop { scroll-margin-top: 90px; }
+.case-picker { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 7px; margin-bottom: 16px; }
+.case-picker button { min-width: 0; min-height: 46px; display: flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); text-align: left; cursor: pointer; font-size: .76rem; }
+.case-picker button span { color: var(--accent); font-family: "Cascadia Code", monospace; font-size: .68rem; }
+.case-picker button.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+.case-detail { padding: 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.case-detail > h2 { margin-top: 0; }
+.case-detail > ol { display: grid; gap: 8px; color: var(--muted); line-height: 1.55; }
+.case-detail details { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.case-detail summary { color: var(--accent); cursor: pointer; font-weight: 800; }
+.case-detail details > div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.case-detail details section { padding: 13px; border-radius: 8px; background: var(--surface-2); }
+.case-detail h4 { margin: 0 0 6px; }
+.case-detail details p { margin: 0; font-size: .78rem; }
+.logic-workshop { scroll-margin-top: 90px; }
+.logic-progress { color: var(--accent); font-size: .72rem; font-weight: 800; }
+.logic-workshop > h2 { max-width: 760px; margin: 10px 0 20px; }
+.logic-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.logic-workshop .feedback { margin-top: 16px; }
 .section-icon { width: 43px; height: 43px; border-radius: 12px; display: grid; place-items: center; color: var(--accent); background: var(--accent-soft); }
 .objectives ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .objectives li { display: flex; gap: 7px; color: var(--muted); font-size: .84rem; }
@@ -268,6 +329,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .lab-jump > svg:first-child { color: var(--accent); }
 .lab-jump span { display: flex; flex-direction: column; gap: 4px; }
 .lab-jump small { color: var(--muted); }
+.mistake-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 
 /* Questions */
 .question-card { max-width: 900px; margin: 24px auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 34px); }
@@ -431,8 +493,9 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .search-field { height: 42px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); display: flex; align-items: center; gap: 8px; padding-left: 11px; }
 .search-field input { border: 0; flex: 1; min-width: 0; padding-left: 0; }
 .formula-list { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
-.formula-list article { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 21px; }
+.formula-list article { min-width: 0; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 21px; }
 .formula-list article header { display: flex; justify-content: space-between; gap: 10px; }
+.formula-list article header > div { min-width: 0; }
 .formula-list article header span { color: var(--accent); font-size: .7rem; font-weight: 800; }
 .formula-list article header h2 { margin: 5px 0 0; }
 .formula-list article header em { height: 25px; background: var(--warning-soft); color: var(--warning); border-radius: 6px; padding: 5px 7px; font-style: normal; font-size: .65rem; white-space: nowrap; }
@@ -440,6 +503,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .formula-list dl div { padding: 10px; border-radius: 8px; background: var(--surface-2); }
 .formula-list dt { font-weight: 800; font-size: .7rem; }
 .formula-list dd { margin: 5px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+.formula-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
 .trap-list { display: grid; gap: 11px; }
 .trap-list article { display: grid; grid-template-columns: 54px 1fr; gap: 15px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 20px; }
 .trap-number { font-family: "Cascadia Code", monospace; color: var(--accent); font-weight: 850; font-size: 1.2rem; }
@@ -559,6 +623,26 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .bayes-equation { display: flex; gap: 10px; align-items: center; justify-content: center; margin: 35px 0; flex-wrap: wrap; }
 .bayes-equation span, .bayes-equation strong { min-width: 72px; min-height: 60px; border-radius: 10px; background: var(--surface-2); display: grid; place-items: center; font-size: 1.2rem; }
 .bayes-equation strong { background: var(--accent); color: white; }
+.toggle-control { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .8rem; margin: 14px 0; }
+.knn-chart, .gradient-chart { display: block; width: min(100%, 560px); margin: 18px auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
+.knn-point { stroke: var(--surface); stroke-width: 1.5; }
+.knn-point.class-a { fill: var(--accent); }
+.knn-point.class-b { fill: var(--warning); }
+.knn-point.neighbor { stroke: var(--text); stroke-width: 2.5; }
+.knn-test { fill: var(--danger); stroke: var(--surface); stroke-width: 2; }
+.knn-chart text { fill: var(--muted); font-size: 5px; }
+.lab-table { display: grid; gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--line); }
+.lab-table > div { min-width: 0; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; padding: 9px 12px; background: var(--surface); font-size: .78rem; }
+.lab-table > div:first-child { background: var(--surface-2); }
+.gradient-chart path { fill: none; stroke: var(--accent); stroke-width: 2; }
+.gradient-chart line { stroke: var(--danger); stroke-width: 2; }
+.gradient-chart circle { fill: var(--danger); }
+.gradient-equation { display: grid; gap: 8px; padding: 14px; border-radius: 9px; background: var(--surface-2); font-family: "Cascadia Code", monospace; font-size: .78rem; }
+.lab-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.cnn-dimension-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+.dimension-result { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0; }
+.dimension-result span { display: flex; flex-direction: column; gap: 5px; padding: 16px; border-radius: 9px; background: var(--accent-soft); color: var(--muted); font-size: .72rem; }
+.dimension-result strong { color: var(--accent-ink); font-size: 1.2rem; }
 .bias-chart path { fill: none; stroke-width: 3; }
 .train-curve { stroke: var(--accent); }
 .validation-curve { stroke: var(--warning); }
@@ -685,6 +769,11 @@ fieldset { border: 0; padding: 0; margin: 0; }
   .device-guide > .button { grid-column: 2; justify-self: start; }
 }
 
+@media (max-width: 1380px) {
+  .learn-layout { grid-template-columns: 270px minmax(0, 1fr); }
+  .lesson-toc { display: none; }
+}
+
 @media (max-width: 900px) {
   .app-shell { display: block; }
   .sidebar { position: fixed; left: 0; top: 0; width: 280px; transform: translateX(-105%); transition: transform .2s ease; box-shadow: 20px 0 60px rgba(0,0,0,.24); }
@@ -721,6 +810,10 @@ fieldset { border: 0; padding: 0; margin: 0; }
   .focus-session { grid-template-columns: auto 1fr; }
   .focus-session .button { grid-column: 1/-1; width: 100%; }
   .objectives ul, .lesson-two-col, .example-grid, .distinction-grid, .recall-grid, .compare-grid, .formula-list { grid-template-columns: 1fr; }
+  .lesson-section.objectives { grid-template-columns: 1fr; }
+  .chapter-formulas dl { grid-template-columns: 1fr; }
+  .chapter-formulas article, .vaio-problem { padding: 17px; }
+  .case-picker, .case-detail details > div { grid-template-columns: 1fr; }
   .formula-feature, .lesson-footer { flex-direction: column; align-items: stretch; }
   .lesson-footer > div:last-child { flex-wrap: wrap; }
   .lesson-footer .button { flex: 1; }
@@ -736,6 +829,8 @@ fieldset { border: 0; padding: 0; margin: 0; }
   .notebook-summary { grid-template-columns: 1fr; }
   .notebook-summary > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .answer-compare, .formula-toolbar, .formula-list dl { grid-template-columns: 1fr; }
+  .formula-list article header { align-items: flex-start; flex-direction: column; }
+  .formula-list article header em { height: auto; white-space: normal; }
   .mistake-list footer, .trap-check, .setting-row { flex-direction: column; align-items: flex-start; }
   .trap-list article { grid-template-columns: 1fr; }
   .sources-grid { grid-template-columns: 1fr; }
@@ -744,6 +839,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
   .lab-stage > header { flex-direction: column; padding: 18px; }
   .lab-stage > header em { max-width: 100%; text-align: left; }
   .lab-formula-panel { padding: 18px; }
+  .cnn-dimension-grid, .dimension-result { grid-template-columns: 1fr; }
   .lab-formula-tabs { display: grid; grid-template-columns: 1fr 1fr; }
   .lab-formula-tabs button { min-width: 0; white-space: normal; line-height: 1.25; }
   .grade12-mode { grid-template-columns: 1fr; }

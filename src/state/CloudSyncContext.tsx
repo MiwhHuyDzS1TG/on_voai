@@ -21,8 +21,8 @@ const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 const errorMessage = (code: string) => {
   if (code === "INVALID_CREDENTIALS") return "Tên đăng nhập hoặc mật khẩu chưa đúng.";
   if (code === "TOO_MANY_ATTEMPTS") return "Đăng nhập quá nhiều lần. Hãy thử lại sau 10 phút.";
-  if (code === "REDIS_NOT_CONFIGURED" || code.includes("MISSING")) return "Cloud chưa được kết nối Redis trên Vercel.";
-  return "Không thể kết nối cloud. Tiến độ cục bộ vẫn được giữ an toàn.";
+  if (code === "REDIS_NOT_CONFIGURED" || code === "AUTH_NOT_CONFIGURED") return "Cloud chưa được cấu hình đầy đủ trên Vercel.";
+  return "Không thể đăng nhập hoặc kết nối cloud. Vui lòng thử lại; tiến độ cục bộ vẫn được giữ an toàn.";
 };
 
 const readJson = async <T,>(response: Response): Promise<T> => {

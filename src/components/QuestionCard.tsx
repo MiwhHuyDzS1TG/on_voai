@@ -108,7 +108,7 @@ export function QuestionCard({ question, onAnswered, compact = false }: Props) {
           <div className="feedback-title">{correct ? <Check size={20} /> : <X size={20} />} {correct ? "Chính xác" : "Chưa đúng"}</div>
           {!correct && <p><strong>Đáp án:</strong> {answerToText(question.answer)}</p>}
           <p>{question.explanation}</p>
-          {!correct && typeof selected === "string" && question.wrongChoiceExplanations?.[selected] && <p className="why-wrong">Vì sao lựa chọn này sai: {question.wrongChoiceExplanations[selected]}</p>}
+          {!correct && typeof selected === "string" && (question.choiceExplanations?.[selected] || question.wrongChoiceExplanations?.[selected]) && <p className="why-wrong">Vì sao lựa chọn này sai: {question.choiceExplanations?.[selected] ?? question.wrongChoiceExplanations?.[selected]}</p>}
         </div>
       )}
     </article>

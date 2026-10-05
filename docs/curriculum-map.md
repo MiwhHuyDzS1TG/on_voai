@@ -2,7 +2,9 @@
 
 ## Nguyên tắc nguồn
 
-- `noi_dung_on_tap_VAIO.pdf` là phạm vi chính thức và là xương sống của toàn bộ khóa học.
+- `noi_dung_on_tap_SoLoaiVAIO_v2.pdf` là curriculum chính và là xương sống của toàn bộ khóa học, bao gồm toàn bộ yêu cầu “Học sinh cần làm được”.
+- `noi_dung_on_tap_VAIO.pdf` được dùng để đối chiếu khái niệm nền tảng; khi khác biệt, bản v2 được ưu tiên.
+- `Trắc nghiệm ôn Theo nội dung.docx` là nguồn question bank. 174 câu hợp lệ, không trùng và đúng curriculum đã được nhập; phần NLP, RL, LLM và MLOps ngoài phạm vi bị loại.
 - `IAIO-Training-Eljakim-Schrijvers-vi.pdf` chỉ được dùng ở Chương 3 (trang PDF 65-80), Chương 4 (81-102) và Chương 5 (103-118).
 - Nội dung IAIO ngoài phạm vi VAIO chỉ xuất hiện dưới nhãn `Mở rộng IAIO`.
 - Tỷ lệ 70/15/15 được trình bày như ví dụ phổ biến, không phải quy tắc bắt buộc.
@@ -28,9 +30,11 @@
 
 ## Data architecture
 
-- `src/data/curriculum.ts`: module, topic, lesson và metadata nguồn.
-- `src/data/questions.ts`: câu hỏi tĩnh theo schema `Question`.
-- `src/utils/generators.ts`: câu tính toán sinh theo tham số và tự tính đáp án.
+- `src/data/curriculum.ts`: module và bản tóm tắt lesson phục vụ điều hướng.
+- `src/data/lessonChapters.ts`: 17 master lesson đầy đủ, độc lập với nội dung ôn nhanh.
+- `src/data/coverage.ts`: checklist toàn bộ yêu cầu “Học sinh cần làm được” của VAIO v2.
+- `src/data/questions.ts` và `src/data/importedQuestions.ts`: câu hỏi biên soạn và câu nhập từ DOCX.
+- `src/utils/generators.ts`: 16 numeric question generators sinh tham số và tự tính lời giải.
 - `src/data/review.ts`: công thức, flashcard, thẻ so sánh và bẫy ôn nhanh.
 - `src/state/ProgressContext.tsx`: mastery, lịch ôn, câu sai, thi thử và kế hoạch.
 - `src/utils/metrics.ts`, `mastery.ts`: logic thuần có unit test.

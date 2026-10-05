@@ -14,7 +14,7 @@ const isProgressData = (value: unknown): value is ProgressData => {
     && typeof data.mastery === "object";
 };
 
-export default async function handler(request: Request) {
+export async function handleSync(request: Request) {
   const username = authenticatedUsername(request);
   if (!username) return json({ error: "UNAUTHORIZED" }, 401);
   if (!isSameOrigin(request)) return json({ error: "INVALID_ORIGIN" }, 403);
@@ -41,6 +41,9 @@ export default async function handler(request: Request) {
     return json({ error: "METHOD_NOT_ALLOWED" }, 405, { Allow: "GET, PUT" });
   } catch (error) {
     const code = error instanceof Error ? error.message : "SYNC_FAILED";
-    return json({ error: code }, code === "REDIS_NOT_CONFIGURED" ? 503 : 500);
+    console.error("Cloud sync failed", { code });
+    return json({ error: code === "REDIS_NOT_CONFIGURED" ? "REDIS_NOT_CONFIGURED" : "SYNC_FAILED" }, code === "REDIS_NOT_CONFIGURED" ? 503 : 500);
   }
 }
+
+export default { fetch: handleSync };

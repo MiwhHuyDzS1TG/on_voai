@@ -92,6 +92,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         nextReview.setDate(nextReview.getDate() + 1);
         const entry = {
           questionId: question.id,
+          lessonId: question.lessonId,
           prompt: question.prompt,
           selected,
           correct: question.answer,

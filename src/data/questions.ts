@@ -1,6 +1,7 @@
 import type { Question } from "../types";
+import { importedQuestions } from "./importedQuestions";
 
-export const questionBank: Question[] = [
+const curatedQuestions: Question[] = [
   {
     id: "q-feature-label",
     module: "m1",
@@ -425,4 +426,10 @@ export const questionBank: Question[] = [
   },
 ];
 
-export const diagnosticQuestions = questionBank.slice(0, 24);
+export const questionBank: Question[] = [...curatedQuestions, ...importedQuestions];
+
+export const diagnosticQuestions = [
+  ...curatedQuestions.filter((question) => question.type === "numeric").slice(0, 6),
+  ...curatedQuestions.filter((question) => question.type === "scenario" || question.difficulty === "iaio").slice(0, 6),
+  ...importedQuestions.filter((question) => ["m1", "m2", "m3", "m4", "m5"].includes(question.module)).filter((_, index) => index % 7 === 0).slice(0, 12),
+].slice(0, 24);

@@ -12,6 +12,7 @@ export type AnswerValue = string | string[] | number | boolean;
 export type Question = {
   id: string;
   module: string;
+  lessonId?: string;
   topic: string;
   subtopic: string;
   difficulty: Difficulty;
@@ -22,9 +23,11 @@ export type Question = {
   tolerance?: number;
   explanation: string;
   wrongChoiceExplanations?: Record<string, string>;
+  choiceExplanations?: Record<string, string>;
   hints?: string[];
   source: string[];
   misconceptionTags: string[];
+  skills?: string[];
 };
 
 export type Lesson = {
@@ -43,6 +46,36 @@ export type Lesson = {
   recall: string[];
   sources: string[];
   extension?: boolean;
+};
+
+export type LessonSource = {
+  file: string;
+  section: string;
+  label: string;
+};
+
+export type LessonChapter = {
+  lessonId: string;
+  objectives: string[];
+  opening: string[];
+  concepts: Array<{ title: string; body: string[] }>;
+  formulas: Array<{
+    name: string;
+    latex: string;
+    variables: string[];
+    input: string;
+    output: string;
+    range?: string;
+    meaning: string;
+  }>;
+  workedExample: { title: string; steps: string[]; conclusion: string };
+  vaioProblem: { prompt: string; steps: string[]; answer: string };
+  whyImportant: string[];
+  misconceptions: Array<{ claim: string; correction: string; counterexample: string }>;
+  recall: Array<{ prompt: string; answer: string }>;
+  remember: string[];
+  simplerExplanation: string[];
+  sources: LessonSource[];
 };
 
 export type CurriculumModule = {
@@ -83,6 +116,7 @@ export type Flashcard = {
 
 export type MistakeEntry = {
   questionId: string;
+  lessonId?: string;
   prompt: string;
   selected: AnswerValue;
   correct: AnswerValue;

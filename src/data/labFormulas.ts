@@ -48,6 +48,16 @@ export const labFormulaGuides: Record<string, LabFormulaGuide> = {
     example: "w = 1,5; x = 4; b = 1 thì ŷ = 1,5 × 4 + 1 = 7.",
     memory: "Linear regression là đường thẳng cộng sai số.",
   },
+  knn: {
+    formulas: [
+      { label: "Euclidean distance", latex: "d(x,z)=\\sqrt{\\sum_i(x_i-z_i)^2}" },
+      { label: "KNN regression", latex: "\\hat y=\\frac{1}{k}\\sum_{j\\in N_k(x)}y_j" },
+    ],
+    symbols: "N_k(x) là tập k hàng xóm gần x nhất; d là khoảng cách; y_j là target của hàng xóm j.",
+    grade12: "Đặt test point lên bản đồ, đo tới mọi điểm đã biết, chọn k điểm gần nhất rồi bỏ phiếu. Nếu dự đoán số, lấy trung bình thay vì bỏ phiếu.",
+    example: "Ba hàng xóm có nhãn A, A, B thì KNN classification dự đoán A.",
+    memory: "Đo khoảng cách, chọn k gần nhất, rồi tổng hợp nhãn.",
+  },
   logistic: {
     formulas: [
       { label: "Xác suất", latex: "p=\\sigma(z)=\\frac{1}{1+e^{-z}}" },
@@ -113,12 +123,29 @@ export const labFormulaGuides: Record<string, LabFormulaGuide> = {
     example: "z = -2 cho ReLU = 0, sigmoid gần 0,119 và tanh gần -0,964.",
     memory: "ReLU cắt âm, sigmoid tạo 0-1, tanh tạo -1 đến 1.",
   },
+  gradient: {
+    formulas: [{ label: "Gradient update", latex: "\\theta_{new}=\\theta_{old}-\\eta\\nabla_\\theta L" }],
+    symbols: "θ là parameter; η là learning rate; gradient chỉ hướng loss tăng nhanh nhất.",
+    grade12: "Bạn đang đứng trên sườn đồi loss. Gradient chỉ hướng lên, nên dấu trừ giúp bước xuống. Learning rate quyết định bước dài hay ngắn.",
+    example: "x=4, L=x², gradient=8, η=0,2 thì x mới=4-0,2×8=2,4.",
+    memory: "Gradient chỉ lên; dấu trừ đi xuống; eta là độ dài bước.",
+  },
   cnn: {
     formulas: [{ label: "Convolution", latex: "Y_{i,j}=\\sum_m\\sum_n X_{i+m,j+n}K_{m,n}+b" }],
     symbols: "X là ảnh; K là kernel; Y là feature map; i,j là vị trí kernel.",
     grade12: "Đặt bảng kernel lên một vùng ảnh, nhân từng ô tương ứng rồi cộng tất cả. Trượt bảng sang vị trí khác và lặp lại.",
     example: "Kernel phát hiện biên cho tổng lớn khi vùng ảnh có thay đổi mạnh giữa các ô lân cận.",
     memory: "Đặt, nhân từng ô, cộng, rồi trượt.",
+  },
+  "cnn-dimensions": {
+    formulas: [
+      { label: "Output size", latex: "H_{out}=\\left\\lfloor\\frac{H+2P-K}{S}\\right\\rfloor+1" },
+      { label: "Parameters", latex: "N=(K_hK_wC_{in}+1)C_{out}" },
+    ],
+    symbols: "H là input size; P padding; K kernel; S stride; C_in/C_out là số kênh.",
+    grade12: "Công thức đầu đếm số vị trí kernel đặt vừa. Công thức sau đếm weight của mỗi filter, cộng một bias, rồi nhân số filter.",
+    example: "Input 32, K=3, S=1, P=1 cho output 32. Với 3 kênh vào và 16 filter có (27+1)×16=448 parameter.",
+    memory: "Shape phụ thuộc H,K,S,P. Parameter phụ thuộc K và số kênh, không phụ thuộc số vị trí.",
   },
   confusion: {
     formulas: [

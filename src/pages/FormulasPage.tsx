@@ -1,10 +1,25 @@
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { formulas } from "../data/review";
 import { MathBlock } from "../components/MathBlock";
 import { SourceBadges } from "../components/SourceBadges";
 
-export function FormulasPage() {
+const lessonByCategory: Record<string, string> = {
+  "Thống kê": "data-quality",
+  "Scaling": "scaling-encoding",
+  "Unsupervised": "unsupervised",
+  "Supervised": "supervised",
+  "Activation": "activation-training",
+  "Deep Learning": "neuron-network",
+  "Regression": "regression-metrics",
+  "Loss": "activation-training",
+  "Decision Tree": "tree-bayes",
+  "Naive Bayes": "tree-bayes",
+  "Classification": "classification-metrics",
+  "CNN": "cnn",
+};
+
+export function FormulasPage({ navigate }: { navigate: (route: string) => void }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Tất cả");
   const categories = ["Tất cả", ...new Set(formulas.map((formula) => formula.category))];
@@ -21,6 +36,7 @@ export function FormulasPage() {
       <MathBlock latex={formula.latex} />
       <dl><div><dt>Ký hiệu</dt><dd>{formula.symbols}</dd></div><div><dt>Trực giác</dt><dd>{formula.intuition}</dd></div><div><dt>Ví dụ</dt><dd>{formula.example}</dd></div><div><dt>Bẫy</dt><dd>{formula.pitfall}</dd></div></dl>
       <SourceBadges sources={formula.source} />
+      <div className="formula-links"><button type="button" className="button ghost" onClick={() => navigate(`learn?lesson=${lessonByCategory[formula.category] ?? "foundations"}`)}>Học bài đầy đủ</button><button type="button" className="button secondary" onClick={() => navigate(`practice?topic=${encodeURIComponent(formula.name)}`)}>Luyện công thức <ArrowRight size={15} /></button></div>
     </article>)}</div>}
   </div>;
 }

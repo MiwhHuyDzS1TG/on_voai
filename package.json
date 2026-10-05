@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && tsc -p tsconfig.api.json && vite build",
     "test": "vitest run",
+    "content:import-questions": "python tools/import_question_bank.py research/question-bank-full.txt src/data/importedQuestions.ts",
+    "content:audit": "node scripts/content-audit.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

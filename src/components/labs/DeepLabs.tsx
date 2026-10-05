@@ -34,3 +34,18 @@ export function CNNLab() {
   const result = products.reduce((sum,value) => sum+value,0);
   return <div className="lab-body cnn-demo"><div><h4>Ảnh 5x5</h4><div className="matrix image-matrix">{image.flatMap((line,r) => line.map((value,c) => <button key={`${r}-${c}`} className={r>=row&&r<row+3&&c>=col&&c<col+3 ? "active" : ""} onClick={() => { setRow(Math.min(2,r)); setCol(Math.min(2,c)); }}>{value}</button>))}</div></div><div><h4>Kernel 3x3</h4><div className="matrix kernel-matrix">{kernel.flat().map((value,index) => <span key={index}>{value}</span>)}</div></div><div className="conv-result"><span>Tích từng ô</span><code>{products.join(" + ")}</code><strong>= {result}</strong></div><p>Chọn một ô trong ảnh để di chuyển góc trên-trái của kernel. Cùng bộ weight được dùng ở mọi vị trí.</p></div>;
 }
+
+export function CNNDimensionLab() {
+  const [size, setSize] = useState(32);
+  const [kernelSize, setKernelSize] = useState(3);
+  const [stride, setStride] = useState(1);
+  const [padding, setPadding] = useState(1);
+  const [cin, setCin] = useState(3);
+  const [cout, setCout] = useState(16);
+  const output = Math.floor((size + 2 * padding - kernelSize) / stride) + 1;
+  const parameters = (kernelSize * kernelSize * cin + 1) * cout;
+  const valid = output > 0;
+  return <div className="lab-body"><div className="cnn-dimension-grid">{[
+    ["H = W", size, setSize, 1, 128], ["Kernel K", kernelSize, setKernelSize, 1, 11], ["Stride S", stride, setStride, 1, 5], ["Padding P", padding, setPadding, 0, 5], ["C_in", cin, setCin, 1, 64], ["C_out", cout, setCout, 1, 128],
+  ].map(([label, value, setter, min, max]) => <label className="field" key={String(label)}><span>{String(label)}</span><input type="number" min={Number(min)} max={Number(max)} value={Number(value)} onChange={(event) => (setter as (value: number) => void)(Number(event.target.value))} /></label>)}</div>{valid ? <><div className="dimension-result"><span>Output shape<strong>{output} × {output} × {cout}</strong></span><span>Parameters<strong>{parameters.toLocaleString("vi-VN")}</strong></span></div><p className="lab-result">H_out = floor(({size} + 2×{padding} - {kernelSize})/{stride}) + 1 = <strong>{output}</strong></p><p className="lab-result">Params = ({kernelSize}×{kernelSize}×{cin} + 1)×{cout} = <strong>{parameters}</strong></p></> : <p className="inline-message">Cấu hình không hợp lệ vì kernel không đặt vừa input.</p>}</div>;
+}

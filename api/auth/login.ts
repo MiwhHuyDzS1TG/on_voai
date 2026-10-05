@@ -1,7 +1,7 @@
 import { configuredUsername, createSessionToken, isSameOrigin, json, sessionCookie, verifyCredentials } from "../_lib/auth";
 import { getRedis } from "../_lib/redis";
 
-export default async function handler(request: Request) {
+export async function handleLogin(request: Request) {
   if (request.method !== "POST") return json({ error: "METHOD_NOT_ALLOWED" }, 405, { Allow: "POST" });
   if (!isSameOrigin(request)) return json({ error: "INVALID_ORIGIN" }, 403);
 
@@ -23,6 +23,10 @@ export default async function handler(request: Request) {
     return json({ user: { username: configuredUsername() } }, 200, { "Set-Cookie": sessionCookie(token) });
   } catch (error) {
     const code = error instanceof Error ? error.message : "LOGIN_FAILED";
-    return json({ error: code }, code.includes("MISSING") || code.includes("CONFIGURED") ? 503 : 400);
+    console.error("Login failed", { code });
+    const configurationError = code.includes("MISSING") || code.includes("CONFIGURED");
+    return json({ error: configurationError ? "AUTH_NOT_CONFIGURED" : "LOGIN_FAILED" }, configurationError ? 503 : 500);
   }
 }
+
+export default { fetch: handleLogin };
